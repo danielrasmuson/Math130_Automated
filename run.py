@@ -1,4 +1,5 @@
 from docx import opendocx, getdocumenttext
+from ttk import Frame, Button, Style
 from Tkinter import *
 from docx import opendocx, getdocumenttext
 import os
@@ -50,15 +51,18 @@ class assignment():
 
 
 class AssignmentGrading(Frame):
-    def __init__(self,assignmentStack):
+    def __init__(self,assignmentStack, parent):
         Frame.__init__(self)
+
         self.canvas = Canvas(self) # , width=400, height=300
         self.canvas.pack(side="top", fill="both", expand=True)
         self.canvas_id = self.canvas.create_text(10, 10, anchor="nw", justify="left")
+        self.canvas.itemconfig(self.canvas_id, text="This is the starting screen\n\nClick Next to see the first student\nI will write some more instrucations")
 
+        self.parent = parent
+        self.parent.title("Math 130 Lab Grading Software")
         self.assignmentStack = assignmentStack
 
-        self.canvas.itemconfig(self.canvas_id, text="This is the starting screen\n\nClick Next to see the first student\nI will write some more instrucations")
 
         self.previousAssignment = Button(self, text="Previous", command=self.previousAssignment)
         self.previousAssignment.pack(side="left")
@@ -83,9 +87,7 @@ folderName = "lab2_section12"
 assignmentStack = assignmentObjects(folderName)
 
 frame = Tk()
-gradingObject = AssignmentGrading(assignmentStack)
+gradingObject = AssignmentGrading(assignmentStack, frame)
 gradingObject.pack(side="top", fill="both", expand=True)
-
-# gradingObject.next()
 
 frame.mainloop()
