@@ -1,4 +1,5 @@
 Notes - there should be "<! !>" surronding each answer
+Etc
 
 STEPS IN GUI PROGAM
 1. Select the folder of files you want to grade
