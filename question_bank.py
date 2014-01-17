@@ -15,12 +15,12 @@ class Question_Bank():
     1:{"question":"What is the 25th term of this sequence?","answer":"41.62"},
     2:{"question":"What is the 80th term of this sequence?","answer":"131.27"},
     3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75"},
-    4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","2nd":"Recall","answer":"6671.91"},
+    4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","atext":"Recall","answer":"6671.91"},
     6:{"question":"What is the 15th term of this sequence?","answer":"5.43"},
-    7:{"question":"What is the sum of the first 30 terms of this sequence?","2nd":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80"},
-    9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","2nd":"An auditorium","answer":"$10.40"},
+    7:{"question":"What is the sum of the first 30 terms of this sequence?","atext":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80"},
+    9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","atext":"An auditorium","answer":"$10.40"},
     10:{"question":"How many seats will there be in the 16th row?","answer":"40"},
-    11:{"question":"How many total seats are there in the auditorium?","2nd":"In compound","answer":"580"},
+    11:{"question":"How many total seats are there in the auditorium?","atext":"In compound","answer":"580"},
     12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95"}
     }
     
