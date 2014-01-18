@@ -1,6 +1,6 @@
 import wx, wx.html
 import sys
-
+import wx.lib.inspection
 
 # This was taken from somewhere, I can't recall where though.
 class HtmlWindow(wx.html.HtmlWindow):
@@ -36,7 +36,7 @@ class Frame(wx.Frame):
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
         # happen to the stuff in the frames.
-        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX, pos=(50,50), size=(800,600))
+        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600))#, style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
         # Utility stuff in order to get a menu
@@ -60,19 +60,63 @@ class Frame(wx.Frame):
         
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
-        panel = wx.Panel(self)
-        box = wx.BoxSizer(wx.VERTICAL)
-        # m_text = wx.StaticText(panel, -1, "Hello World!")
-        # m_text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        # m_text.SetSize(m_text.GetBestSize())
-        # box.Add(m_text, 0, wx.ALL, 10)
+        self.mainpanel = wx.Panel(self, wx.ID_ANY)
+        self.mainpanel.SetBackgroundColour("red")
+        
+        
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        top_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        bottom_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        tree_list_sizer = wx.BoxSizer(wx.VERTICAL)
+        right_sizer = wx.BoxSizer(wx.VERTICAL)
+        top_sizer.Add(tree_list_sizer,0,wx.ALL|wx.GROW,5)
+        top_sizer.Add(right_sizer,0,wx.TOP|wx.BOTTOM|wx.GROW,5)
+        
+        
+        # This is our lab tree list and also the label above it.
+        lab_tree_list = wx.TreeCtrl(self.mainpanel, -1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS)
+        lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Lab Sections and Students')
+        tree_list_sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
+        tree_list_sizer.Add(lab_tree_list, 1,wx.GROW)
+        
+        
+        
+        # This is the top right of our frame containing the 
+        # student ID & the name etc.
+        b_open2 = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
+        right_sizer.Add(b_open2, 1 ,wx.GROW)
+        # top_sizer.Add(right_sizer,1,wx.ALL|wx.GROW, 0)
+        # right_sizer.Add(wx.StaticLine(self.mainpanel), 5, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        b_open3 = wx.Button(self.mainpanel, wx.ID_ANY, "Ope66446436346234623462346234623462352352352351452346n")
+        right_sizer.Add(b_open3, 5,wx.GROW)
+        
+        # These contain all of our buttons along the bottom of the app.
+        b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
+        b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
+        bottom_button_sizer.Add(b_open, 1,wx.ALL,5)
+        
+        b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
+        b_close.Bind(wx.EVT_BUTTON, self.OnClose)
+        bottom_button_sizer.Add(b_close, 1, wx.ALL, 5)
+        
+        b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
+        bottom_button_sizer.Add(b_prev, 1,wx.ALL,5)
 
-        # m_close = wx.Button(panel, wx.ID_CLOSE, "Close")
-        # m_close.Bind(wx.EVT_BUTTON, self.OnClose)
-        # box.Add(m_close, 1, wx.ALL, 10)
-
-        panel.SetSizer(box)
-        panel.Layout()
+        b_next = wx.Button(self.mainpanel, wx.ID_ANY, "Next")
+        bottom_button_sizer.Add(b_next, 1,wx.ALL,5)
+        
+        
+        # This last code just puts our top and bottom sub boxes
+        # on the main box so they're aligned correctly.
+        main_sizer.Add(top_sizer, wx.GROW)
+        main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        main_sizer.Add(bottom_button_sizer)
+        self.mainpanel.SetSizer(main_sizer)
+        self.mainpanel.Layout()
+        
+    def ShowInspector(self, event):
+        wx.lib.inspection.InspectionTool().Show()
 
     def OnClose(self, event):
         dlg = wx.MessageDialog(self,
