@@ -60,64 +60,96 @@ class Frame(wx.Frame):
         
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
+        # I made this red at first so that I can see exactly where things
+        # are positioned and if they're even being rendered since they ususally
+        # just blend in.
         self.mainpanel = wx.Panel(self, wx.ID_ANY)
         self.mainpanel.SetBackgroundColour("red")
         
+        # Set all of our sizers here
+        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.top_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.bottom_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.tree_list_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.right_sizer = wx.BoxSizer(wx.VERTICAL)
         
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
-        top_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        bottom_button_sizer = wx.BoxSizer(wx.HORIZONTAL)
         
-        tree_list_sizer = wx.BoxSizer(wx.VERTICAL)
-        right_sizer = wx.BoxSizer(wx.VERTICAL)
-        top_sizer.Add(tree_list_sizer,0,wx.ALL|wx.GROW,5)
-        top_sizer.Add(right_sizer,0,wx.TOP|wx.BOTTOM|wx.GROW,5)
+        # This is our outer most sizer and its components.
+        self.main_sizer.Add(self.top_sizer, 1, wx.GROW)
+        self.main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        self.main_sizer.Add(self.bottom_button_sizer, 0)
         
+        
+        # Our top sizer contains the left hand tree list and
+        # the right hand side list for the student information
+        # and the questions eventually.
+        self.top_sizer.Add(self.tree_list_sizer,0,wx.ALL|wx.GROW,5)
+        self.top_sizer.Add(self.right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.GROW,5)
         
         # This is our lab tree list and also the label above it.
-        lab_tree_list = wx.TreeCtrl(self.mainpanel, -1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS)
-        lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Lab Sections and Students')
-        tree_list_sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
-        tree_list_sizer.Add(lab_tree_list, 1,wx.GROW)
+        self.lab_tree_list = wx.TreeCtrl(self.mainpanel, -1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS)
+        self.lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Lab Sections and Students')
+        self.tree_list_sizer.Add(self.lab_tree_label,0,wx.ALIGN_CENTER)
+        self.tree_list_sizer.Add(self.lab_tree_list, 1,wx.GROW)
         
         
         
-        # This is the top right of our frame containing the 
+        
+        # This is the right frame containing the 
         # student ID & the name etc.
-        b_open2 = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
-        right_sizer.Add(b_open2, 1 ,wx.GROW)
-        # top_sizer.Add(right_sizer,1,wx.ALL|wx.GROW, 0)
-        # right_sizer.Add(wx.StaticLine(self.mainpanel), 5, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
-        b_open3 = wx.Button(self.mainpanel, wx.ID_ANY, "Ope66446436346234623462346234623462352352352351452346n")
-        right_sizer.Add(b_open3, 5,wx.GROW)
+        self.student_info_container = wx.StaticBox(self.mainpanel, label='Current Student Information')
+        self.student_info_container_sizer = wx.StaticBoxSizer(self.student_info_container, wx.VERTICAL)
+        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Username: Anthony Anderson\nSection: 5\nTech ID: 123456789')
+        self.student_info_container_sizer.Add(self.student_info_label)
+        self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
+        
+
+        # This is the hardest part.  This is where the
+        # questions and the scrollable area is going to be.
+        self.questions_area = wx.ScrolledWindow(self.mainpanel)
+        self.questions_area.SetScrollbars(1, 1, 1000, 1000)
+        self.questions_area.EnableScrolling(True,True)
+        self.right_sizer.Add(self.questions_area, 1, wx.GROW)
+                
+        self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
+        self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
+        self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(900, 900))
+        self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
+        
+        
+        
+        
         
         # These contain all of our buttons along the bottom of the app.
-        b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
-        b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
-        bottom_button_sizer.Add(b_open, 1,wx.ALL,5)
+        self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
+        self.b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
+        self.bottom_button_sizer.Add(self.b_open, 1,wx.ALL,5)
         
-        b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
-        b_close.Bind(wx.EVT_BUTTON, self.OnClose)
-        bottom_button_sizer.Add(b_close, 1, wx.ALL, 5)
+        self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
+        self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
+        self.bottom_button_sizer.Add(self.b_close, 1, wx.ALL, 5)
         
-        b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
-        bottom_button_sizer.Add(b_prev, 1,wx.ALL,5)
+        self.b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
+        self.bottom_button_sizer.Add(self.b_prev, 1,wx.ALL,5)
 
-        b_next = wx.Button(self.mainpanel, wx.ID_ANY, "Next")
-        bottom_button_sizer.Add(b_next, 1,wx.ALL,5)
+        self.b_next = wx.Button(self.mainpanel, wx.ID_ANY, "Next")
+        self.bottom_button_sizer.Add(self.b_next, 1,wx.ALL,5)
+
         
-        
-        # This last code just puts our top and bottom sub boxes
-        # on the main box so they're aligned correctly.
-        main_sizer.Add(top_sizer, wx.GROW)
-        main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
-        main_sizer.Add(bottom_button_sizer)
-        self.mainpanel.SetSizer(main_sizer)
+        # This last code just finally sets the main sizer
+        # on the main box and calls the layout routine.
+        self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
         
     def ShowInspector(self, event):
         wx.lib.inspection.InspectionTool().Show()
-
+        
+    def ScrollTop(self,event):
+        self.questions_area.Scroll(1,1)
+        
+    def ScrollBottom(self,event):
+        self.questions_area.Scroll(1000,1000)
+        
     def OnClose(self, event):
         dlg = wx.MessageDialog(self,
             "Do you really want to close this application?",
