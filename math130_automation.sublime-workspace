@@ -4,12 +4,36 @@
 		"selected_items":
 		[
 			[
-				"ass",
-				"assignmentStack"
+				"p",
+				"pButton  (variable)"
+			],
+			[
+				"pos",
+				"pos"
+			],
+			[
+				"next",
+				"nextAssignment"
+			],
+			[
+				"nex",
+				"nextButton"
+			],
+			[
+				"ne",
+				"nextAssignment"
+			],
+			[
+				"answer",
+				"answerStr"
 			],
 			[
 				"ans",
-				"answersStr"
+				"assignmentStack"
+			],
+			[
+				"ass",
+				"assignmentStack"
 			],
 			[
 				"as",
@@ -42,10 +66,6 @@
 			[
 				"get",
 				"getAnswers"
-			],
-			[
-				"answer",
-				"answers"
 			],
 			[
 				"create",
@@ -236,10 +256,6 @@
 				"margin-top"
 			],
 			[
-				"pos",
-				"position"
-			],
-			[
 				"ine",
 				"inline"
 			],
@@ -391,7 +407,7 @@
 			"file": "run.py",
 			"settings":
 			{
-				"buffer_size": 3141,
+				"buffer_size": 4700,
 				"line_ending": "Windows"
 			}
 		}
@@ -399,12 +415,24 @@
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 235.0,
 		"selected_items":
 		[
 			[
 				"close",
 				"Project: Close"
+			],
+			[
+				"local",
+				"Local History: Browse"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"keyb",
+				"Preferences: Key Bindings - User"
 			],
 			[
 				"del",
@@ -437,10 +465,6 @@
 			[
 				"pretify",
 				"HTMLPrettify"
-			],
-			[
-				"insta",
-				"Package Control: Install Package"
 			],
 			[
 				"plain",
@@ -787,7 +811,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 522.0
+		"width": 386.0
 	},
 	"console":
 	{
@@ -810,6 +834,16 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/tkinterPratice.py",
+		"/C/Users/Daniel/.sublime/history/C/Users/Daniel/Documents/GitHub/Math130_Automated/2014-01-14_09.25.18.run.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/runTkinter.py",
+		"/C/Program Files (x86)/wxPython3.0 Docs and Demos/docs/README.txt",
+		"/C/Program Files (x86)/wxPython3.0 Docs and Demos/demo/demo.py",
+		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Lab_2_Assignment_Key.docx",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/result.txt",
 		"/C/Python27/Lib/lib-tk/Tkinter.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/guiWindow.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/clickTesting.py",
@@ -819,9 +853,7 @@
 		"/C/Python27/Lib/lib-tk/Canvas.py",
 		"/C/Python27/Lib/lib-tk/Tix.py",
 		"/C/Python27/Lib/tkinter",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/result.txt",
 		"/C/Users/Daniel/Desktop/ez_setup.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
 		"/C/Python27/Lib/lxml/__init__.py",
 		"/C/Python27/Lib/docx/example-extracttext.py",
 		"/C/Users/Daniel/AppData/Local/Temp/Temp1_lxml-master.zip/lxml-master/INSTALL.txt",
@@ -870,10 +902,8 @@
 		"/C/Users/Daniel/Pictures/2013-08-26 11_28_50-SkillsOne.com __ Online Administration - Assessment Confirmation.png",
 		"/C/Users/Daniel/Desktop/wordOnTheStreetCheat/engDictionaryWordList.txt",
 		"/C/Users/Daniel/Desktop/wordOnTheStreetCheat/run.py",
-		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Python33/Lib/tkinter/ttk.py",
 		"/C/Python33/Lib/tkinter/__init__.py",
-		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Users/Daniel/Desktop/tkinterTesting.py",
 		"/C/Python33/Lib/tkinter/__main__.py",
 		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/setup.js",
@@ -931,13 +961,7 @@
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/html/details.html",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/js/header.js",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/html/footer.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/js/footer.js",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/header.inc",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/images/.picasa.ini",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/images/banner.jpg",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/css/index.css",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Asset/frozenage/license.txt",
-		"/C/Python33/Scripts/django-admin.py"
+		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/js/footer.js"
 	],
 	"find":
 	{
@@ -956,6 +980,49 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"refreshAssignment",
+			"pl",
+			"assignment",
+			"hbox2",
+			"quote",
+			"hbox1",
+			"hbox2",
+			"tc",
+			"st1",
+			"hbox1",
+			"self.pl",
+			"hbox1",
+			"panel",
+			"Panel",
+			"panel",
+			"#",
+			"panel",
+			"size",
+			"pos",
+			"400",
+			"hbox2",
+			"hbox1",
+			"refreshAssignment",
+			"3",
+			"previousAssignment",
+			"nButton",
+			"self.i",
+			"0",
+			"^",
+			"@",
+			"mailto:",
+			"mailto.*@mnsu.edu",
+			"mnsu",
+			"^.*?@",
+			"rasmuson",
+			"300",
+			"500",
+			"clearButton",
+			",",
+			"1500",
+			"ctrl+shift+l",
+			"ExampleFrame",
+			"assignmentObjects",
 			"700",
 			"justify",
 			")",
@@ -1040,55 +1107,12 @@
 			"<table cellspacing=\"0\" cellpadding=\"0\" class=\"wide\"><tbody><tr><td align=\"center\" style=\"vertical-align: top;\">",
 			"wordsList",
 			"#",
-			"correctList",
-			"daniel",
-			"name",
-			"capslock",
-			"escape",
-			"end",
-			"home",
-			"end",
-			"thisFunction",
-			"capslock",
-			"shift",
-			"\"], \"c",
-			"\"], \"command",
-			"\"], \"command\":",
-			"ctrl",
-			"\"keys\": [\"",
-			"Frame",
-			"vegetable",
-			"vegtable",
-			"upperLetters",
-			"wordsDictionary",
-			"dictionaryList",
-			"todo",
-			"startgame",
-			"switchSetup",
-			"replace(\"</ul>\",\"\"",
-			"li>",
-			"li",
-			"\\n",
-			"var",
-			"documentPage",
-			"Submit",
-			"document.getElementById('premade')",
-			"\"",
-			"\"s",
-			"\"",
-			"documentPage.innerHTML+",
-			"ocument.getElementById('premade'",
-			"documentPage.innerHTML = ",
-			"documentPage.innerHTML = documentPage.innerHTML+'<li><input id=\"startGame\" type=\"button\" value=\"Start Game\" onclick=\"startGame()\" /></li>';",
-			").getElementsByTagName('ul')",
-			"redTurn",
-			"('red','defensive')",
-			"premade"
+			"correctList"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
 			"documentPage.innerHTML = (documentPage.innerHTML).replace(\"</ul>\",\"\")+'<li><input id=\"switchSetup\" type=\"button\" value=\"Submit\" onclick=\"redTurn()\" /></li></ul>';",
@@ -1126,15 +1150,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3141,
+						"buffer_size": 4700,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3124,
-								3124
+								2852,
+								2852
 							]
 						],
 						"settings":
@@ -1248,7 +1272,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 559.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1298,7 +1322,7 @@
 	},
 	"output.exec":
 	{
-		"height": 400.0
+		"height": 97.0
 	},
 	"output.find_results":
 	{
@@ -1320,6 +1344,14 @@
 		"selected_items":
 		[
 			[
+				"run",
+				"run.py"
+			],
+			[
+				"tkint",
+				"tkinterPratice.py"
+			],
+			[
 				"gui",
 				"guiWindow.py"
 			],
@@ -1330,10 +1362,6 @@
 			[
 				"res",
 				"result.txt"
-			],
-			[
-				"run",
-				"run.py"
 			],
 			[
 				"sour",
