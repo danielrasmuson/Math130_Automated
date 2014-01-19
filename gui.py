@@ -1,35 +1,4 @@
-import wx, wx.html
-import sys
-import wx.lib.inspection
-
-# This was taken from somewhere, I can't recall where though.
-class HtmlWindow(wx.html.HtmlWindow):
-    def __init__(self, parent, id, size=(600,400)):
-        wx.html.HtmlWindow.__init__(self,parent, id, size=size)
-        if "gtk2" in wx.PlatformInfo:
-            self.SetStandardFonts()
-    def OnLinkClicked(self, link):
-        wx.LaunchDefaultBrowser(link.GetHref())
-# This was taken from somewhere, I can't recall where though.
-class AboutBox(wx.Dialog):
-    def __init__(self):
-        wx.Dialog.__init__(self, None, -1, "About <<project>>",
-            style=wx.DEFAULT_DIALOG_STYLE|wx.THICK_FRAME|
-                wx.TAB_TRAVERSAL)
-        aboutText = """<p>Sorry, there is no information about this program. It is
-        running on version %(wxpy)s of <b>wxPython</b> and %(python)s of <b>Python</b>.
-        See <a href="http://wiki.wxpython.org">wxPython Wiki</a></p>"""
-        hwin = HtmlWindow(self, -1, size=(400,500))
-        vers = {}
-        vers["python"] = sys.version.split()[0]
-        vers["wxpy"] = wx.VERSION_STRING
-        hwin.SetPage(aboutText % vers)
-        btn = hwin.FindWindowById(wx.ID_OK)
-        irep = hwin.GetInternalRepresentation()
-        hwin.SetSize((irep.GetWidth()+25, irep.GetHeight()+25))
-        self.SetClientSize(hwin.GetSize())
-        self.CentreOnParent(wx.BOTH)
-        self.SetFocus()
+import wx, sys, wx.lib.inspection
 
 class Frame(wx.Frame):
     def __init__(self):
@@ -87,12 +56,14 @@ class Frame(wx.Frame):
         self.top_sizer.Add(self.right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.GROW,5)
         
         # This is our lab tree list and also the label above it.
-        self.lab_tree_list = wx.TreeCtrl(self.mainpanel, -1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS)
-        self.lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Lab Sections and Students')
+        self.lab_tree_list = wx.TreeCtrl(self.mainpanel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
+        self.lab_tree_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, id=1)
+        self.lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Student List')
         self.tree_list_sizer.Add(self.lab_tree_label,0,wx.ALIGN_CENTER)
         self.tree_list_sizer.Add(self.lab_tree_list, 1,wx.GROW)
         
-        
+        # Call our initial tree list build
+        self.UpdateTreeList(self.lab_tree_list)
         
         
         # This is the right frame containing the 
@@ -116,10 +87,6 @@ class Frame(wx.Frame):
         self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(900, 900))
         self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
         
-        
-        
-        
-        
         # These contain all of our buttons along the bottom of the app.
         self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
         self.b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
@@ -141,6 +108,35 @@ class Frame(wx.Frame):
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
         
+    def UpdateTreeList(self, tree):
+        # Just some boring default tree data for testing purposes.
+        tree_root = tree.AddRoot("Lab Sections")
+        section1 = tree.AppendItem(tree_root, "Section 7")
+        tree.AppendItem(section1, "Anthony")
+        tree.AppendItem(section1, "Ben")
+        tree.AppendItem(section1, "Charlie")
+        tree.AppendItem(section1, "Dan")
+        tree.AppendItem(section1, "Evan")
+        tree.AppendItem(section1, "Fred")
+        
+        section2 = tree.AppendItem(tree_root, "Section 8")
+        tree.AppendItem(section2, "Greg")
+        tree.AppendItem(section2, "Harrison")
+        tree.AppendItem(section2, "Ike")
+        tree.AppendItem(section2, "Jake")
+        tree.AppendItem(section2, "Kyle")
+        tree.AppendItem(section2, "Lon")
+        
+    def OnSelChanged(self, event):
+        # Get our item that updated
+        item = event.GetItem()
+        # Find the item text from the tree and update the student information
+        self.UpdateStudentInformation(self.lab_tree_list.GetItemText(item), 1234, 8)
+        # Eventually update student response questions here:
+        
+    def UpdateStudentInformation(self, user, techid, section):
+        self.student_info_label.SetLabel("Username: " + str(user) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
+        
     def ShowInspector(self, event):
         wx.lib.inspection.InspectionTool().Show()
         
@@ -160,8 +156,8 @@ class Frame(wx.Frame):
             self.Destroy()
 
     def OnAbout(self, event):
-        dlg = AboutBox()
-        dlg.ShowModal()
+        dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
+        result = dlg.ShowModal()
         dlg.Destroy()
         
 if __name__ == "__main__":
