@@ -1,5 +1,6 @@
 import wx, wx.lib.inspection
 from assignment import getAssignmentStack
+from question_bank import *
 
 class Frame(wx.Frame):
     def __init__(self):
@@ -15,29 +16,29 @@ class Frame(wx.Frame):
         # Utility stuff in order to get a menu
         # and a status bar in the bottom for the future.
         menuBar = wx.MenuBar()
+        
         menu = wx.Menu()
+        m_open = menu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
         m_exit = menu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
-        self.Bind(wx.EVT_MENU, self.OnClose, m_exit) #binds the event to the menu item
-        menuBar.Append(menu, "&File") #add the menu to the menubar
+        self.Bind(wx.EVT_MENU, self.LoadBank, m_open)
+        self.Bind(wx.EVT_MENU, self.OnClose, m_exit)
+        menuBar.Append(menu, "&File")
+        
         menu = wx.Menu()
         m_about = menu.Append(wx.ID_ABOUT, "&About", "Information about this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, m_about)
         menuBar.Append(menu, "&Help")
+        
         self.SetMenuBar(menuBar)
+        
 
         # Style=0 makes it so no resize handle shows up
         # in the status bar
         self.statusbar = self.CreateStatusBar(style=0)
-
-        
         
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
-        # I made this red at first so that I can see exactly where things
-        # are positioned and if they're even being rendered since they ususally
-        # just blend in. <-- good call
         self.mainpanel = wx.Panel(self, wx.ID_ANY)
-        self.mainpanel.SetBackgroundColour("red")
         
         # Set all of our sizers here
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -50,7 +51,7 @@ class Frame(wx.Frame):
         # This is our outer most sizer and its components.
         self.main_sizer.Add(self.top_sizer, 1, wx.GROW)
         self.main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
-        self.main_sizer.Add(self.bottom_button_sizer, 0)
+        self.main_sizer.Add(self.bottom_button_sizer, 0, wx.GROW)
         
         
         # Our top sizer contains the left hand tree list and
@@ -81,40 +82,42 @@ class Frame(wx.Frame):
 
         # This is the hardest part.  This is where the
         # questions and the scrollable area is going to be.
-        self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 560, 1000)
-        self.questions_area.EnableScrolling(True,True)
-        self.right_sizer.Add(self.questions_area, 1, wx.GROW)
-                
-        self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
-        self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
-        self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(470, 900))
-        self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
+        self.InitializeQuestionArea()
+                        
+        # self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
+        # self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
+        # self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(470, 900))
+        # self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
         
         # These contain all of our buttons along the bottom of the app.
-        self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
-        self.b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
-        self.bottom_button_sizer.Add(self.b_open, 1,wx.ALL,5)
-        
-        self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
-        self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
-        self.bottom_button_sizer.Add(self.b_close, 1, wx.ALL, 5)
-        
         self.b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
+        self.b_prev.SetToolTipString("Selects the previous student of the current section.")
         self.b_prev.Bind(wx.EVT_BUTTON, self.PreviousButton)
-        self.bottom_button_sizer.Add(self.b_prev, 1,wx.ALL,5)
+        self.bottom_button_sizer.Add(self.b_prev, 0,wx.ALL,5)
 
         self.b_next = wx.Button(self.mainpanel, wx.ID_ANY, "Next")
+        self.b_next.SetToolTipString("Selects the next student of the current section")
         self.b_next.Bind(wx.EVT_BUTTON, self.NextButton)
-        self.bottom_button_sizer.Add(self.b_next, 1,wx.ALL,5)
+        self.bottom_button_sizer.Add(self.b_next, 0,wx.ALL,5)
+        
+        self.bottom_button_sizer.Add(wx.BoxSizer(wx.HORIZONTAL), 1, wx.GROW, 0)
+        
+        self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
+        self.b_open.SetToolTipString("Opens the Document Inspector (for now).")
+        self.b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
+        self.bottom_button_sizer.Add(self.b_open, 0,wx.ALL,5)
+        
+        self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
+        self.b_close.SetToolTipString("Quits the application.")
+        self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
+        self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
         
 
-        
+        self.qb = Question_Bank()
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
-        
         # I was looking at an easy way to make buttons but it looks like it might be worse
         # than just doing the three lines of code above to get stuff done.
         # self.EasyButtonAdd("test","bottom_button_sizer","Test",border=5)
@@ -133,6 +136,8 @@ class Frame(wx.Frame):
             if sec not in rootDict.keys(): #creats root section if there isnt one
                 rootDict[sec] = tree.AppendItem(tree_root, "Section "+sec)
             tree.AppendItem(rootDict[sec], assignment.getName()) #appends name onto section
+        
+        tree.ExpandAll()
 
         
     def OnSelChanged(self, event):
@@ -156,10 +161,16 @@ class Frame(wx.Frame):
         wx.lib.inspection.InspectionTool().Show()
         
     def PreviousButton(self, event):
-        print self.lab_tree_list.GetSelection()
+        current = self.lab_tree_list.GetSelection()
+        prev = self.lab_tree_list.GetPrevSibling(current)
+        if prev.IsOk():
+            self.lab_tree_list.SelectItem(prev)
 
     def NextButton(self, event):
-        pass
+        current = self.lab_tree_list.GetSelection()
+        next = self.lab_tree_list.GetNextSibling(current)
+        if next.IsOk():
+            self.lab_tree_list.SelectItem(next)
         
     def ScrollTop(self,event):
         self.questions_area.Scroll(1,1)
@@ -176,6 +187,32 @@ class Frame(wx.Frame):
         if result == wx.ID_OK:
             self.Destroy()
 
+    def LoadBank(self, event):
+        self.UpdateQuestions()
+        
+    def InitializeQuestionArea(self):
+        self.questions_area = wx.ScrolledWindow(self.mainpanel)
+        self.questions_area.SetScrollbars(1, 1, 560, 1000)
+        self.questions_area.EnableScrolling(True,True)
+        self.right_sizer.Add(self.questions_area, 1, wx.GROW)
+        
+        self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.questions_area.SetSizer(self.questions_area_sizer)
+        
+        
+        for i in range(15):
+            b_open = wx.Button(self.questions_area, wx.ID_ANY, "Open")
+        self.questions_area.Layout()
+        self.mainpanel.Layout()
+        
+    def UpdateQuestions(self):
+        if self.questions_area:
+            self.questions_area.Destroy()
+            self.InitializeQuestionArea()
+        # for question in self.qb.questions.keys():
+            # self.button = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 25*question))
+            # self.button.Bind(wx.EVT_BUTTON, self.ScrollBottom)
+
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
         result = dlg.ShowModal()
@@ -183,8 +220,8 @@ class Frame(wx.Frame):
         
 if __name__ == "__main__":
     # Error messages go to popup window
-    # because of the redirect.
-    app = wx.App(redirect=True)
+    # because of the redirect=True.
+    app = wx.App(redirect=False)
     top = Frame()
     top.Show()
     app.MainLoop()
