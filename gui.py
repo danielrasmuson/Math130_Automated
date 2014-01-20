@@ -7,7 +7,7 @@ class Frame(wx.Frame):
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
         # happen to the stuff in the frames.
-        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX)
+        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
         self.assignmentStack = getAssignmentStack("Examples\\test")
@@ -79,9 +79,6 @@ class Frame(wx.Frame):
         self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
         
 
-        # This is the hardest part.  This is where the
-        # questions and the scrollable area is going to be.
-        self.InitializeQuestionArea()
                         
         # self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
         # self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
@@ -111,20 +108,15 @@ class Frame(wx.Frame):
         self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
         self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
         
-
+        # This is the hardest part.  This is where the
+        # questions and the scrollable area is going to be.
         self.qb = Question_Bank()
+        self.InitializeQuestionArea()
+        
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
-        # I was looking at an easy way to make buttons but it looks like it might be worse
-        # than just doing the three lines of code above to get stuff done.
-        # self.EasyButtonAdd("test","bottom_button_sizer","Test",border=5)
-        # def EasyButtonAdd(self, buttonname, sizer, label, border=0, proportion=0, flags=wx.ALL, function=False):
-        # exec("self."+str(buttonname)+" = wx.Button(self.mainpanel, wx.ID_ANY, \""+str(label)+"\")")
-        # exec("self."+str(sizer) + ".Add(self."+str(buttonname) + ", "+str(proportion)+", " + str(flags)+","+str(border)+")" )
-        # if 
-
       
     def updateTreeList(self, tree):
         """Tree List on Left Side - Dynamic to Files"""
@@ -187,7 +179,13 @@ class Frame(wx.Frame):
             self.Destroy()
 
     def LoadBank(self, event):
-        self.UpdateQuestions()
+        # The self.qb_load() here will allow
+        # us to load the question bank before updating
+        # the drawing area to include the information.
+        # self.qb.load()
+        if self.questions_area:
+            self.questions_area.Destroy()
+        self.InitializeQuestionArea()
         
     def InitializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
@@ -198,19 +196,17 @@ class Frame(wx.Frame):
         self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
         self.questions_area.SetSizer(self.questions_area_sizer)
         
-        
-        for i in range(15):
-            b_open = wx.Button(self.questions_area, wx.ID_ANY, "Open")
-        self.questions_area.Layout()
+        self.UpdateQuestions()
         self.mainpanel.Layout()
         
     def UpdateQuestions(self):
-        if self.questions_area:
-            self.questions_area.Destroy()
-            self.InitializeQuestionArea()
-        # for question in self.qb.questions.keys():
-            # self.button = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 25*question))
-            # self.button.Bind(wx.EVT_BUTTON, self.ScrollBottom)
+        # This is just a temporary test to see if I can dynamically add things
+        # and it appears to work.  Next we need to actually get the student answers.
+        for question in self.qb.questionsDict[1].keys():
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(self.qb.questionsDict[1][question]['question']) )
+            self.questions_area_sizer.Add(label)
+            answerbox = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(self.qb.questionsDict[1][question]['answer']) )
+            self.questions_area_sizer.Add(answerbox)
 
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)

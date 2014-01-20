@@ -33,14 +33,14 @@ class Question_Bank():
     def save(self,filename="lab1.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
         f = open(filename, "wb")
-        pickle.dump(self.lab, f , protocol=-1)
+        # pickle.dump(self.lab, f , protocol=-1)
         pickle.dump(self.questions, f , protocol=-1)
         f.close()
         
     def load(self,filename="lab1.dat"):
         """ Load our data back from a file we've already created. """
         f = open(filename, "rb")
-        self.lab = pickle.load(f)
+        # self.lab = pickle.load(f)
         self.questions = pickle.load(f)
         f.close()
 
