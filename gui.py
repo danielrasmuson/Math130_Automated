@@ -1,11 +1,11 @@
-import wx, sys, wx.lib.inspection
+import wx, wx.lib.inspection
 
 class Frame(wx.Frame):
     def __init__(self):
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
         # happen to the stuff in the frames.
-        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600))#, style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX)
+        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
         # Utility stuff in order to get a menu
@@ -78,13 +78,13 @@ class Frame(wx.Frame):
         # This is the hardest part.  This is where the
         # questions and the scrollable area is going to be.
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 1000, 1000)
+        self.questions_area.SetScrollbars(1, 1, 560, 1000)
         self.questions_area.EnableScrolling(True,True)
         self.right_sizer.Add(self.questions_area, 1, wx.GROW)
                 
         self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
         self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
-        self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(900, 900))
+        self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(470, 900))
         self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
         
         # These contain all of our buttons along the bottom of the app.
@@ -97,16 +97,27 @@ class Frame(wx.Frame):
         self.bottom_button_sizer.Add(self.b_close, 1, wx.ALL, 5)
         
         self.b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
+        self.b_prev.Bind(wx.EVT_BUTTON, self.PreviousButton)
         self.bottom_button_sizer.Add(self.b_prev, 1,wx.ALL,5)
 
         self.b_next = wx.Button(self.mainpanel, wx.ID_ANY, "Next")
+        self.b_next.Bind(wx.EVT_BUTTON, self.NextButton)
         self.bottom_button_sizer.Add(self.b_next, 1,wx.ALL,5)
+        
 
         
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
+        
+    # I was looking at an easy way to make buttons but it looks like it might be worse
+    # than just doing the three lines of code above to get stuff done.
+    # self.EasyButtonAdd("test","bottom_button_sizer","Test",border=5)
+    # def EasyButtonAdd(self, buttonname, sizer, label, border=0, proportion=0, flags=wx.ALL, function=False):
+        # exec("self."+str(buttonname)+" = wx.Button(self.mainpanel, wx.ID_ANY, \""+str(label)+"\")")
+        # exec("self."+str(sizer) + ".Add(self."+str(buttonname) + ", "+str(proportion)+", " + str(flags)+","+str(border)+")" )
+        # if 
         
     def UpdateTreeList(self, tree):
         # Just some boring default tree data for testing purposes.
@@ -130,15 +141,22 @@ class Frame(wx.Frame):
     def OnSelChanged(self, event):
         # Get our item that updated
         item = event.GetItem()
-        # Find the item text from the tree and update the student information
-        self.UpdateStudentInformation(self.lab_tree_list.GetItemText(item), 1234, 8)
-        # Eventually update student response questions here:
+        if "Section" not in self.lab_tree_list.GetItemText(item):
+            # Find the item text from the tree and update the student information
+            self.UpdateStudentInformation(self.lab_tree_list.GetItemText(item), 1234, 8)
+            # Eventually update student response questions here:
         
     def UpdateStudentInformation(self, user, techid, section):
         self.student_info_label.SetLabel("Username: " + str(user) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
         
     def ShowInspector(self, event):
         wx.lib.inspection.InspectionTool().Show()
+        
+    def PreviousButton(self, event):
+        print self.lab_tree_list.GetSelection()
+
+    def NextButton(self, event):
+        pass
         
     def ScrollTop(self,event):
         self.questions_area.Scroll(1,1)
