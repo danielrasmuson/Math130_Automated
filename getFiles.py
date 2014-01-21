@@ -17,4 +17,4 @@ def getDocxsStr(subFolder):
     return docxList
 
 if __name__ == "__main__":
-    print getDocxsStr("Examples")[0]
+    print getDocxsStr("Examples\\test")[0]

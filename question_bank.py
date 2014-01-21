@@ -11,8 +11,7 @@ class Question_Bank():
     def __init__(self):
         # Some default stuff to get testing with.
         # @TODO turn this into a dictionary
-        self.lab = 1
-        self.questions = {
+        self.questionsDict = {1:{
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
         3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?"},
@@ -26,6 +25,10 @@ class Question_Bank():
         11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods."},
         12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","aText":-1}
         }
+        }
+
+    def getQuestionsDict(self):
+        return self.questionsDict
 
     def save(self,filename="lab1.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
@@ -43,12 +46,14 @@ class Question_Bank():
 
     def add_question(self,question_number, question, answer, substring1="", substring2=""):
         """ A simple way to add questions to the dictionary. """
-        self.questions[question_number] = {"question":question,"answer":answer}
+        #Note this is assuming lab 1
+        self.questionsDict[1][question_number] = {"question":question,"answer":answer}
         
     def print_questions_to_console(self):
         """ Just a quick test function to print all the data to the console """
-        for key in self.questions.keys():
-            print "Question " + str(key) + ": " + self.questions[key]["question"] + " " + self.questions[key]["answer"]
+        #Note this is assuming lab 1
+        for key in self.questionsDict[1].keys():
+            print "Question " + str(key) + ": " + self.questionsDict[1][key]["question"] + " " + self.questionsDict[1][key]["answer"]
 
    
 if __name__ == "__main__":

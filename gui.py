@@ -4,14 +4,13 @@ from question_bank import *
 
 class Frame(wx.Frame):
     def __init__(self):
-        self.assignmentStack = getAssignmentStack("Examples\\test")
-
-
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
         # happen to the stuff in the frames.
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+        self.assignmentStack = getAssignmentStack("Examples\\test")
 
         # Utility stuff in order to get a menu
         # and a status bar in the bottom for the future.

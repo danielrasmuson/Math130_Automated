@@ -4,6 +4,62 @@
 		"selected_items":
 		[
 			[
+				"dco",
+				"documentStr"
+			],
+			[
+				"set",
+				"setQuestionsDict"
+			],
+			[
+				"ques",
+				"questionsDict"
+			],
+			[
+				"ass",
+				"assignmentStack"
+			],
+			[
+				"get",
+				"getSection"
+			],
+			[
+				"st",
+				"studentAssign"
+			],
+			[
+				"getSt",
+				"getStudentInfo"
+			],
+			[
+				"answer",
+				"answerList"
+			],
+			[
+				"answers",
+				"answers"
+			],
+			[
+				"ans",
+				"answer"
+			],
+			[
+				"an",
+				"answer"
+			],
+			[
+				"que",
+				"Question_Bank"
+			],
+			[
+				"lab1",
+				"lab1Dan"
+			],
+			[
+				"docx",
+				"docxList"
+			],
+			[
 				"p",
 				"pButton  (variable)"
 			],
@@ -24,18 +80,6 @@
 				"nextAssignment"
 			],
 			[
-				"answer",
-				"answerStr"
-			],
-			[
-				"ans",
-				"assignmentStack"
-			],
-			[
-				"ass",
-				"assignmentStack"
-			],
-			[
 				"as",
 				"assignmentStack"
 			],
@@ -54,18 +98,6 @@
 			[
 				"assi",
 				"assignments"
-			],
-			[
-				"set",
-				"setDocumentText"
-			],
-			[
-				"an",
-				"answers"
-			],
-			[
-				"get",
-				"getAnswers"
 			],
 			[
 				"create",
@@ -411,6 +443,18 @@
 		"selected_items":
 		[
 			[
+				"del",
+				"File: Delete"
+			],
+			[
+				"d",
+				"File: Delete"
+			],
+			[
+				"loca",
+				"Local History: Browse"
+			],
+			[
 				"close",
 				"Project: Close"
 			],
@@ -433,10 +477,6 @@
 			[
 				"keyb",
 				"Preferences: Key Bindings - User"
-			],
-			[
-				"del",
-				"File: Delete"
 			],
 			[
 				"upper",
@@ -473,10 +513,6 @@
 			[
 				"disa",
 				"Package Control: Disable Package"
-			],
-			[
-				"d",
-				"File: Delete"
 			],
 			[
 				"de",
@@ -811,7 +847,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 386.0
+		"width": 522.0
 	},
 	"console":
 	{
@@ -834,11 +870,21 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
+		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/docstring.sublime-snippet",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/s4brnx5y.c5a.txt",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/yj00aj5c.uif.txt",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/.gitignore",
+		"/C/Users/Daniel/.sublime/history/C/Users/Daniel/Documents/GitHub/Math130_Automated/2014-01-18_06.08.52.question_bank.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Frame1.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/App1.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/readme.txt",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Lab_2_Assignment_Key.docx",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/test_word_data_extractor.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/result.txt",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/passwordForEditing.txt",
@@ -951,17 +997,7 @@
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/js/header.js",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/header.html",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Asset/frozenage/index.html",
-		"/C/Users/Daniel/Desktop/TimeSheet/timeSheet.py",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/css/enter.css",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/html/enter.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/css/donate.css",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/djangoTesting.py",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/css/aboutALS.css",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/aboutALS.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/css/donate.css",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/details.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/.gitignore",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/deploy/html/details.html"
+		"/C/Users/Daniel/Desktop/TimeSheet/timeSheet.py"
 	],
 	"find":
 	{
@@ -980,6 +1016,39 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"[labN]",
+			"[1]",
+			"1",
+			"questions[k]",
+			"qb",
+			"k",
+			"red",
+			"UpdateStudentInformation",
+			"UpdateTreeList",
+			"a",
+			"Ben",
+			"ben",
+			"    def ",
+			"def",
+			"return",
+			"=",
+			" =",
+			"set",
+			"(self",
+			"self",
+			"name",
+			"information",
+			"name",
+			"\\n",
+			"name",
+			"answer",
+			"lab1Dan",
+			"after",
+			"answer",
+			"infile",
+			"getFiles",
+			"get_files",
+			"UpdateStudentInformation",
 			"15.",
 			"aText",
 			"atext",
@@ -1074,40 +1143,7 @@
 			".",
 			"^",
 			"answersDict",
-			"answerDict",
-			"answerList",
-			"answersList",
-			"newparatextlist",
-			"form",
-			"+",
-			"bracketTest",
-			"str(",
-			"f):",
-			"self",
-			"getBrackets",
-			"allCSS",
-			"resultList",
-			"poolList",
-			"getBracket",
-			"getPool",
-			"print",
-			"poolsString",
-			"fullText",
-			"file",
-			"print",
-			"getDescription",
-			"tourInformation",
-			"brackets",
-			"tourninfo",
-			"pool",
-			"^",
-			"^$",
-			"^&",
-			"#",
-			"fullText",
-			"Hat Tournament - 10:30pm - 6:00am ",
-			"Hat Tournament",
-			"Hat Tournamen"
+			"answerDict"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1209,16 +1245,28 @@
 		"selected_items":
 		[
 			[
+				"ques",
+				"question_bank.py"
+			],
+			[
+				"gui",
+				"gui.py"
+			],
+			[
+				"get",
+				"getFiles.py"
+			],
+			[
+				"que",
+				"question_bank.py"
+			],
+			[
 				"run",
 				"run.py"
 			],
 			[
 				"tkint",
 				"tkinterPratice.py"
-			],
-			[
-				"gui",
-				"guiWindow.py"
 			],
 			[
 				"ru",
@@ -1461,10 +1509,6 @@
 				"RasmusonDZoo3SQL.txt"
 			],
 			[
-				"ques",
-				"questions.txt"
-			],
-			[
 				"zoo",
 				"Zoo+Questions+3.doc"
 			],
@@ -1546,7 +1590,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 174.0,
+	"side_bar_width": 160.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
