@@ -7,9 +7,6 @@ class Frame(wx.Frame):
     qb = Question_Bank()
     initialized = False
     def __init__(self):
-        # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
-        # the window isn't resizeable so we dont' see horrible things
-        # happen to the stuff in the frames.
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
@@ -158,7 +155,7 @@ class Frame(wx.Frame):
             self.Destroy()
 
     def LoadBank(self, event):
-        dlg = wx.FileDialog(self, "Choose a lab file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+        dlg = wx.FileDialog(self, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
         dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
         if dlg.ShowModal() == wx.ID_OK:
             self.qb.load(dlg.GetPath())
@@ -181,18 +178,18 @@ class Frame(wx.Frame):
         self.student_answer_boxes = {}
 
         for qNum in self.qb.getQuestionsDict().keys():
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"], self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
 
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-            correct_answer = wx.StaticText(self.questions_area, wx.ID_ANY, str(self.qb.getQuestionsDict()[qNum]["answer"]) )
             student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="" )
             self.student_answer_boxes[qNum] = student_answer
 
-            q_sizer.Add(correct_answer, 0, wx.ALL, 5)
-            q_sizer.Add(student_answer, 0)
-            self.questions_area_sizer.Add(q_sizer)
+            q_sizer.Add(student_answer, 1, wx.GROW|wx.TOP|wx.RIGHT, 5)
+            self.questions_area_sizer.Add(q_sizer, 0, wx.GROW)
+            if qNum != self.qb.getQuestionsDict().keys()[-1]:
+                self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
         # I've got this initialized variable here to keep track
         # of whether we should warn about loading the question bank
@@ -208,7 +205,7 @@ class Frame(wx.Frame):
             if str(self.qb.getQuestionsDict()[qNum]['answer']) != str(studentQD[qNum]):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
             else:
-                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColor)
 
     def OnOpen(self, event):
         # I get the current working directory + the examples test stuff
@@ -219,7 +216,6 @@ class Frame(wx.Frame):
             self.assignmentStack = getAssignmentStack(dlg.GetPath())
             # Call our initial tree list build
             self.updateTreeList(self.lab_tree_list)
-            # self.filemenu.Enable(wx.OPEN,False)
         dlg.Destroy()
 
     def OnAbout(self, event):

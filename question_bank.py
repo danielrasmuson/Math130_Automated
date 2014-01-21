@@ -35,7 +35,7 @@ class Question_Bank():
         # pickle.dump(self.lab, f , protocol=-1)
         pickle.dump(self.questionsDict, f , protocol=-1)
         f.close()
-        
+
     def load(self,filename="lab1.dat"):
         """ Load our data back from a file we've already created. """
         f = open(filename, "rb")
@@ -47,14 +47,14 @@ class Question_Bank():
         """ A simple way to add questions to the dictionary. """
         #Note this is assuming lab 1
         self.questionsDict[1][question_number] = {"question":question,"answer":answer}
-        
+
     def print_questions_to_console(self):
         """ Just a quick test function to print all the data to the console """
         #Note this is assuming lab 1
         for key in self.questionsDict[1].keys():
             print "Question " + str(key) + ": " + self.questionsDict[1][key]["question"] + " " + self.questionsDict[1][key]["answer"]
 
-   
+
 if __name__ == "__main__":
     qb = Question_Bank()
     qb.save()

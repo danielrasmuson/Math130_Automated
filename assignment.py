@@ -9,7 +9,7 @@ def getStudentAnswersFromLab(qDict, lab):
     for qNum in qDict.keys():
         # @TODO need some error handling on these indexes
         start = lab.index(qDict[qNum]["question"])
-        start += len(qDict[qNum]["question"]) # to not include question 
+        start += len(qDict[qNum]["question"]) # to not include question
 
         if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
             end = -1
@@ -28,13 +28,13 @@ def getStudentAnswersFromLab(qDict, lab):
 
 
 def getStudentInfo(lab, lWord):
-    """Give the lab str and word you want 
-    (name|section) 
+    """Give the lab str and word you want
+    (name|section)
     it will return the corresponding information"""
     info = ""
     for line in lab.split("\r"):
         if lWord in line.lower():
-            info = line.split(":")[1].strip()
+            info = line.split(":")[1].strip().replace("_","")
     return info
 
 
