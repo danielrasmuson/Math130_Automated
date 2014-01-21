@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import win32com.client as win32
 import os,glob
-os.system('cls' if os.name=='nt' else 'clear')
+# os.system('cls' if os.name=='nt' else 'clear')
 
 def getDocxsStr(subFolder):
     """Given a directory it will return a list of string 

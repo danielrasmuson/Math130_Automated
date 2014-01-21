@@ -3,7 +3,6 @@ from question_bank import Question_Bank
 import re
 
 def getStudentAnswersFromLab(qDict, lab):
-    answersList = []
     for k in qDict.keys():
         # @TODO need some error handling on these indexs
         start = lab.index(qDict[k]["question"])
@@ -14,13 +13,15 @@ def getStudentAnswersFromLab(qDict, lab):
         else:
             end = lab.index(qDict[k]["aText"])
 
+        #NOTE - I'm removing strange symbols here
+        # might remove squared and stuff from answers
         answerUnicode = lab[start:end]
         answer = ""
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        answersList.append(answer)
         qDict[k]["sAnswer"] = answer
+
     return qDict
 
 
@@ -38,10 +39,7 @@ def getStudentInfo(lab, lWord):
 class assignment():
     def __init__(self, documentStr):
         self.documentStr = documentStr
-        # self.filePath = filePath
-        # self.document = self.setDocumentStr()
 
-        # studentInfo, answersList = self.setAandInfo()
     def setName(self, name):
         self.name = name
 

@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"studnet",
+				"studentQD"
+			],
+			[
+				"sA",
+				"sAnswer"
+			],
+			[
+				"stu",
+				"studentQD"
+			],
+			[
+				"ans",
+				"answerList"
+			],
+			[
+				"answer",
+				"answerList"
+			],
+			[
 				"dco",
 				"documentStr"
 			],
@@ -32,16 +52,8 @@
 				"getStudentInfo"
 			],
 			[
-				"answer",
-				"answerList"
-			],
-			[
 				"answers",
 				"answers"
-			],
-			[
-				"ans",
-				"answer"
 			],
 			[
 				"an",
@@ -439,9 +451,13 @@
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 210.0,
 		"selected_items":
 		[
+			[
+				"close",
+				"Project: Close"
+			],
 			[
 				"del",
 				"File: Delete"
@@ -453,10 +469,6 @@
 			[
 				"loca",
 				"Local History: Browse"
-			],
-			[
-				"close",
-				"Project: Close"
 			],
 			[
 				"math",
@@ -847,7 +859,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 522.0
+		"width": 386.0
 	},
 	"console":
 	{
@@ -871,9 +883,10 @@
 	"file_history":
 	[
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
 		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/docstring.sublime-snippet",
@@ -996,8 +1009,7 @@
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/enter.html",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/js/header.js",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/header.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Asset/frozenage/index.html",
-		"/C/Users/Daniel/Desktop/TimeSheet/timeSheet.py"
+		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Asset/frozenage/index.html"
 	],
 	"find":
 	{
@@ -1016,6 +1028,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"answersList",
+			"        ",
+			"qb.questionsDict[labN]",
+			"answers",
 			"[labN]",
 			"[1]",
 			"1",
@@ -1139,11 +1155,7 @@
 			"self.QUIT",
 			"self",
 			"say_hi",
-			"tkinter",
-			".",
-			"^",
-			"answersDict",
-			"answerDict"
+			"tkinter"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1245,16 +1257,20 @@
 		"selected_items":
 		[
 			[
-				"ques",
-				"question_bank.py"
+				"get",
+				"getFiles.py"
 			],
 			[
 				"gui",
 				"gui.py"
 			],
 			[
-				"get",
-				"getFiles.py"
+				"as",
+				"assignment.py"
+			],
+			[
+				"ques",
+				"question_bank.py"
 			],
 			[
 				"que",
