@@ -9,14 +9,16 @@ def getDocxsStr(subFolder):
     word = win32.gencache.EnsureDispatch('Word.Application')
     word.Visible = 0
     docxList = []
+    fileList = []
     for filePath in glob.glob(subFolder+"\*.docx"):
         if filePath.find(":") == -1:
             filePath = os.getcwd()+'\\'+filePath
         doc = word.Documents.Open(filePath)
         string = doc.Content.Text.encode('utf8')
         docxList.append(string)
+        fileList.append(filePath)
     word.Application.Quit(-1)
-    return docxList
+    return fileList,docxList
 
 if __name__ == "__main__":
     print getDocxsStr("Examples\\test")[0]

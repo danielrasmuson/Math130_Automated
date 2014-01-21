@@ -54,6 +54,9 @@ class assignment():
     def setStudentDictionary(self, qD):
         self.studentQD = qD
 
+    def setStudentFilepath(self, path):
+        self.filePath = path
+
     def getName(self):
         return self.name
 
@@ -70,10 +73,13 @@ class assignment():
         ex: self.studentQD[Question Number][Student Answer]"""
         return self.studentQD
 
+    def getStudentFilepath(self):
+        return self.filePath
+
 
 def getAssignmentStack(subPath):
     """Returns a list assignments"""
-    labs = getDocxsStr(subPath)
+    fileList,labs = getDocxsStr(subPath)
 
     qb = Question_Bank()
     assignmentStack = {}
@@ -83,12 +89,14 @@ def getAssignmentStack(subPath):
         section = getStudentInfo(labs[i], "section")
         studentQD = getStudentAnswersFromLab(qb.getQuestionsDict(), labs[i])
 
+
         assignObj = assignment(labs[i])
 
         #assign the attributes
         assignObj.setName(name)
         assignObj.setSection(section)
         assignObj.setStudentDictionary(studentQD)
+        assignObj.setStudentFilepath(fileList[i])
 
         assignmentStack[name] = assignObj
 

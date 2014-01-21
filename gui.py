@@ -88,7 +88,7 @@ class Frame(wx.Frame):
 
         self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
         self.b_open.SetToolTipString("Opens the Document Inspector (for now).")
-        self.b_open.Bind(wx.EVT_BUTTON, self.ShowInspector)
+        self.b_open.Bind(wx.EVT_BUTTON, self.openDocument)
         self.bottom_button_sizer.Add(self.b_open, 0,wx.ALL,5)
 
         self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
@@ -124,8 +124,13 @@ class Frame(wx.Frame):
     def UpdateStudentInformation(self, name, section, techid):
         self.student_info_label.SetLabel("Name: " + str(name) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
 
-    def ShowInspector(self, event):
-        wx.lib.inspection.InspectionTool().Show()
+    def openDocument(self, event):
+        current_item = self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection())
+        if "Section" not in current_item:
+            print "start \""+self.assignmentStack[current_item].getStudentFilepath()+"\""
+            os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
+        # wx.lib.inspection.InspectionTool().Show()
+        
 
     def PreviousButton(self, event):
         current = self.lab_tree_list.GetSelection()
