@@ -1,6 +1,5 @@
 import wx, wx.lib.inspection
 from assignment import getAssignmentStack
-from question_bank import *
 
 class Frame(wx.Frame):
     def __init__(self):
@@ -78,13 +77,6 @@ class Frame(wx.Frame):
         self.student_info_container_sizer.Add(self.student_info_label)
         self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
 
-
-
-        # self.tbutton = wx.Button(self.questions_area, -1, "Scroll Bottom", pos=(0, 0))
-        # self.tbutton.Bind(wx.EVT_BUTTON, self.ScrollBottom)
-        # self.bbutton = wx.Button(self.questions_area, -1, "Scroll Top", pos=(470, 900))
-        # self.bbutton.Bind(wx.EVT_BUTTON, self.ScrollTop)
-
         # These contain all of our buttons along the bottom of the app.
         self.b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
         self.b_prev.SetToolTipString("Selects the previous student of the current section.")
@@ -110,8 +102,7 @@ class Frame(wx.Frame):
 
         # This is the hardest part.  This is where the
         # questions and the scrollable area is going to be.
-        self.qb = Question_Bank()
-        self.InitializeQuestionArea()
+        # self.InitializeQuestionArea()
 
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
@@ -144,6 +135,7 @@ class Frame(wx.Frame):
             # # @TODO get tech id
             self.UpdateStudentInformation(name, section, 1234)
             self.UpdateQuestions(name)
+            self.mainpanel.Layout()
 
     def UpdateStudentInformation(self, name, section, techid):
         self.student_info_label.SetLabel("Name: " + str(name) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
@@ -179,10 +171,6 @@ class Frame(wx.Frame):
             self.Destroy()
 
     def LoadBank(self, event):
-        # The self.qb_load() here will allow
-        # us to load the question bank before updating
-        # the drawing area to include the information.
-        # self.qb.load()
         if self.questions_area:
             self.questions_area.Destroy()
 
@@ -195,23 +183,19 @@ class Frame(wx.Frame):
         self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
         self.questions_area.SetSizer(self.questions_area_sizer)
 
-        # self.UpdateQuestions()
-        self.mainpanel.Layout()
+        self.questions_area.Layout()
 
     def UpdateQuestions(self, name):
-        # This is just a temporary test to see if I can dynamically add things
-        # and it appears to work.  Next we need to actually get the student answers.
-
-        # see what name the information box is currently displaying and shows that student
-        # this requires that the infromation box be created prior to this
+        try:
+            if self.questions_area:
+                self.questions_area.Destroy()
+        except:
+            pass
+        self.InitializeQuestionArea()
+        # This gets our students answers and the dictionary we're comparing their answer to.
         for assignment in self.assignmentStack:
-            print assignment.getStudentDictionary()
             if assignment.getName() == name:
                 studentQD = assignment.getStudentDictionary()
-                # print name
-                # print studentQD
-
-        # studentQD = self.assignmentStack[0].getStudentDictionary()
         for question in studentQD.keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(studentQD[question]['question']) )
             self.questions_area_sizer.Add(label)
