@@ -1,14 +1,17 @@
 from getFiles import getDocxsStr
 from question_bank import Question_Bank
-import re
 
 def getStudentAnswersFromLab(qDict, lab):
+    # I changed this to using a new dictionary and only returning that dictionary
+    # because I'd rather have that so we can keep the two different dictionaries
+    # separate.  Otherwise there was a lot of overlap in the two qDict and studentDict.
+    studentDict = {}
     for qNum in qDict.keys():
-        # @TODO need some error handling on these indexs
+        # @TODO need some error handling on these indexes
         start = lab.index(qDict[qNum]["question"])
         start += len(qDict[qNum]["question"]) # to not include question 
 
-        if qDict[qNum]["aText"] == -1: # if its the last questoin it doesnt have aText
+        if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
             end = -1
         else:
             end = lab.index(qDict[qNum]["aText"])
@@ -20,8 +23,8 @@ def getStudentAnswersFromLab(qDict, lab):
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        qDict[qNum]["sAnswer"] = answer
-    return qDict
+        studentDict[qNum] = answer
+    return studentDict
 
 
 def getStudentInfo(lab, lWord):
@@ -70,17 +73,15 @@ class assignment():
 
 def getAssignmentStack(subPath):
     """Returns a list assignments"""
-    labN = 1
     labs = getDocxsStr(subPath)
-    qBL = [] #the problem was they all had the same qBL instance
+
+    qb = Question_Bank()
     assignmentStack = {}
     for i in range(len(labs)):
-        qBL.append(Question_Bank()) #so I just create instance for each dictionary
-
         #create the attributes for the new assignment object
         name = getStudentInfo(labs[i], "name")
         section = getStudentInfo(labs[i], "section")
-        studentQD = getStudentAnswersFromLab(qBL[i].getQuestionsDict()[labN], labs[i])
+        studentQD = getStudentAnswersFromLab(qb.getQuestionsDict(), labs[i])
 
         assignObj = assignment(labs[i])
 
@@ -95,4 +96,3 @@ def getAssignmentStack(subPath):
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test")
-    print assignmentStack

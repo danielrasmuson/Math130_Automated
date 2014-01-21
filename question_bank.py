@@ -11,7 +11,7 @@ class Question_Bank():
     def __init__(self):
         # Some default stuff to get testing with.
         # @TODO turn this into a dictionary
-        self.questionsDict = {1:{
+        self.questionsDict = {
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
         3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?"},
@@ -25,7 +25,6 @@ class Question_Bank():
         11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods."},
         12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","aText":-1}
         }
-        }
 
     def getQuestionsDict(self):
         return self.questionsDict
@@ -34,14 +33,14 @@ class Question_Bank():
         """ Function to allow us to save multiple things to one file that is specified while saving. """
         f = open(filename, "wb")
         # pickle.dump(self.lab, f , protocol=-1)
-        pickle.dump(self.questions, f , protocol=-1)
+        pickle.dump(self.questionsDict, f , protocol=-1)
         f.close()
         
     def load(self,filename="lab1.dat"):
         """ Load our data back from a file we've already created. """
         f = open(filename, "rb")
         # self.lab = pickle.load(f)
-        self.questions = pickle.load(f)
+        self.questionsDict = pickle.load(f)
         f.close()
 
     def add_question(self,question_number, question, answer, substring1="", substring2=""):
@@ -58,5 +57,6 @@ class Question_Bank():
    
 if __name__ == "__main__":
     qb = Question_Bank()
+    qb.save()
     qb.add_question(15,"asdf","lkasdj")
     qb.print_questions_to_console()

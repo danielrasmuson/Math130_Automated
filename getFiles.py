@@ -10,7 +10,9 @@ def getDocxsStr(subFolder):
     word.Visible = 0
     docxList = []
     for filePath in glob.glob(subFolder+"\*.docx"):
-        doc = word.Documents.Open(os.getcwd()+'\\'+filePath)
+        if filePath.find(":") == -1:
+            filePath = os.getcwd()+'\\'+filePath
+        doc = word.Documents.Open(filePath)
         string = doc.Content.Text.encode('utf8')
         docxList.append(string)
     word.Application.Quit(-1)

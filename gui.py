@@ -1,8 +1,11 @@
-import wx, wx.lib.inspection
+import wx, wx.lib.inspection, os, time
 from assignment import getAssignmentStack
+from question_bank import *
 from wx.lib.wordwrap import wordwrap
 
 class Frame(wx.Frame):
+    qb = Question_Bank()
+    initialized = False
     def __init__(self):
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
@@ -10,26 +13,25 @@ class Frame(wx.Frame):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
-        self.assignmentStack = getAssignmentStack("Examples\\test")
-
         # Utility stuff in order to get a menu
         # and a status bar in the bottom for the future.
-        menuBar = wx.MenuBar()
+        self.menuBar = wx.MenuBar()
 
-        menu = wx.Menu()
-        m_open = menu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
-        m_exit = menu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
-        self.Bind(wx.EVT_MENU, self.LoadBank, m_open)
-        self.Bind(wx.EVT_MENU, self.OnClose, m_exit)
-        menuBar.Append(menu, "&File")
+        self.filemenu = wx.Menu()
+        self.m_open = self.filemenu.Append(wx.OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
+        self.m_load = self.filemenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
+        self.m_exit = self.filemenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
+        self.Bind(wx.EVT_MENU, self.OnOpen, self.m_open)
+        self.Bind(wx.EVT_MENU, self.LoadBank, self.m_load)
+        self.Bind(wx.EVT_MENU, self.OnClose, self.m_exit)
+        self.menuBar.Append(self.filemenu, "&File")
 
-        menu = wx.Menu()
-        m_about = menu.Append(wx.ID_ABOUT, "&About", "Information about this program")
-        self.Bind(wx.EVT_MENU, self.OnAbout, m_about)
-        menuBar.Append(menu, "&Help")
+        self.helpmenu = wx.Menu()
+        self.m_about = self.helpmenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
+        self.Bind(wx.EVT_MENU, self.OnAbout, self.m_about)
+        self.menuBar.Append(self.helpmenu, "&Help")
 
-        self.SetMenuBar(menuBar)
-
+        self.SetMenuBar(self.menuBar)
 
         # Style=0 makes it so no resize handle shows up
         # in the status bar
@@ -46,12 +48,10 @@ class Frame(wx.Frame):
         self.tree_list_sizer = wx.BoxSizer(wx.VERTICAL)
         self.right_sizer = wx.BoxSizer(wx.VERTICAL)
 
-
         # This is our outer most sizer and its components.
         self.main_sizer.Add(self.top_sizer, 1, wx.GROW)
         self.main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
         self.main_sizer.Add(self.bottom_button_sizer, 0, wx.GROW)
-
 
         # Our top sizer contains the left hand tree list and
         # the right hand side list for the student information
@@ -65,16 +65,14 @@ class Frame(wx.Frame):
         self.lab_tree_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Student List')
         self.tree_list_sizer.Add(self.lab_tree_label,0,wx.ALIGN_CENTER)
         self.tree_list_sizer.Add(self.lab_tree_list, 1,wx.GROW)
-
-        # Call our initial tree list build
-        self.updateTreeList(self.lab_tree_list)
-
+        self.tree_root = self.lab_tree_list.AddRoot("Lab Sections")
+        self.tree_rootDict = {}
 
         # This is the right frame containing the
         # student ID & the name etc.
         self.student_info_container = wx.StaticBox(self.mainpanel, label='Current Student Information')
         self.student_info_container_sizer = wx.StaticBoxSizer(self.student_info_container, wx.VERTICAL)
-        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY) #'Username: Anthony Anderson\nSection: 5\nTech ID: 123456789'
+        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Username: \nSection: \nTech ID: ')
         self.student_info_container_sizer.Add(self.student_info_label)
         self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
 
@@ -101,10 +99,6 @@ class Frame(wx.Frame):
         self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
         self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
 
-        # This is the hardest part.  This is where the
-        # questions and the scrollable area is going to be.
-        # self.InitializeQuestionArea()
-
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
         self.mainpanel.SetSizer(self.main_sizer)
@@ -112,26 +106,23 @@ class Frame(wx.Frame):
 
     def updateTreeList(self, tree):
         """Tree List on Left Side - Dynamic to Files"""
-        tree_root = tree.AddRoot("Lab Sections")
-        rootDict = {}
         for name in self.assignmentStack.keys():
             sec = self.assignmentStack[name].getSection()
-            if sec not in rootDict.keys(): #creats root section if there isnt one
-                rootDict[sec] = tree.AppendItem(tree_root, "Section "+sec)
-            tree.AppendItem(rootDict[sec], name) #appends name onto section
+            if sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
+                self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
+            # if name not in self.
+            tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
 
     def OnSelChanged(self, event):
         # Get our item that updated
         item = event.GetItem()
         if "Section" not in self.lab_tree_list.GetItemText(item):
-            # Find the item text from the tree and update the student information
             name = self.lab_tree_list.GetItemText(item)
-            section = ""
             section = self.assignmentStack[name].getSection()
             # # @TODO get tech id
-            self.UpdateStudentInformation(name, section, 1234)
-            self.UpdateQuestions(name)
-            self.mainpanel.Layout()
+            self.UpdateStudentInformation(name, section, "Unknown")
+            if self.initialized:
+                self.UpdateQuestions(name)
 
     def UpdateStudentInformation(self, name, section, techid):
         self.student_info_label.SetLabel("Name: " + str(name) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
@@ -167,8 +158,16 @@ class Frame(wx.Frame):
             self.Destroy()
 
     def LoadBank(self, event):
-        if self.questions_area:
-            self.questions_area.Destroy()
+        dlg = wx.FileDialog(self, "Choose a lab file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+        dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
+        if dlg.ShowModal() == wx.ID_OK:
+            self.qb.load(dlg.GetPath())
+            try:
+                self.questions_area.Destroy()
+            except:
+                pass
+            self.InitializeQuestionArea()
+        dlg.Destroy()
 
     def InitializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
@@ -179,32 +178,49 @@ class Frame(wx.Frame):
         self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
         self.questions_area.SetSizer(self.questions_area_sizer)
 
-        self.questions_area.Layout()
+        self.student_answer_boxes = {}
 
-    def UpdateQuestions(self, name):
-        try:
-            if self.questions_area:
-                self.questions_area.Destroy()
-        except:
-            pass
-        self.InitializeQuestionArea()
-        # This gets our students answers and the dictionary we're comparing their answer to.
-        studentQD = self.assignmentStack[name].getStudentDictionary()
-        for question in studentQD.keys():
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(wordwrap(studentQD[question]['question'], self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
+        for qNum in self.qb.getQuestionsDict().keys():
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"], self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
-            
+
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            
-            answerbox = wx.StaticText(self.questions_area, wx.ID_ANY, str(studentQD[question]['answer']) )
-            answerbox2 = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value=str(studentQD[question]['sAnswer']) )
-            if str(studentQD[question]['answer']) != str(studentQD[question]['sAnswer']):
-                answerbox2.SetBackgroundColour("#FFAAAA")
-            
-            q_sizer.Add(answerbox, 0, wx.ALL, 5)
-            q_sizer.Add(answerbox2, 0)
+
+            correct_answer = wx.StaticText(self.questions_area, wx.ID_ANY, str(self.qb.getQuestionsDict()[qNum]["answer"]) )
+            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="" )
+            self.student_answer_boxes[qNum] = student_answer
+
+            q_sizer.Add(correct_answer, 0, wx.ALL, 5)
+            q_sizer.Add(student_answer, 0)
             self.questions_area_sizer.Add(q_sizer)
 
+        # I've got this initialized variable here to keep track
+        # of whether we should warn about loading the question bank
+        # when trying to select a student's responses.
+        self.initialized = True
+        self.mainpanel.Layout()
+
+    def UpdateQuestions(self, name):
+        # This gets our students answers and the dictionary we're comparing their answer to.
+        studentQD = self.assignmentStack[name].getStudentDictionary()
+        for qNum in studentQD.keys():
+            self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
+            if str(self.qb.getQuestionsDict()[qNum]['answer']) != str(studentQD[qNum]):
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+            else:
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+
+    def OnOpen(self, event):
+        # I get the current working directory + the examples test stuff
+        # so that while testing it'll default to our test directory.
+        # Later we can navigate anywhere we want and cut that part.
+        dlg = wx.DirDialog(self, "Choose a directory:",os.getcwd()+"\\Examples\\test")
+        if dlg.ShowModal() == wx.ID_OK:
+            self.assignmentStack = getAssignmentStack(dlg.GetPath())
+            # Call our initial tree list build
+            self.updateTreeList(self.lab_tree_list)
+            # self.filemenu.Enable(wx.OPEN,False)
+        dlg.Destroy()
 
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
