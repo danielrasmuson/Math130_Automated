@@ -140,10 +140,16 @@ class Frame(wx.Frame):
         item = event.GetItem()
         if "Section" not in self.lab_tree_list.GetItemText(item):
             # Find the item text from the tree and update the student information
-            self.UpdateStudentInformation(self.lab_tree_list.GetItemText(item), 1234, 8)
+            name = self.lab_tree_list.GetItemText(item)
+            section = ""
+            for assignment in self.assignmentStack:
+                if assignment.getName() == name:
+                    section = assignment.getSection()
+            # @TODO get tech id
+            self.UpdateStudentInformation(name, section, 1234)
             # Eventually update student response questions here:
         
-    def UpdateStudentInformation(self, user, techid, section):
+    def UpdateStudentInformation(self, user, section, techid):
         self.student_info_label.SetLabel("Username: " + str(user) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
         
     def ShowInspector(self, event):
