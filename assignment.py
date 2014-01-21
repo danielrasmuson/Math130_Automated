@@ -3,15 +3,15 @@ from question_bank import Question_Bank
 import re
 
 def getStudentAnswersFromLab(qDict, lab):
-    for k in qDict.keys():
+    for qNum in qDict.keys():
         # @TODO need some error handling on these indexs
-        start = lab.index(qDict[k]["question"])
-        start += len(qDict[k]["question"]) # to not include question 
+        start = lab.index(qDict[qNum]["question"])
+        start += len(qDict[qNum]["question"]) # to not include question 
 
-        if qDict[k]["aText"] == -1: # if its the last questoin it doesnt have aText
+        if qDict[qNum]["aText"] == -1: # if its the last questoin it doesnt have aText
             end = -1
         else:
-            end = lab.index(qDict[k]["aText"])
+            end = lab.index(qDict[qNum]["aText"])
 
         #NOTE - I'm removing strange symbols here
         # might remove squared and stuff from answers
@@ -20,8 +20,7 @@ def getStudentAnswersFromLab(qDict, lab):
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        qDict[k]["sAnswer"] = answer
-
+        qDict[qNum]["sAnswer"] = answer
     return qDict
 
 
@@ -79,18 +78,34 @@ def getAssignmentStack(subPath):
     for lab in labs:
         name = getStudentInfo(lab, "name")
         section = getStudentInfo(lab, "section")
-        studentQD = getStudentAnswersFromLab(qb.questionsDict[labN], lab)
+
+        questionsDict = qb.questionsDict[labN]
+        studentQD = getStudentAnswersFromLab(questionsDict, lab)
+        # print type(studentQD)
+        # print id(studentQD)
 
         studentAssign = assignment(lab)
         studentAssign.setName(name)
         studentAssign.setSection(section)
         studentAssign.setStudentDictionary(studentQD)
 
-
-
         assignmentStack.append(studentAssign)
 
+
+        # print "pointing to the same place in memory - same command three times" 
+        # print assignmentStack[0].getStudentDictionary()[12]["sAnswer"]
+        # print
+        # print studentQD
+
+
+    # print assignmentStack[0].getStudentDictionary()[12]["sAnswer"]
     return assignmentStack
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test")
+    for assignment in assignmentStack:
+        print id(assignment.getStudentDictionary())
+        # print assignment.getName()
+        # print assignment.getSection()
+        # print assignment.studentQD[12]["sAnswer"] #they should not all have the same final answer
+        pass

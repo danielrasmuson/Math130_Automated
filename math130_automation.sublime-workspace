@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"get",
+				"getStudentDictionary"
+			],
+			[
+				"ass",
+				"assignmentStack"
+			],
+			[
+				"name",
+				"getName  (function)"
+			],
+			[
+				"qd",
+				"qDict"
+			],
+			[
+				"assi",
+				"assignment"
+			],
+			[
+				"upd",
+				"UpdateQuestions"
+			],
+			[
+				"stude",
+				"studentQD"
+			],
+			[
+				"qu",
+				"questionsDict  (variable)"
+			],
+			[
 				"studnet",
 				"studentQD"
 			],
@@ -34,14 +66,6 @@
 			[
 				"ques",
 				"questionsDict"
-			],
-			[
-				"ass",
-				"assignmentStack"
-			],
-			[
-				"get",
-				"getSection"
 			],
 			[
 				"st",
@@ -106,10 +130,6 @@
 			[
 				"file",
 				"filePath"
-			],
-			[
-				"assi",
-				"assignments"
 			],
 			[
 				"create",
@@ -447,11 +467,47 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "gui.py",
+			"settings":
+			{
+				"buffer_size": 10396,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "assignment.py",
+			"settings":
+			{
+				"buffer_size": 3137,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Dan Rasmuson\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '6671.97'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '170.80'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': '$1,485.95'}}\nGreg Dosh\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '131.27'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '6671.97'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '5.43'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '170.80'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': '$10.10 is 36th term, but corresponds with the year 2046 the cost in 2047 should be $10.40.An auditorium has ten seats in the first row.  Each succeeding row has two more seats in an ever widening pattern.  The auditorium has a total of 20 rows of seats.  Use your Excel workbook to set up and answer these questions.'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': '$1,485.95'}}\nMatt Preim\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '1700000000'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '250'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': 'A tower fell on his head. Then it was all over.'}}\n\nDan Rasmuson\n8\nA tower fell on his head. Then it was all over.\nGreg Dosh\n7\nA tower fell on his head. Then it was all over.\nMatt Preim\n7\nA tower fell on his head. Then it was all over.\n>>> ",
+			"settings":
+			{
+				"buffer_size": 6600,
+				"line_ending": "Windows",
+				"name": "*REPL* [python]",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "Dan Rasmuson\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '6671.97'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '170.80'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': '$1,485.95'}}\nGreg Dosh\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '131.27'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '6671.97'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '5.43'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '170.80'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': '$10.10 is 36th term, but corresponds with the year 2046 the cost in 2047 should be $10.40.An auditorium has ten seats in the first row.  Each succeeding row has two more seats in an ever widening pattern.  The auditorium has a total of 20 rows of seats.  Use your Excel workbook to set up and answer these questions.'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': '$1,485.95'}}\nMatt Preim\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '1700000000'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '250'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': 'A tower fell on his head. Then it was all over.'}}\n\nDan Rasmuson\n8\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '1700000000'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '250'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': 'A tower fell on his head. Then it was all over.'}}\nGreg Dosh\n7\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '1700000000'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '250'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': 'A tower fell on his head. Then it was all over.'}}\nMatt Preim\n7\n{1: {'answer': '41.62', 'aText': 'What is the 80th term of this sequence', 'question': 'What is the 25th term of this sequence?', 'sAnswer': '41.62'}, 2: {'answer': '131.27', 'aText': 'What is the sum of the first through the 75th term of this sequence?', 'question': 'What is the 80th term of this sequence?', 'sAnswer': '15000'}, 3: {'answer': '4710.75', 'aText': 'What is the sum of the 10th through the 90th term of this sequence?', 'question': 'What is the sum of the first through the 75th term of this sequence?', 'sAnswer': '4710.75'}, 4: {'answer': '6671.91', 'aText': 'Recall the explicit formulas for the nth term of an arithmetic sequence', 'question': 'What is the sum of the 10th through the 90th term of this sequence?', 'sAnswer': '1700000000'}, 6: {'answer': '5.43', 'aText': 'What is the sum of the first 30 terms of this sequence?', 'question': 'What is the 15th term of this sequence?', 'sAnswer': '7.86'}, 7: {'answer': '170.80', 'aText': 'Recall the explicit formulas for the nth term of a geometric sequence', 'question': 'What is the sum of the first 30 terms of this sequence?', 'sAnswer': '250'}, 9: {'answer': '$10.40', 'aText': 'How many seats will there be in the', 'question': 'If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?', 'sAnswer': 'Im Not sure'}, 10: {'answer': '40', 'aText': 'How many total seats are there in the auditorium', 'question': 'How many seats will there be in the 16th row?', 'sAnswer': '40'}, 11: {'answer': '580', 'aText': 'In compound interest, time is divided into interest periods.', 'question': 'How many total seats are there in the auditorium?', 'sAnswer': '580'}, 12: {'answer': '$1,485.95', 'aText': -1, 'question': 'Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?', 'sAnswer': 'A tower fell on his head. Then it was all over.'}}\n>>> ",
+			"settings":
+			{
+				"buffer_size": 12603,
+				"line_ending": "Windows",
+				"name": "*REPL* [python]",
+				"scratch": true
+			}
+		}
 	],
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
 	{
-		"height": 210.0,
+		"height": 235.0,
 		"selected_items":
 		[
 			[
@@ -882,9 +938,9 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
@@ -1028,6 +1084,28 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"setStudentDictionary",
+			"getStudentAnswersFromLab",
+			"print",
+			"pring",
+			"rasmuson",
+			"k",
+			"print",
+			"UpdateQuestions",
+			"InitializeQuestionArea",
+			"UpdateQuestions",
+			"self.student_info_label",
+			"infor",
+			"LoadBank",
+			"InitializeQuestionArea",
+			"UpdateQuestions",
+			"cName",
+			"self.current",
+			"user",
+			"answerbox",
+			"self.qb.questionsDict[1]",
+			"4710.75",
+			"1",
 			"answersList",
 			"        ",
 			"qb.questionsDict[labN]",
@@ -1133,29 +1211,7 @@
 			"getAnswers",
 			"answersList",
 			"300",
-			"self.canvasText",
-			"self",
-			"answersDict",
-			"createNextButton",
-			"studentNum",
-			"nextButton",
-			"print",
-			"varName",
-			"returnSomething",
-			"500",
-			"textVar",
-			"#",
-			"Daniel",
-			"tk.",
-			"self.hi_there",
-			"canvas",
-			"below",
-			"say_hi",
-			"self",
-			"self.QUIT",
-			"self",
-			"say_hi",
-			"tkinter"
+			"self.canvasText"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1189,8 +1245,597 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "gui.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10396,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9366,
+								9366
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3893.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "assignment.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3137,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3123,
+								3123
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1667.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6600,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6600,
+								6600
+							]
+						],
+						"settings":
+						{
+							"auto_complete": true,
+							"auto_indent": false,
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"detect_indentation": false,
+							"gutter": false,
+							"history_arrows": true,
+							"indent_subsequent_lines": false,
+							"line_numbers": false,
+							"repl": true,
+							"repl_external_id": "python",
+							"repl_id": "5e491f6ccd8d4373a7bbdd925e469f97",
+							"repl_restart_args":
+							{
+								"cmd":
+								[
+									"python",
+									"-i",
+									"-u",
+									"$file"
+								],
+								"cwd": "$file_path",
+								"encoding": "utf8",
+								"external_id": "python",
+								"syntax": "Packages/Python/Python.tmLanguage",
+								"type": "subprocess"
+							},
+							"repl_sublime2": false,
+							"smart_indent": false,
+							"spell_check": false,
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 826.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12603,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12603,
+								12603
+							]
+						],
+						"settings":
+						{
+							"auto_complete": true,
+							"auto_indent": false,
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"detect_indentation": false,
+							"gutter": false,
+							"history_arrows": true,
+							"indent_subsequent_lines": false,
+							"line_numbers": false,
+							"repl": true,
+							"repl_external_id": "python",
+							"repl_id": "295e8c83827f48c0ac0303d8c20b2f16",
+							"repl_restart_args":
+							{
+								"cmd":
+								[
+									"python",
+									"-i",
+									"-u",
+									"$file"
+								],
+								"cwd": "$file_path",
+								"encoding": "utf8",
+								"external_id": "python",
+								"syntax": "Packages/Python/Python.tmLanguage",
+								"type": "subprocess"
+							},
+							"repl_sublime2": false,
+							"smart_indent": false,
+							"spell_check": false,
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1241.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -1257,12 +1902,16 @@
 		"selected_items":
 		[
 			[
-				"get",
-				"getFiles.py"
+				"ass",
+				"assignment.py"
 			],
 			[
 				"gui",
 				"gui.py"
+			],
+			[
+				"get",
+				"getFiles.py"
 			],
 			[
 				"as",
