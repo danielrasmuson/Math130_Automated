@@ -86,15 +86,20 @@ class Frame(wx.Frame):
 
         self.bottom_button_sizer.Add(wx.BoxSizer(wx.HORIZONTAL), 1, wx.GROW, 0)
 
-        self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open")
+        # I was a little confused by open so I added Document
+        self.b_open = wx.Button(self.mainpanel, wx.ID_ANY, "Open Document") #works great
         self.b_open.SetToolTipString("Opens the Document Inspector (for now).")
         self.b_open.Bind(wx.EVT_BUTTON, self.openDocument)
         self.bottom_button_sizer.Add(self.b_open, 0,wx.ALL,5)
 
-        self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
-        self.b_close.SetToolTipString("Quits the application.")
-        self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
-        self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
+        # I think we should remove the quit button, here is why
+        # It's confusing to have it near the document control buttons
+        # and everyone knows if they want to quit a program the click the x
+        # I don't think we need the button
+        # self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
+        # self.b_close.SetToolTipString("Quits the application.")
+        # self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
+        # self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
 
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
@@ -208,12 +213,13 @@ class Frame(wx.Frame):
         studentQD = self.assignmentStack[name].getStudentDictionary()
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
-            if str(self.qb.getQuestionsDict()[qNum]['answer']) != str(studentQD[qNum]):
+
+            #I changed this to not in because then it can verify more answers
+            if str(self.qb.getQuestionsDict()[qNum]['answer']) not in str(studentQD[qNum]):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
             else:
-                # Are you getting this error?
-                #AttributeError: 'module' object has no attribute 'NullColor' 
-                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColor) # I'm getting an error on this line
+                #Change 'NullColor' to Grey because I was getting errors
+                self.student_answer_boxes[qNum].SetBackgroundColour("#CCCCCC")
 
     def OnOpen(self, event):
         # I get the current working directory + the examples test stuff

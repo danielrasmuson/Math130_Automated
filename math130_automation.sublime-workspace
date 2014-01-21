@@ -495,16 +495,16 @@
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
 	{
-		"height": 210.0,
+		"height": 235.0,
 		"selected_items":
 		[
 			[
-				"mergetoo",
-				"Sublimerge: Compare to Revision..."
-			],
-			[
 				"close",
 				"Project: Close"
+			],
+			[
+				"mergetoo",
+				"Sublimerge: Compare to Revision..."
 			],
 			[
 				"del",
@@ -907,7 +907,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 522.0
+		"width": 386.0
 	},
 	"console":
 	{
@@ -931,10 +931,10 @@
 	"file_history":
 	[
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/2hpp3fsj.kjp.txt",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/2hpp3fsj.kjp.txt",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
@@ -1076,6 +1076,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"open",
+			"nullColor",
 			"self.questions_area",
 			"#",
 			"assignment",
@@ -1201,9 +1203,7 @@
 			")",
 			"Frame",
 			"root",
-			"setAnswersAndName",
-			"deck",
-			"assingments"
+			"setAnswersAndName"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1305,8 +1305,8 @@
 		"selected_items":
 		[
 			[
-				"qu",
-				"question_bank.py"
+				"get",
+				"getFiles.py"
 			],
 			[
 				"ass",
@@ -1317,8 +1317,8 @@
 				"gui.py"
 			],
 			[
-				"get",
-				"getFiles.py"
+				"qu",
+				"question_bank.py"
 			],
 			[
 				"as",
