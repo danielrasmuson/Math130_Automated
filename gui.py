@@ -1,5 +1,6 @@
 import wx, wx.lib.inspection
 from assignment import getAssignmentStack
+from wx.lib.wordwrap import wordwrap
 
 class Frame(wx.Frame):
     def __init__(self):
@@ -119,7 +120,7 @@ class Frame(wx.Frame):
                 rootDict[sec] = tree.AppendItem(tree_root, "Section "+sec)
             tree.AppendItem(rootDict[sec], assignment.getName()) #appends name onto section
 
-        tree.ExpandAll()
+        # tree.ExpandAll()
 
 
     def OnSelChanged(self, event):
@@ -176,7 +177,7 @@ class Frame(wx.Frame):
 
     def InitializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 560, 1000)
+        self.questions_area.SetScrollbars(1, 1, 650, 1000)
         self.questions_area.EnableScrolling(True,True)
         self.right_sizer.Add(self.questions_area, 1, wx.GROW)
 
@@ -197,12 +198,19 @@ class Frame(wx.Frame):
             if assignment.getName() == name:
                 studentQD = assignment.getStudentDictionary()
         for question in studentQD.keys():
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(studentQD[question]['question']) )
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(wordwrap(studentQD[question]['question'], self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
-            answerbox = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['answer']) )
-            self.questions_area_sizer.Add(answerbox)
-            answerbox2 = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['sAnswer']) )
-            self.questions_area_sizer.Add(answerbox2)
+            
+            q_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            
+            answerbox = wx.StaticText(self.questions_area, wx.ID_ANY, str(studentQD[question]['answer']) )
+            answerbox2 = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value=str(studentQD[question]['sAnswer']) )
+            if str(studentQD[question]['answer']) != str(studentQD[question]['sAnswer']):
+                answerbox2.SetBackgroundColour("#FFAAAA")
+            
+            q_sizer.Add(answerbox, 0, wx.ALL, 5)
+            q_sizer.Add(answerbox2, 0)
+            self.questions_area_sizer.Add(q_sizer)
 
 
     def OnAbout(self, event):
