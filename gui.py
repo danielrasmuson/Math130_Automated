@@ -1,7 +1,11 @@
 import wx, wx.lib.inspection
+from assignment import getAssignmentStack
 
 class Frame(wx.Frame):
     def __init__(self):
+        self.assignmentStack = getAssignmentStack("Examples\\test")
+
+
         # The ^ wx.RESIZE_BORDER ^ wx.MAXIMIZE_BOX makes it so
         # the window isn't resizeable so we dont' see horrible things
         # happen to the stuff in the frames.
@@ -63,7 +67,7 @@ class Frame(wx.Frame):
         self.tree_list_sizer.Add(self.lab_tree_list, 1,wx.GROW)
         
         # Call our initial tree list build
-        self.UpdateTreeList(self.lab_tree_list)
+        self.updateTreeList(self.lab_tree_list)
         
         
         # This is the right frame containing the 
@@ -111,32 +115,25 @@ class Frame(wx.Frame):
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
         
-    # I was looking at an easy way to make buttons but it looks like it might be worse
-    # than just doing the three lines of code above to get stuff done.
-    # self.EasyButtonAdd("test","bottom_button_sizer","Test",border=5)
-    # def EasyButtonAdd(self, buttonname, sizer, label, border=0, proportion=0, flags=wx.ALL, function=False):
+        # I was looking at an easy way to make buttons but it looks like it might be worse
+        # than just doing the three lines of code above to get stuff done.
+        # self.EasyButtonAdd("test","bottom_button_sizer","Test",border=5)
+        # def EasyButtonAdd(self, buttonname, sizer, label, border=0, proportion=0, flags=wx.ALL, function=False):
         # exec("self."+str(buttonname)+" = wx.Button(self.mainpanel, wx.ID_ANY, \""+str(label)+"\")")
         # exec("self."+str(sizer) + ".Add(self."+str(buttonname) + ", "+str(proportion)+", " + str(flags)+","+str(border)+")" )
         # if 
-        
-    def UpdateTreeList(self, tree):
-        # Just some boring default tree data for testing purposes.
+
+      
+    def updateTreeList(self, tree):
+        """Tree List on Left Side - Dynamic to Files"""
         tree_root = tree.AddRoot("Lab Sections")
-        section1 = tree.AppendItem(tree_root, "Section 7")
-        tree.AppendItem(section1, "Anthony")
-        tree.AppendItem(section1, "Ben")
-        tree.AppendItem(section1, "Charlie")
-        tree.AppendItem(section1, "Dan")
-        tree.AppendItem(section1, "Evan")
-        tree.AppendItem(section1, "Fred")
-        
-        section2 = tree.AppendItem(tree_root, "Section 8")
-        tree.AppendItem(section2, "Greg")
-        tree.AppendItem(section2, "Harrison")
-        tree.AppendItem(section2, "Ike")
-        tree.AppendItem(section2, "Jake")
-        tree.AppendItem(section2, "Kyle")
-        tree.AppendItem(section2, "Lon")
+        rootDict = {}
+        for assignment in self.assignmentStack:
+            sec = assignment.getSection()
+            if sec not in rootDict.keys(): #creats root section if there isnt one
+                rootDict[sec] = tree.AppendItem(tree_root, "Section "+sec)
+            tree.AppendItem(rootDict[sec], assignment.getName()) #appends name onto section
+
         
     def OnSelChanged(self, event):
         # Get our item that updated

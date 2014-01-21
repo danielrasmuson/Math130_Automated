@@ -1,5 +1,4 @@
 import cPickle as pickle
-from getFiles import getDocxsStr
 
 class Question_Bank():
     """
@@ -10,8 +9,8 @@ class Question_Bank():
     """
 
     def __init__(self):
-        # """ Nothing happening here yet, but maybe later. """
         # Some default stuff to get testing with.
+        # @TODO turn this into a dictionary
         self.lab = 1
         self.questions = {
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
@@ -54,15 +53,5 @@ class Question_Bank():
    
 if __name__ == "__main__":
     qb = Question_Bank()
-    # qb.add_question(15,"asdf","lkasdj")
-    # qb.print_questions_to_console()
-    lab1Dan = getDocxsStr("Examples\\test")[0]
-    for k in qb.questions.keys():
-        # @TODO need some error handling on these index
-        start = lab1Dan.index(qb.questions[k]["question"])+len(qb.questions[k]["question"]) # to not include question 
-        if qb.questions[k]["aText"] == -1: # if its the last questoin it doesnt have aText
-            after = -1
-        else:
-            after = lab1Dan.index(qb.questions[k]["aText"])
-        answer = lab1Dan[start:after].replace("\n","")
-        print list(answer)
+    qb.add_question(15,"asdf","lkasdj")
+    qb.print_questions_to_console()
