@@ -73,7 +73,7 @@ def getAssignmentStack(subPath):
     labN = 1
     labs = getDocxsStr(subPath)
     qBL = [] #the problem was they all had the same qBL instance
-    assignmentStack = []
+    assignmentStack = {}
     for i in range(len(labs)):
         qBL.append(Question_Bank()) #so I just create instance for each dictionary
 
@@ -89,9 +89,10 @@ def getAssignmentStack(subPath):
         assignObj.setSection(section)
         assignObj.setStudentDictionary(studentQD)
 
-        assignmentStack.append(assignObj)
+        assignmentStack[name] = assignObj
 
     return assignmentStack
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test")
+    print assignmentStack

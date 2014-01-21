@@ -114,14 +114,11 @@ class Frame(wx.Frame):
         """Tree List on Left Side - Dynamic to Files"""
         tree_root = tree.AddRoot("Lab Sections")
         rootDict = {}
-        for assignment in self.assignmentStack:
-            sec = assignment.getSection()
+        for name in self.assignmentStack.keys():
+            sec = self.assignmentStack[name].getSection()
             if sec not in rootDict.keys(): #creats root section if there isnt one
                 rootDict[sec] = tree.AppendItem(tree_root, "Section "+sec)
-            tree.AppendItem(rootDict[sec], assignment.getName()) #appends name onto section
-
-        # tree.ExpandAll()
-
+            tree.AppendItem(rootDict[sec], name) #appends name onto section
 
     def OnSelChanged(self, event):
         # Get our item that updated
@@ -130,9 +127,7 @@ class Frame(wx.Frame):
             # Find the item text from the tree and update the student information
             name = self.lab_tree_list.GetItemText(item)
             section = ""
-            for assignment in self.assignmentStack:
-                if assignment.getName() == name:
-                    section = assignment.getSection()
+            section = self.assignmentStack[name].getSection()
             # # @TODO get tech id
             self.UpdateStudentInformation(name, section, 1234)
             self.UpdateQuestions(name)
@@ -194,9 +189,7 @@ class Frame(wx.Frame):
             pass
         self.InitializeQuestionArea()
         # This gets our students answers and the dictionary we're comparing their answer to.
-        for assignment in self.assignmentStack:
-            if assignment.getName() == name:
-                studentQD = assignment.getStudentDictionary()
+        studentQD = self.assignmentStack[name].getStudentDictionary()
         for question in studentQD.keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(wordwrap(studentQD[question]['question'], self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
