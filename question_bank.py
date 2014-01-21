@@ -1,5 +1,5 @@
 import cPickle as pickle
-
+from getFiles import getDocxsStr
 
 class Question_Bank():
     """
@@ -9,24 +9,24 @@ class Question_Bank():
     manipulating etc of our questions.
     """
 
-    # Some default stuff to get testing with.
-    lab = 1
-    questions = {
-    1:{"question":"What is the 25th term of this sequence?","answer":"41.62"},
-    2:{"question":"What is the 80th term of this sequence?","answer":"131.27"},
-    3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75"},
-    4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","atext":"Recall","answer":"6671.91"},
-    6:{"question":"What is the 15th term of this sequence?","answer":"5.43"},
-    7:{"question":"What is the sum of the first 30 terms of this sequence?","atext":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80"},
-    9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","atext":"An auditorium","answer":"$10.40"},
-    10:{"question":"How many seats will there be in the 16th row?","answer":"40"},
-    11:{"question":"How many total seats are there in the auditorium?","atext":"In compound","answer":"580"},
-    12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95"}
-    }
-    
     def __init__(self):
-        """ Nothing happening here yet, but maybe later. """
-        pass 
+        # """ Nothing happening here yet, but maybe later. """
+        # Some default stuff to get testing with.
+        self.lab = 1
+        self.questions = {
+        1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
+        2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
+        3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?"},
+        4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","aText":"Recall the explicit formulas for the nth term of an arithmetic sequence","answer":"6671.91"},
+        # 5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3.  Show your work.","aText":"Now, use your Excel workbook to set up a geometric progression with a first term of 3.59 and a common multiplier of 1.03.  Answer the following problems"},
+        6:{"question":"What is the 15th term of this sequence?","answer":"5.43","aText":"What is the sum of the first 30 terms of this sequence?"},
+        7:{"question":"What is the sum of the first 30 terms of this sequence?","aText":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80"},
+        # 8:{"question":"Use these formulas to verify your answers for questions 6 and 7.  Show your work.","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?"},
+        9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","aText":"How many seats will there be in the","answer":"$10.40"},
+        10:{"question":"How many seats will there be in the 16th row?","answer":"40","aText":"How many total seats are there in the auditorium"},
+        11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods."},
+        12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","aText":-1}
+        }
 
     def save(self,filename="lab1.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
@@ -50,9 +50,19 @@ class Question_Bank():
         """ Just a quick test function to print all the data to the console """
         for key in self.questions.keys():
             print "Question " + str(key) + ": " + self.questions[key]["question"] + " " + self.questions[key]["answer"]
-        
+
    
 if __name__ == "__main__":
     qb = Question_Bank()
-    qb.add_question(15,"asdf","lkasdj")
-    qb.print_questions_to_console()
+    # qb.add_question(15,"asdf","lkasdj")
+    # qb.print_questions_to_console()
+    lab1Dan = getDocxsStr("Examples\\test")[0]
+    for k in qb.questions.keys():
+        # @TODO need some error handling on these index
+        start = lab1Dan.index(qb.questions[k]["question"])+len(qb.questions[k]["question"]) # to not include question 
+        if qb.questions[k]["aText"] == -1: # if its the last questoin it doesnt have aText
+            after = -1
+        else:
+            after = lab1Dan.index(qb.questions[k]["aText"])
+        answer = lab1Dan[start:after].replace("\n","")
+        print list(answer)

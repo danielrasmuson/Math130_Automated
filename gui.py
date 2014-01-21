@@ -13,8 +13,8 @@ class Frame(wx.Frame):
         menuBar = wx.MenuBar()
         menu = wx.Menu()
         m_exit = menu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
-        self.Bind(wx.EVT_MENU, self.OnClose, m_exit)
-        menuBar.Append(menu, "&File")
+        self.Bind(wx.EVT_MENU, self.OnClose, m_exit) #binds the event to the menu item
+        menuBar.Append(menu, "&File") #add the menu to the menubar
         menu = wx.Menu()
         m_about = menu.Append(wx.ID_ABOUT, "&About", "Information about this program")
         self.Bind(wx.EVT_MENU, self.OnAbout, m_about)
@@ -31,7 +31,7 @@ class Frame(wx.Frame):
         # and then we are adding the things we want to see on this panel.
         # I made this red at first so that I can see exactly where things
         # are positioned and if they're even being rendered since they ususally
-        # just blend in.
+        # just blend in. <-- good call
         self.mainpanel = wx.Panel(self, wx.ID_ANY)
         self.mainpanel.SetBackgroundColour("red")
         
