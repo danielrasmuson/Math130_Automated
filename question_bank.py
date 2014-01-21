@@ -9,8 +9,6 @@ class Question_Bank():
     """
 
     def __init__(self):
-        # Some default stuff to get testing with.
-        # @TODO turn this into a dictionary
         self.questionsDict = {
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},

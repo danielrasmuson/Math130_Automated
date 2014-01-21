@@ -2,3 +2,19 @@ Math 130 Automated Grading
 ==============
 
 Just a readme so we can communicate about stuffs.
+
+C:\Users\Daniel\Documents\GitHub\Math130_Automated\assignment.py:
+    9      studentDict = {}
+   10      for qNum in qDict.keys():
+   11:         # @TODO need some error handling on these indexes
+   12          start = lab.index(qDict[qNum]["question"])
+   13          start += len(qDict[qNum]["question"]) # to not include question
+
+C:\Users\Daniel\Documents\GitHub\Math130_Automated\gui.py:
+  122              name = self.lab_tree_list.GetItemText(item)
+  123              section = self.assignmentStack[name].getSection()
+  124:             # # @TODO get tech id
+  125              self.UpdateStudentInformation(name, section, "Unknown")
+  126              if self.initialized:
+
+4 matches across 4 files
