@@ -137,24 +137,30 @@ class Frame(wx.Frame):
             os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
         # wx.lib.inspection.InspectionTool().Show()
         
-
     def PreviousButton(self, event):
         current = self.lab_tree_list.GetSelection()
         prev = self.lab_tree_list.GetPrevSibling(current)
-        if prev.IsOk():
+        if prev.IsOk() and not self.lab_tree_list.ItemHasChildren(prev):
             self.lab_tree_list.SelectItem(prev)
+        elif prev.IsOk() and  self.lab_tree_list.ItemHasChildren(prev):
+            self.lab_tree_list.SelectItem(self.lab_tree_list.GetLastChild(prev))
+        else:
+            parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
+            if parent != self.lab_tree_list.GetRootItem():
+                self.lab_tree_list.SelectItem(parent)
 
     def NextButton(self, event):
         current = self.lab_tree_list.GetSelection()
-        next = self.lab_tree_list.GetNextSibling(current)
+        if self.lab_tree_list.ItemHasChildren(current):
+            next = self.lab_tree_list.GetFirstChild(current)[0]
+        else:
+            next = self.lab_tree_list.GetNextSibling(current)
         if next.IsOk():
             self.lab_tree_list.SelectItem(next)
-
-    def ScrollTop(self,event):
-        self.questions_area.Scroll(1,1)
-
-    def ScrollBottom(self,event):
-        self.questions_area.Scroll(1000,1000)
+        else:
+            parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
+            if self.lab_tree_list.GetNextSibling(parent).IsOk():
+                self.lab_tree_list.SelectItem(self.lab_tree_list.GetNextSibling(parent))
 
     def OnClose(self, event):
         dlg = wx.MessageDialog(self,
@@ -232,6 +238,7 @@ class Frame(wx.Frame):
             # Call our initial tree list build
             self.updateTreeList(self.lab_tree_list)
         dlg.Destroy()
+        self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
 
     def OnAbout(self, event):
         dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
