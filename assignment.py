@@ -71,41 +71,25 @@ class assignment():
 def getAssignmentStack(subPath):
     """Returns a list assignments"""
     labN = 1
-    
-    qb = Question_Bank()
     labs = getDocxsStr(subPath)
+    qBL = [] #the problem was they all had the same qBL instance
     assignmentStack = []
-    for lab in labs:
-        name = getStudentInfo(lab, "name")
-        section = getStudentInfo(lab, "section")
+    for i in range(len(labs)):
+        qBL.append(Question_Bank()) #so I just create instance for each dictionary
 
-        questionsDict = qb.questionsDict[labN]
-        studentQD = getStudentAnswersFromLab(questionsDict, lab)
-        # print type(studentQD)
-        # print id(studentQD)
+        name = getStudentInfo(labs[i], "name")
+        section = getStudentInfo(labs[i], "section")
+        studentQD = getStudentAnswersFromLab(qBL[i].getQuestionsDict()[labN], labs[i])
 
-        studentAssign = assignment(lab)
-        studentAssign.setName(name)
-        studentAssign.setSection(section)
-        studentAssign.setStudentDictionary(studentQD)
+        assignObj = assignment(labs[i])
 
-        assignmentStack.append(studentAssign)
+        assignObj.setName(name)
+        assignObj.setSection(section)
+        assignObj.setStudentDictionary(studentQD)
 
+        assignmentStack.append(assignObj)
 
-        # print "pointing to the same place in memory - same command three times" 
-        # print assignmentStack[0].getStudentDictionary()[12]["sAnswer"]
-        # print
-        # print studentQD
-
-
-    # print assignmentStack[0].getStudentDictionary()[12]["sAnswer"]
     return assignmentStack
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test")
-    for assignment in assignmentStack:
-        print id(assignment.getStudentDictionary())
-        # print assignment.getName()
-        # print assignment.getSection()
-        # print assignment.studentQD[12]["sAnswer"] #they should not all have the same final answer
-        pass
