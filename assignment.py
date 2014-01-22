@@ -5,6 +5,7 @@ def getStudentAnswersFromLab(qDict, lab):
     # I changed this to using a new dictionary and only returning that dictionary
     # because I'd rather have that so we can keep the two different dictionaries
     # separate.  Otherwise there was a lot of overlap in the two qDict and studentDict.
+    # fair point - Dan
     studentDict = {}
     for qNum in qDict.keys():
         # @TODO need some error handling on these indexes

@@ -204,13 +204,16 @@ class Frame(wx.Frame):
 
     def UpdateQuestions(self, name):
         # This gets our students answers and the dictionary we're comparing their answer to.
+        # Yep I was going to tell you to pass in the name variable. That speeds things up
         studentQD = self.assignmentStack[name].getStudentDictionary()
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
             if str(self.qb.getQuestionsDict()[qNum]['answer']) != str(studentQD[qNum]):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
             else:
-                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColor)
+                # Are you getting this error?
+                #AttributeError: 'module' object has no attribute 'NullColor' 
+                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColor) # I'm getting an error on this line
 
     def OnOpen(self, event):
         # I get the current working directory + the examples test stuff
