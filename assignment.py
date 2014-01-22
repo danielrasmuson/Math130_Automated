@@ -77,12 +77,14 @@ def getAssignmentStack(subPath):
     for i in range(len(labs)):
         qBL.append(Question_Bank()) #so I just create instance for each dictionary
 
+        #create the attributes for the new assignment object
         name = getStudentInfo(labs[i], "name")
         section = getStudentInfo(labs[i], "section")
         studentQD = getStudentAnswersFromLab(qBL[i].getQuestionsDict()[labN], labs[i])
 
         assignObj = assignment(labs[i])
 
+        #assign the attributes
         assignObj.setName(name)
         assignObj.setSection(section)
         assignObj.setStudentDictionary(studentQD)
