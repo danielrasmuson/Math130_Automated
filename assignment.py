@@ -12,10 +12,14 @@ def getStudentAnswersFromLab(qDict, lab):
         start = lab.index(qDict[qNum]["question"])
         start += len(qDict[qNum]["question"]) # to not include question
 
-        if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
+        try:
+            if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
+                end = -1
+            else:
+                end = lab.index(qDict[qNum]["aText"])
+        except ValueError:
+            print "Unable to find after text. Returning whole document string."
             end = -1
-        else:
-            end = lab.index(qDict[qNum]["aText"])
 
         #NOTE - I'm removing strange symbols here
         # might remove squared and stuff from answers
@@ -24,7 +28,7 @@ def getStudentAnswersFromLab(qDict, lab):
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        studentDict[qNum] = answer
+        studentDict[qNum] = answer.strip()
     return studentDict
 
 
@@ -35,7 +39,9 @@ def getStudentInfo(lab, lWord):
     info = ""
     for line in lab.split("\r"):
         if lWord in line.lower():
-            info = line.split(":")[1].strip().replace("_","")
+            info = line.split(":")[1].strip().replace("_","").lstrip("0")
+    if info == "":
+        info = "MissingInformation"
     return info
 
 

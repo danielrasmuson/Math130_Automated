@@ -110,9 +110,10 @@ class Frame(wx.Frame):
         """Tree List on Left Side - Dynamic to Files"""
         for name in self.assignmentStack.keys():
             sec = self.assignmentStack[name].getSection()
-            if sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
+            if sec == "MissingInformation":
+                self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Missing Lab Section")
+            elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
-            # if name not in self.
             tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
 
     def OnSelChanged(self, event):
@@ -219,7 +220,7 @@ class Frame(wx.Frame):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
             else:
                 #Change 'NullColor' to Grey because I was getting errors
-                self.student_answer_boxes[qNum].SetBackgroundColour("#CCCCCC")
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
 
     def OnOpen(self, event):
         # I get the current working directory + the examples test stuff
