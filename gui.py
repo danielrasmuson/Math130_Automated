@@ -73,7 +73,7 @@ class Frame(wx.Frame):
         # student ID & the name etc.
         self.student_info_container = wx.StaticBox(self.mainpanel, label='Current Student Information')
         self.student_info_container_sizer = wx.StaticBoxSizer(self.student_info_container, wx.VERTICAL)
-        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Username: Anthony Anderson\nSection: 5\nTech ID: 123456789')
+        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY) #'Username: Anthony Anderson\nSection: 5\nTech ID: 123456789'
         self.student_info_container_sizer.Add(self.student_info_label)
         self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
 
@@ -132,17 +132,13 @@ class Frame(wx.Frame):
             for assignment in self.assignmentStack:
                 if assignment.getName() == name:
                     section = assignment.getSection()
-            # @TODO get tech id
+            # # @TODO get tech id
             self.UpdateStudentInformation(name, section, 1234)
-<<<<<<< HEAD
-            # Eventually update student response questions here:
-=======
             self.UpdateQuestions(name)
             self.mainpanel.Layout()
->>>>>>> 902d08622b2d5267a1adebc0af04027f906a7cf0
 
-    def UpdateStudentInformation(self, user, section, techid):
-        self.student_info_label.SetLabel("Username: " + str(user) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
+    def UpdateStudentInformation(self, name, section, techid):
+        self.student_info_label.SetLabel("Name: " + str(name) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
 
     def ShowInspector(self, event):
         wx.lib.inspection.InspectionTool().Show()
@@ -177,7 +173,6 @@ class Frame(wx.Frame):
     def LoadBank(self, event):
         if self.questions_area:
             self.questions_area.Destroy()
-        self.InitializeQuestionArea()
 
     def InitializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
@@ -188,16 +183,6 @@ class Frame(wx.Frame):
         self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
         self.questions_area.SetSizer(self.questions_area_sizer)
 
-<<<<<<< HEAD
-        self.UpdateQuestions()
-        self.mainpanel.Layout()
-
-    def UpdateQuestions(self):
-        # This is just a temporary test to see if I can dynamically add things
-        # and it appears to work.  Next we need to actually get the student answers.
-        for question in self.qb.questionsDict[1].keys():
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(self.qb.questionsDict[1][question]['question']) )
-=======
         self.questions_area.Layout()
 
     def UpdateQuestions(self, name):
@@ -213,36 +198,11 @@ class Frame(wx.Frame):
                 studentQD = assignment.getStudentDictionary()
         for question in studentQD.keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(studentQD[question]['question']) )
->>>>>>> 902d08622b2d5267a1adebc0af04027f906a7cf0
             self.questions_area_sizer.Add(label)
-            answerbox = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(self.qb.questionsDict[1][question]['answer']) )
+            answerbox = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['answer']) )
             self.questions_area_sizer.Add(answerbox)
-
-
-        # #clears the panel
-        # for child in self.questions_area.GetChildren(): 
-        #     child.Destroy() 
-        
-        # # self.InitializeQuestionArea()
-            
-        # # see what name the information box is currently displaying and shows that student
-        # # this requires that the infromation box be created prior to this
-        # for assignment in self.assignmentStack:
-        #     if assignment.getName() == name:
-        #         studentQD = assignment.getStudentDictionary()
-
-        # # studentQD = self.assignmentStack[0].getStudentDictionary()
-        # for question in studentQD.keys():
-        #     label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(question) + ":\n"+ str(studentQD[question]['question']) )
-        #     self.questions_area_sizer.Add(label)
-        #     answerbox = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['answer']) )
-        #     self.questions_area_sizer.Add(answerbox)
-        #     answerbox2 = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['sAnswer']) )
-        #     self.questions_area_sizer.Add(answerbox2)
-
-
-
-
+            answerbox2 = wx.TextCtrl(self.questions_area, wx.ID_ANY, str(studentQD[question]['sAnswer']) )
+            self.questions_area_sizer.Add(answerbox2)
 
 
     def OnAbout(self, event):
@@ -256,19 +216,4 @@ if __name__ == "__main__":
     app = wx.App(redirect=False)
     top = Frame()
     top.Show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     app.MainLoop()
