@@ -9,8 +9,12 @@ def getStudentAnswersFromLab(qDict, lab):
     studentDict = {}
     for qNum in qDict.keys():
         # @TODO need some error handling on these indexes
-        start = lab.index(qDict[qNum]["question"])
-        start += len(qDict[qNum]["question"]) # to not include question
+        try:
+            start = lab.index(qDict[qNum]["question"])
+            start += len(qDict[qNum]["question"]) # to not include question
+        except ValueError:
+            print "Unable to find before text. Returning blank answers."
+            start = -1
 
         try:
             if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
@@ -18,7 +22,7 @@ def getStudentAnswersFromLab(qDict, lab):
             else:
                 end = lab.index(qDict[qNum]["aText"])
         except ValueError:
-            print "Unable to find after text. Returning whole document string."
+            print "Unable to find after text. Returning partial document string."
             end = -1
 
         #NOTE - I'm removing strange symbols here
@@ -64,6 +68,12 @@ class assignment():
     def setStudentFilepath(self, path):
         self.filePath = path
 
+    def setMisc(self, misc):
+        self.misc = misc
+
+    def getMisc(self):
+        return self.misc
+
     def getName(self):
         return self.name
 
@@ -86,7 +96,7 @@ class assignment():
 
 def getAssignmentStack(subPath):
     """Returns a list assignments"""
-    fileList,labs = getDocxsStr(subPath)
+    fileList,labs,miscObjects = getDocxsStr(subPath)
 
     qb = Question_Bank()
     assignmentStack = {}
@@ -104,6 +114,7 @@ def getAssignmentStack(subPath):
         assignObj.setSection(section)
         assignObj.setStudentDictionary(studentQD)
         assignObj.setStudentFilepath(fileList[i])
+        assignObj.setMisc(miscObjects[i])
 
         assignmentStack[name] = assignObj
 

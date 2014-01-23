@@ -80,7 +80,7 @@ class Frame(wx.Frame):
             if result == wx.ID_OK:
                 self.Show(False)
                 newSession()
-                self.Destroy()             
+                self.Destroy()
 
         def onOpen(event):
             # I get the current working directory + the examples test stuff
@@ -126,7 +126,6 @@ class Frame(wx.Frame):
         def openDocument(event):
             current_item = self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection())
             if "Section" not in current_item:
-                print "start \""+self.assignmentStack[current_item].getStudentFilepath()+"\""
                 os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
 
         def previousButton(event):
@@ -182,6 +181,7 @@ class Frame(wx.Frame):
                 section = self.assignmentStack[name].getSection()
                 # # @TODO get tech id
                 self.updateStudentInformation(name, section)
+                self.si_misc.SetValue(unicode(self.assignmentStack[name].getMisc()))
                 if self.initialized:
                     self.updateQuestions(name)
         self.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
@@ -208,6 +208,13 @@ class Frame(wx.Frame):
         self.si_section = wx.TextCtrl(panel, value="")
         self.si_right = wx.TextCtrl(panel, value="")
         self.si_wrong = wx.TextCtrl(panel, value="")
+        
+        # If you want to see the math objects that were pulled out
+        # then set the Show to true and it'll make a panel in the middle
+        # of the interface.  It's ugly but just a test for now.
+        self.si_misc = wx.TextCtrl(panel, style=wx.TE_MULTILINE, value="")
+        si_sizer.Add(self.si_misc, pos=(0, 2), flag=wx.ALL|wx.GROW, border=0)
+        self.si_misc.Show(False)
 
         si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
@@ -215,6 +222,7 @@ class Frame(wx.Frame):
         si_sizer.Add(self.si_wrong, pos=(1, 4), flag=wx.ALL, border=0)
 
         si_sizer.AddGrowableCol(2)
+
         sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
         sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
@@ -285,7 +293,7 @@ class Frame(wx.Frame):
         # when trying to select a student's responses.
         self.initialized = True
         self.mainpanel.Layout()
-        
+
 def newSession():
     top = Frame()
     top.Show()
