@@ -1,4 +1,4 @@
-import wx, wx.lib.inspection, os, time
+import wx, os, time
 from assignment import getAssignmentStack
 from question_bank import *
 from wx.lib.wordwrap import wordwrap
@@ -8,6 +8,7 @@ class Frame(wx.Frame):
     initialized = False
     def __init__(self):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
+        self.SetMinSize((800,600))
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
         # Utility stuff in order to get a menu
@@ -30,13 +31,12 @@ class Frame(wx.Frame):
 
         self.SetMenuBar(self.menuBar)
 
-        # Style=0 makes it so no resize handle shows up
-        # in the status bar
-        self.statusbar = self.CreateStatusBar(style=0)
+        self.statusbar = self.CreateStatusBar()
 
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
         self.mainpanel = wx.Panel(self, wx.ID_ANY)
+        
 
         # Set all of our sizers here
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -46,6 +46,7 @@ class Frame(wx.Frame):
         self.right_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # This is our outer most sizer and its components.
+
         self.main_sizer.Add(self.top_sizer, 1, wx.GROW)
         self.main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
         self.main_sizer.Add(self.bottom_button_sizer, 0, wx.GROW)
@@ -67,12 +68,32 @@ class Frame(wx.Frame):
 
         # This is the right frame containing the
         # student ID & the name etc.
-        self.student_info_container = wx.StaticBox(self.mainpanel, label='Current Student Information')
-        self.student_info_container_sizer = wx.StaticBoxSizer(self.student_info_container, wx.VERTICAL)
-        self.student_info_label = wx.StaticText(self.mainpanel, wx.ID_ANY, 'Username: \nSection: \nTech ID: ')
-        self.student_info_container_sizer.Add(self.student_info_label)
-        self.right_sizer.Add(self.student_info_container_sizer, 0 , wx.BOTTOM|wx.GROW,5)
-
+        title = wx.StaticText(self.mainpanel, wx.ID_ANY, label="Math 130 Automated Grading System")
+        titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
+        title.SetFont(titlefont)
+        self.right_sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
+        
+        si_sizer = wx.GridBagSizer(5, 5)
+        si_sizer.Add(wx.StaticText(self.mainpanel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        si_sizer.Add(wx.StaticText(self.mainpanel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        si_sizer.Add(wx.StaticText(self.mainpanel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        si_sizer.Add(wx.StaticText(self.mainpanel, label="Questions Wrong:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        
+        self.si_name = wx.TextCtrl(self.mainpanel, value="")
+        self.si_section = wx.TextCtrl(self.mainpanel, value="")
+        self.si_right = wx.TextCtrl(self.mainpanel, value="")
+        self.si_wrong = wx.TextCtrl(self.mainpanel, value="")
+        
+        si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
+        si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
+        si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
+        si_sizer.Add(self.si_wrong, pos=(1, 4), flag=wx.ALL, border=0)
+        
+        si_sizer.AddGrowableCol(2)
+        self.right_sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
+        self.right_sizer.Add(wx.StaticLine(self.mainpanel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        
+        
         # These contain all of our buttons along the bottom of the app.
         self.b_prev = wx.Button(self.mainpanel, wx.ID_ANY, "Previous")
         self.b_prev.SetToolTipString("Selects the previous student of the current section.")
@@ -92,15 +113,6 @@ class Frame(wx.Frame):
         self.b_open.Bind(wx.EVT_BUTTON, self.openDocument)
         self.bottom_button_sizer.Add(self.b_open, 0,wx.ALL,5)
 
-        # I think we should remove the quit button, here is why
-        # It's confusing to have it near the document control buttons
-        # and everyone knows if they want to quit a program the click the x
-        # I don't think we need the button
-        # self.b_close = wx.Button(self.mainpanel, wx.ID_CLOSE, "Quit")
-        # self.b_close.SetToolTipString("Quits the application.")
-        # self.b_close.Bind(wx.EVT_BUTTON, self.OnClose)
-        # self.bottom_button_sizer.Add(self.b_close, 0, wx.ALL, 5)
-
         # This last code just finally sets the main sizer
         # on the main box and calls the layout routine.
         self.mainpanel.SetSizer(self.main_sizer)
@@ -112,6 +124,7 @@ class Frame(wx.Frame):
             sec = self.assignmentStack[name].getSection()
             if sec == "MissingInformation":
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Missing Lab Section")
+                self.lab_tree_list.SetItemBackgroundColour(self.tree_rootDict[sec],"#FFAAAA")
             elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
             tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
@@ -128,14 +141,16 @@ class Frame(wx.Frame):
                 self.UpdateQuestions(name)
 
     def UpdateStudentInformation(self, name, section, techid):
-        self.student_info_label.SetLabel("Name: " + str(name) + "\nSection: "+str(section) + "\nTech ID: " + str(techid))
+        self.si_name.SetValue(name)
+        self.si_section.SetValue(section)
+        self.si_right.SetValue("")
+        self.si_wrong.SetValue("")
 
     def openDocument(self, event):
         current_item = self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection())
         if "Section" not in current_item:
             print "start \""+self.assignmentStack[current_item].getStudentFilepath()+"\""
             os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
-        # wx.lib.inspection.InspectionTool().Show()
         
     def PreviousButton(self, event):
         current = self.lab_tree_list.GetSelection()
@@ -218,15 +233,21 @@ class Frame(wx.Frame):
         # This gets our students answers and the dictionary we're comparing their answer to.
         # Yep I was going to tell you to pass in the name variable. That speeds things up
         studentQD = self.assignmentStack[name].getStudentDictionary()
+        right = 0
+        wrong = 0
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
 
             #I changed this to not in because then it can verify more answers
             if str(self.qb.getQuestionsDict()[qNum]['answer']) not in str(studentQD[qNum]):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                wrong += 1
             else:
                 #Change 'NullColor' to Grey because I was getting errors
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                right += 1
+        self.si_right.SetValue(str(right))
+        self.si_wrong.SetValue(str(wrong))
 
     def OnOpen(self, event):
         # I get the current working directory + the examples test stuff
@@ -246,7 +267,7 @@ class Frame(wx.Frame):
         dlg.Destroy()
 
 if __name__ == "__main__":
-    # Error messages go to popup window
+    # Error messages go to pop-up window
     # because of the redirect=True.
     app = wx.App(redirect=False)
     top = Frame()
