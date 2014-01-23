@@ -228,7 +228,7 @@ class Frame(wx.Frame):
 
     def updateTreeList(self, tree):
         """Tree List on Left Side - Dynamic to Files"""
-        for name in self.assignmentStack.keys():
+        for name in sorted(self.assignmentStack.keys()):
             sec = self.assignmentStack[name].getSection()
             if sec == "MissingInformation":
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Missing Lab Section")
