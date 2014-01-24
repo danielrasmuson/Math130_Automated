@@ -3,11 +3,38 @@ from assignment import getAssignmentStack
 from question_bank import *
 from wx.lib.wordwrap import wordwrap
 
-class Frame(wx.Frame):
+class EquationsBrowser(wx.Frame):
+    def __init__(self, parent, initialPosition, initialSize):
+        wx.Frame.__init__(self, parent, title='Equation Browser', pos=initialPosition, size=initialSize)
+        self.panel = wx.Panel(self)
+        self.parent = parent
+
+        def onClose(event):
+            self.Hide()
+        self.Bind(wx.EVT_CLOSE, onClose)
+
+        self.createEquations()
+
+    def createEquations(self):
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        title = wx.StaticText(self.panel, wx.ID_ANY, label="Equations Browser")
+        titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
+        title.SetFont(titlefont)
+        sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
+
+        self.parent.si_misc = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
+        sizer.Add(self.parent.si_misc, 1, flag=wx.ALL|wx.GROW, border=0)
+
+        self.panel.SetSizer(sizer)
+        self.Layout()
+
+
+class MainApp(wx.Frame):
     qb = Question_Bank()
     initialized = False
     def __init__(self):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
+        self.eq_frame = EquationsBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
 
         self.buildMenuNav()
@@ -62,7 +89,7 @@ class Frame(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
 
-        def onClose(event, forced=False):
+        def onClose(event):
             dlg = wx.MessageDialog(self,
                 "Do you really want to close this application?",
                 "Confirm Exit", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
@@ -95,8 +122,7 @@ class Frame(wx.Frame):
             self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
 
         self.Bind(wx.EVT_CLOSE, onClose)
-        # Utility stuff in order to get a menu
-        # and a status bar in the bottom for the future.
+
         menuBar = wx.MenuBar()
 
         fileMenu = wx.Menu()
@@ -165,11 +191,23 @@ class Frame(wx.Frame):
 
         sizer.Add(wx.BoxSizer(wx.HORIZONTAL), 1, wx.EXPAND, 0)
 
-        # I was a little confused by open so I added Document
+        self.b_equations = wx.Button(panel, wx.ID_ANY, "Equations")
+        self.b_equations.Disable()
+        self.b_equations.SetToolTipString("Opens a new dialog box with extra equations (if available) for the current student.")
+        self.b_equations.Bind(wx.EVT_BUTTON, self.equationsBrowser)
+        sizer.Add(self.b_equations, 0,wx.ALL,5)
+
         b_open = wx.Button(panel, wx.ID_ANY, "Open Document") #works great
-        b_open.SetToolTipString("Opens the Document Inspector (for now).")
+        b_open.SetToolTipString("Opens the document in word.")
         b_open.Bind(wx.EVT_BUTTON, openDocument)
         sizer.Add(b_open, 0,wx.ALL,5)
+
+    def equationsBrowser(self, event):
+        w,h = self.GetSizeTuple()
+        x,y = self.GetPositionTuple()
+        self.eq_frame.SetPosition((w+x,y))
+        self.eq_frame.Show()
+        self.eq_frame.Raise()
 
     def buildTreeNav(self, panel, sizer):
         """ Builds our tree list of students """
@@ -181,7 +219,10 @@ class Frame(wx.Frame):
                 section = self.assignmentStack[name].getSection()
                 # # @TODO get tech id
                 self.updateStudentInformation(name, section)
-                self.si_misc.SetValue(unicode(self.assignmentStack[name].getMisc()))
+                uni_str = u""
+                for number, line in enumerate(self.assignmentStack[name].getMisc()):
+                    uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
+                self.si_misc.SetValue(unicode(uni_str))
                 if self.initialized:
                     self.updateQuestions(name)
         self.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
@@ -208,13 +249,6 @@ class Frame(wx.Frame):
         self.si_section = wx.TextCtrl(panel, value="")
         self.si_right = wx.TextCtrl(panel, value="")
         self.si_wrong = wx.TextCtrl(panel, value="")
-        
-        # If you want to see the math objects that were pulled out
-        # then set the Show to true and it'll make a panel in the middle
-        # of the interface.  It's ugly but just a test for now.
-        self.si_misc = wx.TextCtrl(panel, style=wx.TE_MULTILINE, value="")
-        si_sizer.Add(self.si_misc, pos=(0, 2), flag=wx.ALL|wx.GROW, border=0)
-        self.si_misc.Show(False)
 
         si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
@@ -249,6 +283,10 @@ class Frame(wx.Frame):
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
         wrong = 0
+        if self.assignmentStack[name].getMisc() != []:
+            self.b_equations.Enable()
+        else:
+            self.b_equations.Disable()
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
 
@@ -295,8 +333,8 @@ class Frame(wx.Frame):
         self.mainpanel.Layout()
 
 def newSession():
-    top = Frame()
-    top.Show()
+    main = MainApp()
+    main.Show()
 
 if __name__ == "__main__":
     # Error messages go to pop-up window
