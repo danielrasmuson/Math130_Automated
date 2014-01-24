@@ -5,23 +5,25 @@ def getGradesStudentsLab(quesBank, studentDict):
     """A more robust system for grading labs
     grade could be either a 1 or 0
     can add a lot more to function but I just started it"""
-    rE = .05 #rouding error
+    def roundingError(studentAnswer, answer, rE):
+        answerC = answer.replace("$","").replace(",","").strip() #clean question bank value
+        studentC = studentAnswer.replace("$","").replace(",","").strip()
+
+        try: #isdigit() doesnt work on floats i guess
+            if (float(answerC)*(1-rE)) < float(studentC) < (float(answerC)*(1+rE)):
+                grade = 1
+            else:
+                grade = 0
+        except ValueError:
+            if answerC in studentC:
+                grade = 1
+            else:
+                grade = 0
+        return grade
+
     for k in studentDict.keys():
         for key, value in studentDict[k].items():
-            cleanQBV = quesBank[k]["answer"].replace(".","").replace("$","") #clean question bank value
-            cleanedValue = value.replace(".","").replace("$","")
-            if cleanQBV.isdigit() and cleanedValue.isdigit():
-                # still correct up to x% rounding difference
-                if (float(cleanQBV)*(1-rE)) < float(cleanedValue) < (float(cleanQBV)*(1+rE)):
-                    grade = 1
-                else:
-                    grade = 0
-            else: #its a word problem
-                if cleanQBV in cleanedValue:
-                    grade = 1
-                else:
-                    grade = 0
-
+            grade = roundingError(value, quesBank[k]["answer"], .05)
             studentDict[k]["grade"] = grade
 
     return studentDict
