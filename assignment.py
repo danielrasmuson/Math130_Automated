@@ -1,6 +1,31 @@
 from getFiles import getDocxsStr
 from question_bank import Question_Bank
 
+def getGradesStudentsLab(quesBank, studentDict):
+    """A more robust system for grading labs
+    grade could be either a 1 or 0
+    can add a lot more to function but I just started it"""
+    rE = .05 #rouding error
+    for k in studentDict.keys():
+        for key, value in studentDict[k].items():
+            cleanQBV = quesBank[k]["answer"].replace(".","").replace("$","") #clean question bank value
+            cleanedValue = value.replace(".","").replace("$","")
+            if cleanQBV.isdigit() and cleanedValue.isdigit():
+                # still correct up to x% rounding difference
+                if (float(cleanQBV)*(1-rE)) < float(cleanedValue) < (float(cleanQBV)*(1+rE)):
+                    grade = 1
+                else:
+                    grade = 0
+            else: #its a word problem
+                if cleanQBV in cleanedValue:
+                    grade = 1
+                else:
+                    grade = 0
+
+            studentDict[k]["grade"] = grade
+
+    return studentDict
+
 def getStudentAnswersFromLab(qDict, lab):
     # I changed this to using a new dictionary and only returning that dictionary
     # because I'd rather have that so we can keep the two different dictionaries
@@ -32,7 +57,10 @@ def getStudentAnswersFromLab(qDict, lab):
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        studentDict[qNum] = answer.strip()
+        
+        #Added some more automated grading here
+        studentDict[qNum] = {"answer": answer.strip()}
+
     return studentDict
 
 
@@ -105,6 +133,7 @@ def getAssignmentStack(subPath):
         name = getStudentInfo(labs[i], "name")
         section = getStudentInfo(labs[i], "section")
         studentQD = getStudentAnswersFromLab(qb.getQuestionsDict(), labs[i])
+        studentQD = getGradesStudentsLab(qb.getQuestionsDict(), studentQD)
 
 
         assignObj = assignment(labs[i])
@@ -122,3 +151,4 @@ def getAssignmentStack(subPath):
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test")
+    print assignmentStack["Dan Rasmuson"].getStudentDictionary() #[0].getStudentDictionary()

@@ -491,11 +491,37 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "gui.py",
+			"settings":
+			{
+				"buffer_size": 16285,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Traceback (most recent call last):\n  File \"C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\gui.py\", line 2, in <module>\n    from assignment import getAssignmentStack\n  File \"C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\assignment.py\", line 1, in <module>\n    from getFiles import getDocxsStr\n  File \"C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\getFiles.py\", line 4, in <module>\n    import ImageGrab\nImportError: No module named ImageGrab\n>>> import ImageGrab\nTraceback (most recent call last):\n  File \"<stdin>\", line 1, in <module>\nImportError: No module named ImageGrab\n>>> ",
+			"settings":
+			{
+				"buffer_size": 591,
+				"line_ending": "Windows",
+				"name": "*REPL* [python]",
+				"scratch": true
+			}
+		},
+		{
+			"file": "getFiles.py",
+			"settings":
+			{
+				"buffer_size": 2226,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
 	{
-		"height": 235.0,
+		"height": 375.0,
 		"selected_items":
 		[
 			[
@@ -907,7 +933,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 386.0
+		"width": 522.0
 	},
 	"console":
 	{
@@ -930,11 +956,12 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/2hpp3fsj.kjp.txt",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/README",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/2hpp3fsj.kjp.txt",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
@@ -1056,12 +1083,11 @@
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/js/footer.js",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/css/enter.css",
 		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/enter.html",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/js/header.js",
-		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/html/header.html"
+		"/C/Users/Daniel/Documents/GitHub/ALS_Ultimate/Deploy/js/header.js"
 	],
 	"find":
 	{
-		"height": 38.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -1076,6 +1102,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"TODO",
+			"Searching 15 files for \"TODO\" (regex)\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\.gitignore:\n  132  \n  133  # NuGet Packages Directory\n  134: ## TODO: If you have NuGet Package Restore enabled, uncomment the next line\n  135  #packages/\n  136  \n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\assignment.py:\n    9      studentDict = {}\n   10      for qNum in qDict.keys():\n   11:         # @TODO need some error handling on these indexes\n   12          start = lab.index(qDict[qNum][\"question\"])\n   13          start += len(qDict[qNum][\"question\"]) # to not include question\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\gui.py:\n  122              name = self.lab_tree_list.GetItemText(item)\n  123              section = self.assignmentStack[name].getSection()\n  124:             # # @TODO get tech id\n  125              self.UpdateStudentInformation(name, section, \"Unknown\")\n  126              if self.initialized:\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\question_bank.py:\n   11      def __init__(self):\n   12          # Some default stuff to get testing with.\n   13:         # @TODO turn this into a dictionary\n   14          self.questionsDict = {\n   15          1:{\"question\":\"What is the 25th term of this sequence?\",\"answer\":\"41.62\",\"aText\":\"What is the 80th term of this sequence\"},\n\n4 matches across 4 files",
+			"TODO",
 			"open",
 			"nullColor",
 			"self.questions_area",
@@ -1200,10 +1229,7 @@
 			"assignmentObjects",
 			"700",
 			"justify",
-			")",
-			"Frame",
-			"root",
-			"setAnswersAndName"
+			")"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1237,14 +1263,443 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "gui.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16285,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								161,
+								161
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 591,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								591,
+								591
+							]
+						],
+						"settings":
+						{
+							"auto_complete": true,
+							"auto_indent": false,
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"detect_indentation": false,
+							"gutter": false,
+							"history_arrows": true,
+							"indent_subsequent_lines": false,
+							"line_numbers": false,
+							"repl": true,
+							"repl_external_id": "python",
+							"repl_id": "5e789ca0078e483e9a589b018b95bbe4",
+							"repl_restart_args":
+							{
+								"cmd":
+								[
+									"python",
+									"-i",
+									"-u",
+									"$file"
+								],
+								"cwd": "$file_path",
+								"encoding": "utf8",
+								"external_id": "python",
+								"syntax": "Packages/Python/Python.tmLanguage",
+								"type": "subprocess"
+							},
+							"repl_sublime2": false,
+							"smart_indent": false,
+							"spell_check": false,
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 26.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "getFiles.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2226,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								409,
+								409
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 28.0
+		"height": 30.0
 	},
 	"input":
 	{
@@ -1296,7 +1751,7 @@
 	"project": "math130_automation.sublime-project",
 	"replace":
 	{
-		"height": 52.0
+		"height": 56.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1307,6 +1762,10 @@
 			[
 				"get",
 				"getFiles.py"
+			],
+			[
+				"g",
+				"gui.py"
 			],
 			[
 				"ass",

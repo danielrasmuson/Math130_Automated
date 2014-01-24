@@ -234,13 +234,15 @@ class MainApp(wx.Frame):
         self.tree_rootDict = {}
 
     def buildRightQuestionsArea(self, panel, sizer):
-        title = wx.StaticText(panel, wx.ID_ANY, label="Math 130 Automated Grading System")
-        titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        title.SetFont(titlefont)
-        sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
+        # Note sure we need the title seems redundant
+        # title = wx.StaticText(panel, wx.ID_ANY, label="Math 130 Automated Grading System")
+        # titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
+        # title.SetFont(titlefont)
+        # sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
         si_sizer = wx.GridBagSizer(5, 5)
         si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
         si_sizer.Add(wx.StaticText(panel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
         si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
         si_sizer.Add(wx.StaticText(panel, label="Questions Wrong:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
@@ -288,16 +290,15 @@ class MainApp(wx.Frame):
         else:
             self.b_equations.Disable()
         for qNum in studentQD.keys():
-            self.student_answer_boxes[qNum].SetLabel(studentQD[qNum])
+            self.student_answer_boxes[qNum].SetLabel(studentQD[qNum]["answer"])
 
-            #I changed this to not in because then it can verify more answers
-            if str(self.qb.getQuestionsDict()[qNum]['answer']) not in str(studentQD[qNum]):
-                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                wrong += 1
-            else:
+            if studentQD[qNum]['grade']:
                 #Change 'NullColor' to Grey because I was getting errors
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 right += 1
+            else:
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                wrong += 1
         self.si_right.SetValue(str(right))
         self.si_wrong.SetValue(str(wrong))
 
