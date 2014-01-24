@@ -301,7 +301,6 @@ class MainApp(wx.Frame):
             elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
             tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
-        self.tree = tree
 
     def updateStudentInformation(self, name, section):
         self.si_name.SetValue(name)
@@ -314,7 +313,7 @@ class MainApp(wx.Frame):
         # Yep I was going to tell you to pass in the name variable. That speeds things up
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
-        self.wrong = 0
+        wrong = 0
         if self.assignmentStack[name].getMisc() != []:
             self.b_equations.Enable()
         else:
@@ -328,9 +327,9 @@ class MainApp(wx.Frame):
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                self.wrong += 1
+                wrong += 1
         self.si_right.SetValue(str(right))
-        self.si_wrong.SetValue(str(self.wrong))
+        self.si_wrong.SetValue(str(wrong))
 
     def initializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
