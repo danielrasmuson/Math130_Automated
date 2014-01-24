@@ -2,6 +2,7 @@ import wx, os, time
 from assignment import getAssignmentStack
 from question_bank import *
 from wx.lib.wordwrap import wordwrap
+from toImportDocument import sendToImport
 
 class EquationsBrowser(wx.Frame):
     def __init__(self, parent, initialPosition, initialSize):
@@ -84,6 +85,15 @@ class MainApp(wx.Frame):
                 self.initializeQuestionArea()
             dlg.Destroy()
 
+        def loadImportFile(event):
+            """The user finds the template import file
+            downloaded from d2l and then the program will
+            fill in the values."""
+            dlg = wx.FileDialog(self, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            if dlg.ShowModal() == wx.ID_OK:
+                self.importFilePath = dlg.GetPath()
+            dlg.Destroy()
+
         def onAbout(event):
             dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
             result = dlg.ShowModal()
@@ -129,11 +139,13 @@ class MainApp(wx.Frame):
         m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
         m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
         m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
+        m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
         fileMenu.AppendSeparator()
         m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
         self.Bind(wx.EVT_MENU, onNew, m_new)
         self.Bind(wx.EVT_MENU, onOpen, m_open)
         self.Bind(wx.EVT_MENU, loadBank, m_load)
+        self.Bind(wx.EVT_MENU, loadImportFile, m_import)
         self.Bind(wx.EVT_MENU, onClose, m_exit)
         menuBar.Append(fileMenu, "&File")
 
@@ -179,6 +191,16 @@ class MainApp(wx.Frame):
                 if self.lab_tree_list.GetNextSibling(parent).IsOk():
                     self.lab_tree_list.SelectItem(self.lab_tree_list.GetNextSibling(parent))
 
+        def sendGrade(event):
+            # Do you know how to do complete this first check greg?
+            # @TODO: Hoping to add ✔ to the start of tree names if sendGrade has been executed
+            # @TODO: right answers should be divided by the total score (30 points)
+            # @TODO: wont work if they have more then 2 word name
+            name = self.si_name.GetValue().split()
+            score = self.si_right.GetValue()
+            sendToImport(self.importFilePath, name[0], name[1], score)
+
+
         b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
         b_prev.SetToolTipString("Selects the previous student of the current section.")
         b_prev.Bind(wx.EVT_BUTTON, previousButton)
@@ -197,10 +219,17 @@ class MainApp(wx.Frame):
         self.b_equations.Bind(wx.EVT_BUTTON, self.equationsBrowser)
         sizer.Add(self.b_equations, 0,wx.ALL,5)
 
-        b_open = wx.Button(panel, wx.ID_ANY, "Open Document") #works great
+        b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
         b_open.SetToolTipString("Opens the document in word.")
         b_open.Bind(wx.EVT_BUTTON, openDocument)
         sizer.Add(b_open, 0,wx.ALL,5)
+
+        # A button for sending the grade to the excel file
+        b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
+        b_grade.SetToolTipString("Sends the grade to excel file")
+        b_grade.Bind(wx.EVT_BUTTON, sendGrade)
+        sizer.Add(b_grade, 0,wx.ALL,5)
+
 
     def equationsBrowser(self, event):
         w,h = self.GetSizeTuple()
@@ -272,6 +301,7 @@ class MainApp(wx.Frame):
             elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
             tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
+        self.tree = tree
 
     def updateStudentInformation(self, name, section):
         self.si_name.SetValue(name)
@@ -284,7 +314,7 @@ class MainApp(wx.Frame):
         # Yep I was going to tell you to pass in the name variable. That speeds things up
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
-        wrong = 0
+        self.wrong = 0
         if self.assignmentStack[name].getMisc() != []:
             self.b_equations.Enable()
         else:
@@ -298,9 +328,9 @@ class MainApp(wx.Frame):
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                wrong += 1
+                self.wrong += 1
         self.si_right.SetValue(str(right))
-        self.si_wrong.SetValue(str(wrong))
+        self.si_wrong.SetValue(str(self.wrong))
 
     def initializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)

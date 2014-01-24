@@ -24,9 +24,11 @@ def getGradesStudentsLab(quesBank, studentDict):
     for k in studentDict.keys():
         for key, value in studentDict[k].items():
             grade = roundingError(value, quesBank[k]["answer"], .05)
+            
             studentDict[k]["grade"] = grade
 
     return studentDict
+
 
 def getStudentAnswersFromLab(qDict, lab):
     # I changed this to using a new dictionary and only returning that dictionary
@@ -64,19 +66,6 @@ def getStudentAnswersFromLab(qDict, lab):
         studentDict[qNum] = {"answer": answer.strip()}
 
     return studentDict
-
-
-def getStudentInfo(lab, lWord):
-    """Give the lab str and word you want
-    (name|section)
-    it will return the corresponding information"""
-    info = ""
-    for line in lab.split("\r"):
-        if lWord in line.lower():
-            info = line.split(":")[1].strip().replace("_","").lstrip("0")
-    if info == "":
-        info = "MissingInformation"
-    return info
 
 
 class assignment():
@@ -125,6 +114,17 @@ class assignment():
 
 
 def getAssignmentStack(subPath):
+    def getStudentInfo(lab, lWord):
+        """Give the lab str and word you want
+        (name|section)
+        it will return the corresponding information"""
+        info = ""
+        for line in lab.split("\r"):
+            if lWord in line.lower():
+                info = line.split(":")[1].strip().replace("_","").lstrip("0")
+        if info == "":
+            info = "MissingInformation"
+        return info
     """Returns a list assignments"""
     fileList,labs,miscObjects = getDocxsStr(subPath)
 
