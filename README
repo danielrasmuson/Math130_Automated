@@ -20,13 +20,16 @@ I'm thinking of starting export CSV grades
 
 Possible ideas for future
 -------------------------
-1. disable buttons when you cant use them
-2. grading support for multiple sections
-3. wizard for loading files
-4. noticing when document has and does not have equations
-5. change value of question right changes value of score
-6. ability to move students from incorrect or missing section
-7. speed up word document opening
-8. ability to add more answers ($10.40 | 10 dollar 40 cents)
-9. add checkmark to done students
-10. Add multiple lines to student quesitons
+redo document importing (faster with equations) - Greg
+    noticing when document has and does not have equations
+    speed up word document opening
+disable buttons when you cant use them - Greg
+change value of question right changes value of score - Greg
+file name support - Dan
+add checkmark to done students - Greg
+    look into wrapper for trees
+ability to add more answers ($10.40 | 10 dollar 40 cents) - Dan
+wizard for loading files
+Add multiple lines to student quesitons
+grading support for multiple sections
+ability to move students from incorrect or missing section
