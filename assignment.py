@@ -72,13 +72,13 @@ def getStudentAnswersFromLab(qDict, lab):
         #NOTE - I'm removing strange symbols here
         # might remove squared and stuff from answers
         answerUnicode = lab[start:end]
-        answer = ""
-        for char in answerUnicode:
-            if 14 < ord(char) < 128:
-                answer += char
+        # answer = ""
+        # for char in answerUnicode:
+            # if 14 < ord(char) < 128:
+                # answer += char
         
         #Added some more automated grading here
-        studentDict[qNum] = {"answer": answer.strip()}
+        studentDict[qNum] = {"answer": answerUnicode.strip()}
 
     return studentDict
 
