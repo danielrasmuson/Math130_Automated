@@ -193,11 +193,12 @@ class MainApp(wx.Frame):
 
         def sendGrade(event):
             # Do you know how to do complete this first check greg?
+            # @TODO: when you change the value of the score box in the gui it needs change the value of the variable
             # @TODO: Hoping to add \xe2 to the start of tree names if sendGrade has been executed
             # @TODO: right answers should be divided by the total score (30 points)
             # @TODO: wont work if they have more then 2 word name
             name = self.si_name.GetValue().split()
-            score = self.si_right.GetValue()
+            score = self.si_score.GetValue()
             sendToImport(self.importFilePath, name[0], name[1], score)
 
 
@@ -230,7 +231,6 @@ class MainApp(wx.Frame):
         b_grade.Bind(wx.EVT_BUTTON, sendGrade)
         sizer.Add(b_grade, 0,wx.ALL,5)
 
-
     def equationsBrowser(self, event):
         w,h = self.GetSizeTuple()
         x,y = self.GetPositionTuple()
@@ -246,7 +246,6 @@ class MainApp(wx.Frame):
             if "Section" not in self.lab_tree_list.GetItemText(item):
                 name = self.lab_tree_list.GetItemText(item)
                 section = self.assignmentStack[name].getSection()
-                # # @TODO get tech id
                 self.updateStudentInformation(name, section)
                 uni_str = u""
                 for number, line in enumerate(self.assignmentStack[name].getMisc()):
@@ -263,28 +262,22 @@ class MainApp(wx.Frame):
         self.tree_rootDict = {}
 
     def buildRightQuestionsArea(self, panel, sizer):
-        # Note sure we need the title seems redundant
-        # title = wx.StaticText(panel, wx.ID_ANY, label="Math 130 Automated Grading System")
-        # titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        # title.SetFont(titlefont)
-        # sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
-
         si_sizer = wx.GridBagSizer(5, 5)
         si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
         # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
         si_sizer.Add(wx.StaticText(panel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
         si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-        si_sizer.Add(wx.StaticText(panel, label="Questions Wrong:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
 
         self.si_name = wx.TextCtrl(panel, value="")
         self.si_section = wx.TextCtrl(panel, value="")
         self.si_right = wx.TextCtrl(panel, value="")
-        self.si_wrong = wx.TextCtrl(panel, value="")
+        self.si_score = wx.TextCtrl(panel, value="")
 
         si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
-        si_sizer.Add(self.si_wrong, pos=(1, 4), flag=wx.ALL, border=0)
+        si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
 
         si_sizer.AddGrowableCol(2)
 
@@ -306,14 +299,16 @@ class MainApp(wx.Frame):
         self.si_name.SetValue(name)
         self.si_section.SetValue(section)
         self.si_right.SetValue("")
-        self.si_wrong.SetValue("")
+        self.si_score.SetValue("")
 
     def updateQuestions(self, name):
+        # @TODO - it would be better if this variable could be set somewhere else
+        totalPoints = 30.0 #if they are floats answer will be more accurate
+        numberQuestions = 12.0
+
         # This gets our students answers and the dictionary we're comparing their answer to.
-        # Yep I was going to tell you to pass in the name variable. That speeds things up
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
-        wrong = 0
         if self.assignmentStack[name].getMisc() != []:
             self.b_equations.Enable()
         else:
@@ -327,9 +322,8 @@ class MainApp(wx.Frame):
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                wrong += 1
-        self.si_right.SetValue(str(right))
-        self.si_wrong.SetValue(str(wrong))
+        self.si_right.SetValue(str(right) + " / " + str(int(numberQuestions)))
+        self.si_score.SetValue(str(right/numberQuestions*totalPoints) + " / " + str(int(totalPoints)))
 
     def initializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)

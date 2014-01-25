@@ -9,6 +9,7 @@ class Question_Bank():
     """
 
     def __init__(self):
+        # I think maybe we should put this inside a lab 1 then we can include more data for example total points
         self.questionsDict = {
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
