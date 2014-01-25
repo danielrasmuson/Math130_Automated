@@ -1,4 +1,5 @@
-math130_automation.sublime-project
+*.sublime-project
+*.docx
 
 #################
 ## Eclipse
