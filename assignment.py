@@ -127,31 +127,21 @@ class assignment():
     def getStudentFilepath(self):
         return self.filePath
 
-
-def getAssignmentStack(subPath):
-    def getStudentInfo(lab, lWord):
-        """Give the lab str and word you want
-        (name|section)
-        it will return the corresponding information"""
-        info = ""
-        for line in lab.split("\r"):
-            if lWord in line.lower():
-                info = line.split(":")[1].replace("_","").strip().lstrip("0").strip()
-        if info == "":
-            info = "MissingInformation"
-        return info
+def getAssignmentStack(subPath, importFilePath):
     """Returns a list assignments"""
-    fileList,labs,miscObjects = getDocxsStr(subPath)
+    fileList, labs, miscObjects, fileNameList = getDocxsStr(subPath)
 
     qb = Question_Bank()
     assignmentStack = {}
+
+    #EX: Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv
+    section = importFilePath.split()[-1].split("_")[0] #this will give an error if the rename the file
+
     for i in range(len(labs)):
-        #create the attributes for the new assignment object
-        name = getStudentInfo(labs[i], "name")
-        section = getStudentInfo(labs[i], "section")
+        name = fileNameList[i].split("-")[0]
+
         studentQD = getStudentAnswersFromLab(qb.getQuestionsDict(), labs[i])
         studentQD = getGradesStudentsLab(qb.getQuestionsDict(), studentQD)
-
 
         assignObj = assignment(labs[i])
 
@@ -167,5 +157,5 @@ def getAssignmentStack(subPath):
     return assignmentStack
 
 if __name__ == "__main__":
-    assignmentStack = getAssignmentStack("Examples\\test")
-    print assignmentStack["Dan Rasmuson"].getStudentDictionary() #[0].getStudentDictionary()
+    assignmentStack = getAssignmentStack("Examples\\test", "C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv")
+    # print assignmentStack["Dan Rasmuson"].getStudentDictionary() #[0].getStudentDictionary()

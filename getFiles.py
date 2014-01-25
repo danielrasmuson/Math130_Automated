@@ -11,7 +11,9 @@ def getDocxsStr(subFolder):
     docxList = []
     fileList = []
     objectList = []
+    fileNameList = []
     for filePath in glob.glob(subFolder+"\*.docx"):
+        fileNameList.append(filePath.split("\\")[-1])
         start = time.clock()
         misc_objects = []
         if filePath.find(":") == -1:
@@ -50,7 +52,7 @@ def getDocxsStr(subFolder):
         fileList.append(filePath)
         objectList.append(misc_objects)
     word.Application.Quit(-1)
-    return fileList,docxList,objectList
+    return fileList, docxList, objectList, fileNameList
 
 if __name__ == "__main__":
     print getDocxsStr("Examples\\test")[0]
