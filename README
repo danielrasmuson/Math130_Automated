@@ -24,7 +24,6 @@ redo document importing (faster with equations) - Greg
     noticing when document has and does not have equations
     speed up word document opening
 disable buttons when you cant use them - Greg
-change value of question right changes value of score - Greg
 file name support - Dan
 add checkmark to done students - Greg
     look into wrapper for trees
@@ -33,3 +32,8 @@ wizard for loading files
 Add multiple lines to student quesitons
 grading support for multiple sections
 ability to move students from incorrect or missing section
+
+
+Done
+-----------------------------
+change value of question right changes value of score - Greg

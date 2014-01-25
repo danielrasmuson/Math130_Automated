@@ -69,6 +69,9 @@ class MainApp(wx.Frame):
 
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
+    def getImportFilePath(self):
+        #TODO: if we make sub classes we can embed this into buildMenuNav
+        return self.importFilePath
 
     def buildMenuNav(self):
         """ Builds the menu bar, status bar, and the associated
@@ -94,6 +97,8 @@ class MainApp(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 self.importFilePath = dlg.GetPath()
             dlg.Destroy()
+
+
 
         def onAbout(event):
             dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
@@ -126,7 +131,7 @@ class MainApp(wx.Frame):
             # Later we can navigate anywhere we want and cut that part.
             dlg = wx.DirDialog(self, "Choose a directory:",os.getcwd()+"\\Examples\\test")
             if dlg.ShowModal() == wx.ID_OK:
-                self.assignmentStack = getAssignmentStack(dlg.GetPath())
+                self.assignmentStack = getAssignmentStack(dlg.GetPath(), self.getImportFilePath())
                 # Call our initial tree list build
                 self.updateTreeList(self.lab_tree_list)
             dlg.Destroy()
