@@ -1,3 +1,4 @@
+from __future__ import division
 import wx, os, time
 from assignment import getAssignmentStack
 from question_bank import *
@@ -250,7 +251,7 @@ class MainApp(wx.Frame):
                 uni_str = u""
                 for number, line in enumerate(self.assignmentStack[name].getMisc()):
                     uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
-                self.si_misc.SetValue(unicode(uni_str))
+                self.si_misc.ChangeValue(unicode(uni_str))
                 if self.initialized:
                     self.updateQuestions(name)
         self.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
@@ -274,6 +275,8 @@ class MainApp(wx.Frame):
         self.si_right = wx.TextCtrl(panel, value="")
         self.si_score = wx.TextCtrl(panel, value="")
 
+        self.si_right.Bind(wx.EVT_TEXT, self.setScore)
+
         si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
         si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
@@ -296,15 +299,15 @@ class MainApp(wx.Frame):
             tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
 
     def updateStudentInformation(self, name, section):
-        self.si_name.SetValue(name)
-        self.si_section.SetValue(section)
-        self.si_right.SetValue("")
-        self.si_score.SetValue("")
+        self.si_name.ChangeValue(name)
+        self.si_section.ChangeValue(section)
+        self.si_right.ChangeValue("")
+        self.si_score.ChangeValue("")
 
     def updateQuestions(self, name):
         # @TODO - it would be better if this variable could be set somewhere else
-        totalPoints = 30.0 #if they are floats answer will be more accurate
-        numberQuestions = 12.0
+        self.totalPoints = 30 #if they are floats answer will be more accurate
+        self.numberQuestions = 12
 
         # This gets our students answers and the dictionary we're comparing their answer to.
         studentQD = self.assignmentStack[name].getStudentDictionary()
@@ -317,13 +320,17 @@ class MainApp(wx.Frame):
             self.student_answer_boxes[qNum].SetLabel(studentQD[qNum]["answer"])
 
             if studentQD[qNum]['grade']:
-                #Change 'NullColor' to Grey because I was getting errors
-                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColour)
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-        self.si_right.SetValue(str(right) + " / " + str(int(numberQuestions)))
-        self.si_score.SetValue(str(right/numberQuestions*totalPoints) + " / " + str(int(totalPoints)))
+        self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
+        
+    def setScore(self, event):
+        try:
+            self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
+        except:
+            pass
 
     def initializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)

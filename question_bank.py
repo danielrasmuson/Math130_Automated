@@ -27,6 +27,17 @@ class Question_Bank():
 
     def getQuestionsDict(self):
         return self.questionsDict
+        
+    # def setLab(self, lab):
+        # self.lab = lab
+        
+    # def getAnswer(self, qNum):
+        # return self.questionsDict[self.lab]
+# qb["lab1"]["question"][1]
+# qb["lab1"]["answer"][1]
+# qb["lab1"]["questionPoints"][1]
+# qb["lab1"]["totalPoints"]
+# qb["lab1"]["
 
     def save(self,filename="lab1.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
