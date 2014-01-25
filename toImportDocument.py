@@ -12,6 +12,8 @@ def sendToImport(path, fName, lName, score):
         print "ERROR: the name you are looking for is not in the template"
         return False
 
+    score = score.strip().split()[0] #score comes in as "25 / 30"
+
     newText = startText
     for line in startText.split("\n"):
         if fName.lower() in line.lower() and lName.lower() in line.lower():

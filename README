@@ -15,3 +15,18 @@ I'm thinking of starting export CSV grades
   1. Button that pushes student results to CSV
   2. After this button is pressed it puts a green check next to student name
   3. You have to press this button to confirm the grading on each students report
+
+@TODO - Current send to grade won't overlap already pushed grade  
+
+Possible ideas for future
+-------------------------
+1. disable buttons when you cant use them
+2. grading support for multiple sections
+3. wizard for loading files
+4. noticing when document has and does not have equations
+5. change value of question right changes value of score
+6. ability to move students from incorrect or missing section
+7. speed up word document opening
+8. ability to add more answers ($10.40 | 10 dollar 40 cents)
+9. add checkmark to done students
+10. Add multiple lines to student quesitons
