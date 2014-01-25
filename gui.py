@@ -193,7 +193,7 @@ class MainApp(wx.Frame):
 
         def sendGrade(event):
             # Do you know how to do complete this first check greg?
-            # @TODO: Hoping to add ✔ to the start of tree names if sendGrade has been executed
+            # @TODO: Hoping to add \xe2 to the start of tree names if sendGrade has been executed
             # @TODO: right answers should be divided by the total score (30 points)
             # @TODO: wont work if they have more then 2 word name
             name = self.si_name.GetValue().split()

@@ -14,10 +14,10 @@ class Question_Bank():
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
         3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?"},
         4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","aText":"Recall the explicit formulas for the nth term of an arithmetic sequence","answer":"6671.97"},
-        # 5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3.  Show your work.","aText":"Now, use your Excel workbook to set up a geometric progression with a first term of 3.59 and a common multiplier of 1.03.  Answer the following problems"},
+        5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3.  Show your work.","aText":"Now, use your Excel workbook to set up a geometric progression with a first term of 3.59 and a common multiplier of 1.03.  Answer the following problems","answer":["2.5+1.63(25-1)","2.5+1.63(80-1)","75/2(2.5+123.12)"]},
         6:{"question":"What is the 15th term of this sequence?","answer":"5.43","aText":"What is the sum of the first 30 terms of this sequence?"},
         7:{"question":"What is the sum of the first 30 terms of this sequence?","aText":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80"},
-        # 8:{"question":"Use these formulas to verify your answers for questions 6 and 7.  Show your work.","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?"},
+        8:{"question":"Use these formulas to verify your answers for questions 6 and 7.  Show your work.","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","answer":["3.59*1.03^(15-1)","3.59((1.03 ^30)-1)/(1.03-1)"]},
         9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","aText":"An auditorium has","answer":"$10.40"},
         10:{"question":"How many seats will there be in the 16th row?","answer":"40","aText":"How many total seats are there in the auditorium"},
         11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods."},
@@ -44,17 +44,18 @@ class Question_Bank():
     def add_question(self,question_number, question, answer, substring1="", substring2=""):
         """ A simple way to add questions to the dictionary. """
         #Note this is assuming lab 1
-        self.questionsDict[1][question_number] = {"question":question,"answer":answer}
+        self.questionsDict[question_number] = {"question":question,"answer":answer}
 
     def print_questions_to_console(self):
         """ Just a quick test function to print all the data to the console """
         #Note this is assuming lab 1
-        for key in self.questionsDict[1].keys():
-            print "Question " + str(key) + ": " + self.questionsDict[1][key]["question"] + " " + self.questionsDict[1][key]["answer"]
+        # Wont work right now because of lists
+        for key in self.questionsDict.keys():
+            print "Question " + str(key) + ": " + self.questionsDict[key]["question"] + " " + self.questionsDict[key]["answer"]
 
 
 if __name__ == "__main__":
     qb = Question_Bank()
     qb.save()
-    qb.add_question(15,"asdf","lkasdj")
-    qb.print_questions_to_console()
+    # qb.add_question(15,"asdf","lkasdj")
+    # qb.print_questions_to_console()

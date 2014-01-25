@@ -5,25 +5,40 @@ def getGradesStudentsLab(quesBank, studentDict):
     """A more robust system for grading labs
     grade could be either a 1 or 0
     can add a lot more to function but I just started it"""
-    def roundingError(studentAnswer, answer, rE):
+    def roundingError(sAnswer, answer, rE):
         answerC = answer.replace("$","").replace(",","").strip() #clean question bank value
-        studentC = studentAnswer.replace("$","").replace(",","").strip()
+        studentC = sAnswer.replace("$","").replace(",","").strip()
 
         try: #isdigit() doesnt work on floats i guess
             if (float(answerC)*(1-rE)) < float(studentC) < (float(answerC)*(1+rE)):
-                grade = 1
+                return 1
             else:
-                grade = 0
+                return 0
         except ValueError:
             if answerC in studentC:
-                grade = 1
+                return 1
             else:
-                grade = 0
-        return grade
+                return 0
+
+    def gradeList(sAnswer, answerList):
+        """This will hopefully grade answers
+        that are show your work involving mutliple steps
+        and have answers such as 3.59*1.03^15-1"""
+        for answer in answerList:
+            answer = answer.replace(" ","")
+            sAnswer = sAnswer.replace(" ","")
+            if answer not in sAnswer:
+                return 0
+        return 1
+
 
     for k in studentDict.keys():
         for key, value in studentDict[k].items():
-            grade = roundingError(value, quesBank[k]["answer"], .05)
+            answer = quesBank[k]["answer"]
+            if type(answer) == list:
+                grade = gradeList(value, answer)
+            else:
+                grade = roundingError(value, answer, .05)
             
             studentDict[k]["grade"] = grade
 
