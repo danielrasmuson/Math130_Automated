@@ -45,7 +45,7 @@ def getDocxsStr(subFolder):
                     print "Error saving images from file: ",filePath
         end = time.clock()
         print "Time Taken:",end-start
-        doc.Close()
+        doc.Close(SaveChanges=False)
         docxList.append(string)
         fileList.append(filePath)
         objectList.append(misc_objects)

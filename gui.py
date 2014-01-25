@@ -163,7 +163,7 @@ class MainApp(wx.Frame):
         """Builds a predefined set of buttons on a specific panel
          and utilizing the sizer provided"""
         def openDocument(event):
-            current_item = self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection())
+            current_item = str(self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection()).strip(u"\u2714"))
             if "Section" not in current_item:
                 os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
 
@@ -244,8 +244,9 @@ class MainApp(wx.Frame):
         def onSelChanged(event):
             # Get our item that updated
             item = event.GetItem()
-            if "Section" not in self.lab_tree_list.GetItemText(item):
-                name = self.lab_tree_list.GetItemText(item)
+            currentSelection = self.lab_tree_list.GetItemText(item)
+            if "Section" not in currentSelection:
+                name = str(currentSelection.strip(u"\u2714 "))
                 section = self.assignmentStack[name].getSection()
                 self.updateStudentInformation(name, section)
                 uni_str = u""
@@ -296,7 +297,7 @@ class MainApp(wx.Frame):
                 self.lab_tree_list.SetItemBackgroundColour(self.tree_rootDict[sec],"#FFAAAA")
             elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
-            tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
+            tree.AppendItem(self.tree_rootDict[sec], u"\u2714" + name) #appends name onto section
 
     def updateStudentInformation(self, name, section):
         self.si_name.ChangeValue(name)
@@ -317,7 +318,7 @@ class MainApp(wx.Frame):
         else:
             self.b_equations.Disable()
         for qNum in studentQD.keys():
-            self.student_answer_boxes[qNum].SetLabel(studentQD[qNum]["answer"])
+            self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
 
             if studentQD[qNum]['grade']:
                 self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColour)
@@ -370,6 +371,6 @@ def newSession():
 if __name__ == "__main__":
     # Error messages go to pop-up window
     # because of the redirect=True.
-    app = wx.App(redirect=False)
+    app = wx.App(redirect=True)
     newSession()
     app.MainLoop()
