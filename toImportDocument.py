@@ -1,3 +1,4 @@
+import re
 def sendToImport(path, fName, lName, score):
     """In order for this to work the user
     must include the names in the export"""
@@ -17,8 +18,7 @@ def sendToImport(path, fName, lName, score):
     newText = startText
     for line in startText.split("\n"):
         if fName.lower() in line.lower() and lName.lower() in line.lower():
-            # in csv two commas would denote an empty cell
-            newLine = line.replace(",,",","+str(score)+",")
+            newLine = re.sub(r",\d*?,#",","+str(score)+",", line) # matches ,,# or ,23343,#
             newText = newText.replace(line,newLine)
 
     textFile = open(path,"w")
