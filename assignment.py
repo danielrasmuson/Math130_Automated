@@ -1,4 +1,4 @@
-from getFiles import getDocxsStr
+from getFiles import getDocxsFromFolder
 from question_bank import *
 
 def getGradesStudentsLab(qb, studentDict):
@@ -143,7 +143,7 @@ class assignment():
 
 def getAssignmentStack(subPath, importFilePath):
     """Returns a list assignments"""
-    fileList, labs, miscObjects, fileNameList = getDocxsStr(subPath)
+    labs, fileNameList = getDocxsFromFolder(subPath)
 
     qb = Question_Bank()
     assignmentStack = {}
@@ -163,8 +163,8 @@ def getAssignmentStack(subPath, importFilePath):
         assignObj.setName(name)
         assignObj.setSection(section)
         assignObj.setStudentDictionary(qs)
-        assignObj.setStudentFilepath(fileList[i])
-        assignObj.setMisc(miscObjects[i])
+        assignObj.setStudentFilepath(fileNameList[i])
+        # assignObj.setMisc(miscObjects[i])
 
         assignmentStack[name] = assignObj
 

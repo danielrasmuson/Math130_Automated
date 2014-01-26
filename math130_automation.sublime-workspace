@@ -4,6 +4,62 @@
 		"selected_items":
 		[
 			[
+				"dco",
+				"docxObj"
+			],
+			[
+				"Doc",
+				"docxObj"
+			],
+			[
+				"ans",
+				"answerTextBox"
+			],
+			[
+				"qNum",
+				"qNumText"
+			],
+			[
+				"qN",
+				"qNumText"
+			],
+			[
+				"size",
+				"sizeQuestionArea"
+			],
+			[
+				"te",
+				"textInQandA"
+			],
+			[
+				"labelq",
+				"labelQ"
+			],
+			[
+				"labelQ",
+				"labelQNum"
+			],
+			[
+				"Comment",
+				"CommentBrowser"
+			],
+			[
+				"print",
+				"print_questions_to_console"
+			],
+			[
+				"assi",
+				"assignObj"
+			],
+			[
+				"ass",
+				"assignment"
+			],
+			[
+				"lab",
+				"labNum"
+			],
+			[
 				"number",
 				"numberQuestions"
 			],
@@ -76,10 +132,6 @@
 				"getStudentDictionary"
 			],
 			[
-				"ass",
-				"assignmentStack"
-			],
-			[
 				"assign",
 				"assignObj"
 			],
@@ -112,10 +164,6 @@
 				"qDict"
 			],
 			[
-				"assi",
-				"assignment"
-			],
-			[
 				"upd",
 				"UpdateQuestions"
 			],
@@ -138,14 +186,6 @@
 			[
 				"stu",
 				"studentQD"
-			],
-			[
-				"ans",
-				"answerList"
-			],
-			[
-				"dco",
-				"documentStr"
 			],
 			[
 				"getSt",
@@ -228,10 +268,6 @@
 				"returnSomething"
 			],
 			[
-				"te",
-				"textVar"
-			],
-			[
 				"text",
 				"text1"
 			],
@@ -306,10 +342,6 @@
 			[
 				"le",
 				"leftLetters"
-			],
-			[
-				"print",
-				"printList"
 			],
 			[
 				"score",
@@ -482,43 +514,27 @@
 			[
 				"min",
 				"min-width"
-			],
-			[
-				"link",
-				"link	link - stylesheet"
-			],
-			[
-				"style",
-				"styleChanges"
-			],
-			[
-				"inside",
-				"insideL"
-			],
-			[
-				"span",
-				"spanStyle"
-			],
-			[
-				"product",
-				"product_name"
-			],
-			[
-				"clea",
-				"cleanedLine"
-			],
-			[
-				"ins",
-				"insideStyle"
-			],
-			[
-				"sec",
-				"sectionReplace"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/Python27/Lib/site-packages/BeautifulSoupTests.py",
+			"settings":
+			{
+				"buffer_size": 37577,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Python27/Lib/site-packages/pydocx/DocxParser.py",
+			"settings":
+			{
+				"buffer_size": 27202,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/User/Python2.sublime-build",
 	"command_palette":
@@ -529,6 +545,22 @@
 			[
 				"close",
 				"Project: Close"
+			],
+			[
+				"pretif",
+				"HTMLPrettify"
+			],
+			[
+				"",
+				"Bookmarks: Select Previous"
+			],
+			[
+				"preti",
+				"HTMLPrettify"
+			],
+			[
+				"ti",
+				"Convert Case: Title Case"
 			],
 			[
 				"pane b",
@@ -625,10 +657,6 @@
 			[
 				"delet",
 				"File: Delete"
-			],
-			[
-				"pretif",
-				"HTMLPrettify"
 			],
 			[
 				"enab",
@@ -875,10 +903,6 @@
 				"SublimeREPL: Python - Sublime Text Console"
 			],
 			[
-				"",
-				"AutoHotkey - Run As Piped Buffer"
-			],
-			[
 				"connect",
 				"SQLExec: List connections"
 			],
@@ -967,7 +991,7 @@
 				"SublimeREPL: Python - IPython"
 			]
 		],
-		"width": 386.0
+		"width": 522.0
 	},
 	"console":
 	{
@@ -990,17 +1014,40 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/lab1.dat",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/docxTest.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/outfile.txt",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/lib/colourchooser/pycolourchooser.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/tools/XRCed/encode_bitmaps.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/py/PyAlaMode.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/tools/Editra/locale/pt_BR/LC_MESSAGES/Editra.mo",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/lib/pdfviewer/bezier.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/lib/busy.py",
+		"/C/Users/Daniel/Desktop/new.docx",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/test/Amy Holscher- Jan 23, 2014 323 PM - Lab 1 Assignment finished.docx",
+		"/C/Users/Daniel/Desktop/pythonPath.txt",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/pydocx/DocxParser.py",
+		"/C/Python27/Lib/pydocx/DocxParser.py",
+		"/C/Users/Daniel/Google Drive/Classes/Philo/EXAM1.docx",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/README",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/gui.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/_controls.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/tools/Editra/tests/syntax/actionscript.as",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/tools/Editra/tests/syntax/objective_c.mm",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/tools/Editra/src/extern/pygments/styles/native.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/lib/statbmp.py",
+		"/C/Python27/Lib/site-packages/wx-3.0-msw/wx/stc.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/commentBrowser.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_bank.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/getFiles.py",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
+		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/lab1.dat",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/Lab 1 Assignment Complete.docx",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/completeTest/lab1DirectoryTest/Edwig Vyncke- Jan 23, 2014 256 PM - Lab+1+Assignment.docx",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/toImportDocument.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/test/greg.docx",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/Examples/completeTest/gradesImportTest.csv",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment.py",
 		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/pythonOpen.sublime-snippet",
 		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/Python2.sublime-build",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/numbertest.py",
@@ -1014,7 +1061,6 @@
 		"/C/Users/Daniel/.sublime/history/C/Users/Daniel/Documents/GitHub/Math130_Automated/2014-01-23_21.13.27.lab1.dat",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/assignment2.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/2hpp3fsj.kjp.txt",
-		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/math130_automation.sublime-project",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/question_test.py",
 		"/C/Users/Daniel/Documents/GitHub/Math130_Automated/run.py",
 		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/User/docstring.sublime-snippet",
@@ -1095,33 +1141,11 @@
 		"/C/Users/Daniel/Desktop/tkinterTesting.py",
 		"/C/Python33/Lib/tkinter/__main__.py",
 		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/setup.js",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/css/setup.css",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/html/setup.html",
-		"/C/Users/Daniel/Desktop/HelloWorldApp.java",
-		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/JSHint Gutter/.jshintrc",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/boardList.js",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/css/master.css",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/html/boardlist.html",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/randomToDo.txt",
-		"/C/Users/Daniel/Desktop/delete.js",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/COMMIT_EDITMSG.COMMIT_EDITMSG",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/COMMIT_EDITMSG.COMMIT_EDITMSG",
-		"/C/Users/Daniel/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/Stratego_Project.sublime-project",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/fwrmbglx.ayi.txt",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/test.js",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/setup.js.orig",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/boardList.js.orig",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/3pc1c3of.rns.txt",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/n3eguhu0.kx0.txt",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/e3ztwswy.g0o.txt",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/html/boardList.html",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/js/dots.js",
-		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/.gitignore"
+		"/C/Users/Daniel/Documents/GitHub/stratego_11-23/Stratego2/css/setup.css"
 	],
 	"find":
 	{
-		"height": 38.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -1136,6 +1160,81 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"fulltext",
+			"text",
+			"\\",
+			"<.*?>",
+			"^ +",
+			"\\",
+			"MulitMemoizeMixin",
+			"\\",
+			"\\n",
+			"\"Cambria Math\"",
+			"^$",
+			"^ +",
+			"<.*?>",
+			"<.*?Cambria Math",
+			"  ",
+			"\\n",
+			"                ",
+			"^ *?$",
+			"^$",
+			"<.*?>",
+			" ",
+			"^$",
+			" ",
+			"<.*?>",
+			"bold",
+			"font",
+			"answer",
+			"init",
+			"inti",
+			"__init",
+			"position",
+			"StaticText",
+			"size",
+			"label",
+			"questionPacket",
+			"labelQandA",
+			"sizeQuestionArea",
+			"Question .*?:",
+			"Question ",
+			"studentDict",
+			"qs",
+			"studentQD",
+			"student",
+			"getStudentDictionary",
+			"studentQD",
+			"getGrade",
+			"getStudentDictionary",
+			"getQuestion",
+			"self.qb[self.lab]",
+			"self.studentQD",
+			"key",
+			"self.lab",
+			"self.questionsDict",
+			"QuestionsDict",
+			"questionsDict",
+			"qb",
+			"self.qb",
+			"question_bank",
+			"self.qb =",
+			"self.qb",
+			"qb",
+			"Question_Bank",
+			"answer",
+			"k",
+			"quesBank",
+			"getGradesStudentsLab",
+			"qb",
+			"qb.",
+			"getStudentAnswersFromLab",
+			"qDict",
+			"getStudentAnswersFromLab",
+			"getTotalQuesionts",
+			"getStudentAnswersFromLab",
+			"qb",
+			":",
 			". ",
 			".",
 			"\\n",
@@ -1188,82 +1287,7 @@
 			"wrong",
 			"right",
 			"send",
-			"openDocument",
-			"b_open",
-			"open docu",
-			"#",
-			"GetPath",
-			"ID_OK",
-			"alt",
-			"loadBank",
-			"loadImportFile",
-			"onOpen",
-			"m_open",
-			"loadBank",
-			"open",
-			"getStudentInfo",
-			"170.7957424",
-			".replace(\".\",\"\")",
-			"170.795",
-			"170.7957424",
-			"(\"$\",\"\")",
-			"cleanedValue",
-			"cleanQBV",
-			"place(\"$\",\"\")",
-			"python",
-			"studentQD[qNum]",
-			"\"answer\"",
-			"print",
-			"cleanQBV",
-			"replace",
-			"{",
-			"}",
-			"print",
-			"gradedDict",
-			"studentDict",
-			"cleanedValueQB",
-			"cleanedValue",
-			":",
-			"getStudentAnswersFromLab",
-			":",
-			"not in",
-			"time taken",
-			"time",
-			"section",
-			"equationsBrowser",
-			"h 130 Automated Grading S",
-			"th 130 Automated Grading",
-			"Math 130 Automated Gradin",
-			"TODO",
-			"Searching 15 files for \"TODO\" (regex)\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\.gitignore:\n  132  \n  133  # NuGet Packages Directory\n  134: ## TODO: If you have NuGet Package Restore enabled, uncomment the next line\n  135  #packages/\n  136  \n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\assignment.py:\n    9      studentDict = {}\n   10      for qNum in qDict.keys():\n   11:         # @TODO need some error handling on these indexes\n   12          start = lab.index(qDict[qNum][\"question\"])\n   13          start += len(qDict[qNum][\"question\"]) # to not include question\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\gui.py:\n  122              name = self.lab_tree_list.GetItemText(item)\n  123              section = self.assignmentStack[name].getSection()\n  124:             # # @TODO get tech id\n  125              self.UpdateStudentInformation(name, section, \"Unknown\")\n  126              if self.initialized:\n\nC:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\question_bank.py:\n   11      def __init__(self):\n   12          # Some default stuff to get testing with.\n   13:         # @TODO turn this into a dictionary\n   14          self.questionsDict = {\n   15          1:{\"question\":\"What is the 25th term of this sequence?\",\"answer\":\"41.62\",\"aText\":\"What is the 80th term of this sequence\"},\n\n4 matches across 4 files",
-			"TODO",
-			"open",
-			"nullColor",
-			"self.questions_area",
-			"#",
-			"assignment",
-			"assignmentStack[i]",
-			"questionBankList",
-			"lab",
-			"studentAssign",
-			"lastId",
-			"print",
-			"self.",
-			"qDict",
-			"questionDict",
-			"print",
-			"setStudentDictionary",
-			"getStudentAnswersFromLab",
-			"print",
-			"pring",
-			"rasmuson",
-			"k",
-			"print",
-			"UpdateQuestions",
-			"InitializeQuestionArea",
-			"UpdateQuestions",
-			"self.student_info_label",
-			"infor"
+			"openDocument"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1271,6 +1295,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"qs",
 			"documentPage.innerHTML = (documentPage.innerHTML).replace(\"</ul>\",\"\")+'<li><input id=\"switchSetup\" type=\"button\" value=\"Submit\" onclick=\"redTurn()\" /></li></ul>';",
 			"font-size: $1$2px\"",
 			"font-size: $1",
@@ -1297,8 +1322,173 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/C/Python27/Lib/site-packages/BeautifulSoupTests.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 37577,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8386,
+								8386
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 919.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Python27/Lib/site-packages/pydocx/DocxParser.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 27202,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								416,
+								416
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 169.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -1365,16 +1555,40 @@
 		"selected_items":
 		[
 			[
+				"out",
+				"Math130_Automated\\outfile.txt"
+			],
+			[
+				"gui",
+				"gui.py"
+			],
+			[
+				"read",
+				"README"
+			],
+			[
+				"ass",
+				"assignment.py"
+			],
+			[
 				"ques",
+				"question_bank.py"
+			],
+			[
+				"ban",
+				"question_bank.py"
+			],
+			[
+				"gu",
+				"gui.py"
+			],
+			[
+				"qes",
 				"question_bank.py"
 			],
 			[
 				"get",
 				"getFiles.py"
-			],
-			[
-				"read",
-				"README"
 			],
 			[
 				"re",
@@ -1387,14 +1601,6 @@
 			[
 				"grade",
 				"Examples\\completeTest\\gradesImportTest.csv"
-			],
-			[
-				"gui",
-				"gui.py"
-			],
-			[
-				"ass",
-				"assignment.py"
 			],
 			[
 				"g",
@@ -1621,10 +1827,6 @@
 				"css\\style.css"
 			],
 			[
-				"out",
-				"cleanTextPython\\out.csv"
-			],
-			[
 				"chan",
 				"Sandy HTML Project\\cleanTextPython\\changes11-26.txt"
 			],
@@ -1684,6 +1886,10 @@
 		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"score",
+				"C:\\Users\\Daniel\\Documents\\GitHub\\Score_Reporter_Mobile\\score_reporter_mobile.sublime-project"
+			],
 			[
 				"math",
 				"C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\math130_automation.sublime-workspace"
