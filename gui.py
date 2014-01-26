@@ -69,6 +69,8 @@ class MainApp(wx.Frame):
 
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
+        
+        
     def getImportFilePath(self):
         #TODO: if we make sub classes we can embed this into buildMenuNav
         return self.importFilePath
@@ -94,12 +96,11 @@ class MainApp(wx.Frame):
             downloaded from d2l and then the program will
             fill in the values."""
             dlg = wx.FileDialog(self, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg.SetWildcard("Lab Import File (*.csv)|*.csv")
             if dlg.ShowModal() == wx.ID_OK:
                 self.importFilePath = dlg.GetPath()
             dlg.Destroy()
-
-
-
+ 
         def onAbout(event):
             dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
             result = dlg.ShowModal()
@@ -202,10 +203,10 @@ class MainApp(wx.Frame):
             # @TODO: when you change the value of the score box in the gui it needs change the value of the variable
             # @TODO: Hoping to add \xe2 to the start of tree names if sendGrade has been executed
             # @TODO: right answers should be divided by the total score (30 points)
-            # @TODO: wont work if they have more then 2 word name
             name = self.si_name.GetValue().split()
             score = self.si_score.GetValue()
-            sendToImport(self.importFilePath, name[0], name[1], score)
+            sendToImport(self.importFilePath, name[0], " ".join(name[1:]), score)
+            self.lab_tree_list.SetItemText(self.lab_tree_list.GetSelection(), u"\u2714"+self.si_name.GetValue())
 
 
         b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
@@ -302,7 +303,7 @@ class MainApp(wx.Frame):
                 self.lab_tree_list.SetItemBackgroundColour(self.tree_rootDict[sec],"#FFAAAA")
             elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
                 self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
-            tree.AppendItem(self.tree_rootDict[sec], u"\u2714" + name) #appends name onto section
+            tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
 
     def updateStudentInformation(self, name, section):
         self.si_name.ChangeValue(name)
