@@ -158,4 +158,3 @@ def getAssignmentStack(subPath, importFilePath):
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test", "C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv")
-    # print assignmentStack["Dan Rasmuson"].getStudentDictionary() #[0].getStudentDictionary()
