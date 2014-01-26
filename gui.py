@@ -8,411 +8,417 @@ from commentBrowser import CommentBrowser # split this to a new file because thi
 
 class MainApp(wx.Frame):
     initialized = False
-    def __init__(self):
-        self.qb = Question_Bank() 
-        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
-        self.comment_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
-        self.SetMinSize((800,600))
+    class MenuNav:
+        """ Create our menu bar with all the appropriate buttons and methods. """
+        def __init__(self, parent):
+            self.parent = parent
+            self.parent.Bind(wx.EVT_CLOSE, self.onClose)
 
-        self.buildMenuNav()
-        # We need a panel in order to put stuff on
-        # and then we are adding the things we want to see on this panel.
-        self.mainpanel = wx.Panel(self, wx.ID_ANY)
+            menuBar = wx.MenuBar()
 
-        # Define most of our main sizers here
-        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.main_sizer_a = wx.BoxSizer(wx.HORIZONTAL)
-        self.main_sizer_b = wx.BoxSizer(wx.HORIZONTAL)
-        self.tree_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.right_sizer = wx.BoxSizer(wx.VERTICAL)
+            fileMenu = wx.Menu()
+            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
+            m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
+            m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
+            m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
+            fileMenu.AppendSeparator()
+            m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tAlt-D", "Loads all of the above stuff in one click.  Will get deleted later.")
+            fileMenu.AppendSeparator()
+            m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
+            self.parent.Bind(wx.EVT_MENU, self.onNew, m_new)
+            self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
+            self.parent.Bind(wx.EVT_MENU, self.loadBank, m_load)
+            self.parent.Bind(wx.EVT_MENU, self.loadImportFile, m_import)
+            self.parent.Bind(wx.EVT_MENU, self.parent.deleteMeLater, m_default)
+            self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
+            menuBar.Append(fileMenu, "&File")
 
-        # Set up the first layer of sizers for the top and
-        # bottom panels separated by a line.
-        self.main_sizer.Add(self.main_sizer_a, 1, wx.EXPAND)
-        self.main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
-        self.main_sizer.Add(self.main_sizer_b, 0, wx.EXPAND)
+            helpMenu = wx.Menu()
+            m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
+            self.parent.Bind(wx.EVT_MENU, self.onAbout, m_about)
+            menuBar.Append(helpMenu, "&Help")
 
-        # Our top sizer contains the left hand tree list and
-        # the right hand side list for the student information
-        self.main_sizer_a.Add(self.tree_sizer,0,wx.ALL|wx.EXPAND,5)
-        self.main_sizer_a.Add(self.right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.EXPAND,5)
+            self.parent.SetMenuBar(menuBar)
 
-        # Now we call the routines to build the main content
-        self.buildTreeNav(self.mainpanel, self.tree_sizer)
-        self.buildRightQuestionsArea(self.mainpanel, self.right_sizer)
-        self.buildBottomNav(self.mainpanel,self.main_sizer_b)
+            self.parent.statusbar = self.parent.CreateStatusBar()
 
-        self.mainpanel.SetSizer(self.main_sizer)
-        self.mainpanel.Layout()
-
-        self.Show()
-
-        def deleteMeLater():
-            self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-            self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
-            self.updateTreeList(self.lab_tree_list)
-            self.qb.load(os.getcwd()+"\\lab1.dat")
-            self.initializeQuestionArea()
-            print "Done With Sample Load"
-
-        deleteMeLater()
-
-    def getImportFilePath(self):
-        #TODO: if we make sub classes we can embed this into buildMenuNav
-        return self.importFilePath
-
-    def buildMenuNav(self):
-        """ Builds the menu bar, status bar, and the associated
-        functions required for these things to work including loading
-        questions and also selecting folders/directories."""
-        def loadBank(event):
-            dlg = wx.FileDialog(self, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+        def loadBank(self, event):
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
-                self.qb.load(dlg.GetPath())
+                self.parent.questionBank.load(dlg.GetPath())
                 try:
-                    self.questions_area.Destroy()
+                    self.parent.questions_area.Destroy()
                 except:
                     pass
-                self.initializeQuestionArea()
+                self.parent.questionsArea.drawQuestions()
             dlg.Destroy()
 
-        def loadImportFile(event):
+        def loadImportFile(self, event):
             """The user finds the template import file
             downloaded from d2l and then the program will
             fill in the values."""
-            dlg = wx.FileDialog(self, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg = wx.FileDialog(self.parent, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
             dlg.SetWildcard("Lab Import File (*.csv)|*.csv")
             if dlg.ShowModal() == wx.ID_OK:
-                self.importFilePath = dlg.GetPath()
+                self.parent.importFilePath = dlg.GetPath()
             dlg.Destroy()
 
-        def onAbout(event):
-            dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
+        def onAbout(self, event):
+            dlg = wx.MessageDialog(self.parent, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
             result = dlg.ShowModal()
             dlg.Destroy()
 
-        def onClose(event):
-            dlg = wx.MessageDialog(self,
+        def onClose(self, event):
+            dlg = wx.MessageDialog(self.parent,
                 "Do you really want to close this application?",
                 "Confirm Exit", wx.YES_NO|wx.ICON_EXCLAMATION)
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_YES:
-                self.Destroy()
+                self.parent.Destroy()
 
-        def onNew(event):
-            dlg = wx.MessageDialog(self,
+        def onNew(self, event):
+            dlg = wx.MessageDialog(self.parent,
                 "Do you want to clear everything and start a new session?",
                 "Confirm New", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_OK:
-                self.Show(False)
+                self.parent.Show(False)
                 newSession()
-                self.Destroy()
+                self.parent.Destroy()
 
-        def onOpen(event):
+        def onOpen(self, event):
             # I get the current working directory + the examples test stuff
             # so that while testing it'll default to our test directory.
             # Later we can navigate anywhere we want and cut that part.
-            dlg = wx.DirDialog(self, "Choose a directory:",os.getcwd()+"\\Examples\\test")
+            dlg = wx.DirDialog(self.parent, "Choose a directory:",os.getcwd()+"\\Examples\\test")
             if dlg.ShowModal() == wx.ID_OK:
-                self.assignmentStack = getAssignmentStack(dlg.GetPath(), self.getImportFilePath())
+                self.parent.assignmentStack = getAssignmentStack(dlg.GetPath(), self.parent.getImportFilePath())
                 # Call our initial tree list build
-                self.updateTreeList(self.lab_tree_list)
+                self.parent.studentTree.updateTreeList()
             dlg.Destroy()
-            self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
+            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
 
-        self.Bind(wx.EVT_CLOSE, onClose)
+    class BottomNav:
+        """ Builds a predefined set of buttons on a specific panel and utilizing the sizer provided """
+        def __init__(self, parent, panel, sizer):
+            self.parent = parent
+            self.panel = panel
+            self.sizer = sizer
 
-        menuBar = wx.MenuBar()
+            b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
+            b_prev.SetToolTipString("Selects the previous student of the current section.")
+            b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
+            sizer.Add(b_prev, 0,wx.ALL,5)
 
-        fileMenu = wx.Menu()
-        m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
-        m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
-        m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
-        m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
-        fileMenu.AppendSeparator()
-        m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
-        self.Bind(wx.EVT_MENU, onNew, m_new)
-        self.Bind(wx.EVT_MENU, onOpen, m_open)
-        self.Bind(wx.EVT_MENU, loadBank, m_load)
-        self.Bind(wx.EVT_MENU, loadImportFile, m_import)
-        self.Bind(wx.EVT_MENU, onClose, m_exit)
-        menuBar.Append(fileMenu, "&File")
+            b_next = wx.Button(panel, wx.ID_ANY, "Next")
+            b_next.SetToolTipString("Selects the next student of the current section")
+            b_next.Bind(wx.EVT_BUTTON, self.nextButton)
+            sizer.Add(b_next, 0,wx.ALL,5)
 
-        helpMenu = wx.Menu()
-        m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
-        self.Bind(wx.EVT_MENU, onAbout, m_about)
-        menuBar.Append(helpMenu, "&Help")
+            sizer.AddStretchSpacer(1)
 
-        self.SetMenuBar(menuBar)
+            self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
+            self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
+            self.b_comments.Bind(wx.EVT_BUTTON, self.parent.commentWindow.display)
+            sizer.Add(self.b_comments, 0,wx.ALL,5)
 
-        self.statusbar = self.CreateStatusBar()
+            b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
+            b_open.SetToolTipString("Opens the document in word.")
+            b_open.Bind(wx.EVT_BUTTON, self.openDocument)
+            sizer.Add(b_open, 0,wx.ALL,5)
 
-    def buildBottomNav(self, panel, sizer):
-        """Builds a predefined set of buttons on a specific panel
-         and utilizing the sizer provided"""
-        def openDocument(event):
-            current_item = str(self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection()).strip(u"\u2714"))
+            # A button for sending the grade to the excel file
+            b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
+            b_grade.SetToolTipString("Sends the grade to excel file")
+            b_grade.Bind(wx.EVT_BUTTON, self.sendGrade)
+            sizer.Add(b_grade, 0,wx.ALL,5)
+
+        def openDocument(self, event):
+            current_item = self.parent.studentTree.getSelected()
             if "Section" not in current_item:
-                os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
+                os.system("\""+self.parent.assignmentStack[current_item].getStudentFilepath()+"\"")
 
-        def previousButton(event):
-            current = self.lab_tree_list.GetSelection()
-            prev = self.lab_tree_list.GetPrevSibling(current)
-            if prev.IsOk() and not self.lab_tree_list.ItemHasChildren(prev):
-                self.lab_tree_list.SelectItem(prev)
-            elif prev.IsOk() and  self.lab_tree_list.ItemHasChildren(prev):
-                self.lab_tree_list.SelectItem(self.lab_tree_list.GetLastChild(prev))
+        def previousButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            prev = self.parent.lab_tree_list.GetPrevSibling(current)
+            if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(prev)
+            elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
             else:
-                parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
-                if parent != self.lab_tree_list.GetRootItem():
-                    self.lab_tree_list.SelectItem(parent)
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if parent != self.parent.lab_tree_list.GetRootItem():
+                    self.parent.lab_tree_list.SelectItem(parent)
 
-        def nextButton(event):
-            current = self.lab_tree_list.GetSelection()
-            if self.lab_tree_list.ItemHasChildren(current):
-                next = self.lab_tree_list.GetFirstChild(current)[0]
+        def nextButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            if self.parent.lab_tree_list.ItemHasChildren(current):
+                next = self.parent.lab_tree_list.GetFirstChild(current)[0]
             else:
-                next = self.lab_tree_list.GetNextSibling(current)
+                next = self.parent.lab_tree_list.GetNextSibling(current)
             if next.IsOk():
-                self.lab_tree_list.SelectItem(next)
+                self.parent.lab_tree_list.SelectItem(next)
             else:
-                parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
-                if self.lab_tree_list.GetNextSibling(parent).IsOk():
-                    self.lab_tree_list.SelectItem(self.lab_tree_list.GetNextSibling(parent))
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
+                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
 
-        def sendGrade(event):
-            # Do you know how to do complete this first check greg?
-            # @TODO: when you change the value of the score box in the gui it needs change the value of the variable
-            # @TODO: Hoping to add \xe2 to the start of tree names if sendGrade has been executed
+        def sendGrade(self, event):
             # @TODO: right answers should be divided by the total score (30 points)
-            name = self.si_name.GetValue().split()
-            score = self.si_score.GetValue()
-            sendToImport(self.importFilePath, name[0], " ".join(name[1:]), score)
-            self.lab_tree_list.SetItemText(self.lab_tree_list.GetSelection(), u"\u2714"+self.si_name.GetValue())
-            self.lab_tree_list.SetItemTextColour(self.lab_tree_list.GetSelection(), (0,150,0))
+            name = self.parent.questionsArea.si_name.GetValue().split()
+            score = self.parent.questionsArea.si_score.GetValue()
+            sendToImport(self.parent.importFilePath, name[0], " ".join(name[1:]), score)
+            self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
+            self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
 
-
-        b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
-        b_prev.SetToolTipString("Selects the previous student of the current section.")
-        b_prev.Bind(wx.EVT_BUTTON, previousButton)
-        sizer.Add(b_prev, 0,wx.ALL,5)
-
-        b_next = wx.Button(panel, wx.ID_ANY, "Next")
-        b_next.SetToolTipString("Selects the next student of the current section")
-        b_next.Bind(wx.EVT_BUTTON, nextButton)
-        sizer.Add(b_next, 0,wx.ALL,5)
-
-        sizer.AddStretchSpacer(1)
-
-        self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
-        self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
-        self.b_comments.Bind(wx.EVT_BUTTON, self.commentBrowser)
-        sizer.Add(self.b_comments, 0,wx.ALL,5)
-
-        b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
-        b_open.SetToolTipString("Opens the document in word.")
-        b_open.Bind(wx.EVT_BUTTON, openDocument)
-        sizer.Add(b_open, 0,wx.ALL,5)
-
-        # A button for sending the grade to the excel file
-        b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
-        b_grade.SetToolTipString("Sends the grade to excel file")
-        b_grade.Bind(wx.EVT_BUTTON, sendGrade)
-        sizer.Add(b_grade, 0,wx.ALL,5)
-
-    def commentBrowser(self, event):
-        w,h = self.GetSizeTuple()
-        x,y = self.GetPositionTuple()
-        self.comment_frame.SetPosition((w+x,y))
-        self.comment_frame.Show()
-        self.comment_frame.Raise()
-
-    def buildTreeNav(self, panel, sizer):
+    class TreeNav:
         """ Builds our tree list of students """
-        def onSelChanged(event):
+        def __init__(self, parent, panel, sizer):
+            self.parent = parent
+            self.panel = panel
+            self.sizer = sizer
+
+            self.parent.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
+            self.parent.lab_tree_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelChanged, id=1)
+            lab_tree_label = wx.StaticText(panel, wx.ID_ANY, 'Student List')
+            sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
+            sizer.Add(self.parent.lab_tree_list, 1,wx.EXPAND)
+            self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
+            self.parent.tree_rootDict = {}
+
+        def getSelected(self):
+            return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
+
+        def onSelChanged(self, event):
             # Get our item that updated
             item = event.GetItem()
-            currentSelection = self.lab_tree_list.GetItemText(item)
+            currentSelection = self.getSelected()
             if "Section" not in currentSelection:
-                name = str(currentSelection.strip(u"\u2714 "))
-                section = self.assignmentStack[name].getSection()
-                self.updateStudentInformation(name, section)
-                self.comment_frame.setStudent(name)
-                # uni_str = u""
-                # for number, line in enumerate(self.assignmentStack[name].getMisc()):
-                    # uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
-                # self.si_misc.ChangeValue(unicode(uni_str))
-                if self.initialized:
-                    self.updateQuestions(name)
-        self.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
-        self.lab_tree_list.Bind(wx.EVT_TREE_SEL_CHANGED, onSelChanged, id=1)
-        lab_tree_label = wx.StaticText(panel, wx.ID_ANY, 'Student List')
-        sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
-        sizer.Add(self.lab_tree_list, 1,wx.EXPAND)
-        self.tree_root = self.lab_tree_list.AddRoot("Lab Sections")
-        self.tree_rootDict = {}
+                section = self.parent.assignmentStack[currentSelection].getSection()
+                self.parent.questionsArea.updateStudentInformation(currentSelection, section)
+                self.parent.commentWindow.setStudent(currentSelection)
+                if self.parent.initialized:
+                    self.parent.questionsArea.updateStudentAnswers(currentSelection)
 
-    def buildRightQuestionsArea(self, panel, sizer):
-        si_sizer = wx.GridBagSizer(5, 5)
-        si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-        # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
-        si_sizer.Add(wx.StaticText(panel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-        si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-        si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+        def updateTreeList(self):
+            """Tree List on Left Side - Dynamic to Files"""
+            for name in sorted(self.parent.assignmentStack.keys()):
+                sec = self.parent.assignmentStack[name].getSection()
+                if sec == "MissingInformation":
+                    self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Missing Lab Section")
+                    self.parent.lab_tree_list.SetItemBackgroundColour(self.parent.tree_rootDict[sec],"#FFAAAA")
+                elif sec not in self.parent.tree_rootDict.keys(): #creates root section if there isn't one
+                    self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Section "+sec)
+                self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name) #appends name onto section
 
-        self.si_name = wx.TextCtrl(panel, value="")
-        self.si_section = wx.TextCtrl(panel, value="")
-        self.si_right = wx.TextCtrl(panel, value="")
-        self.si_score = wx.TextCtrl(panel, value="")
+    class QuestionsArea:
+        def __init__(self, parent, panel, sizer):
+            self.parent = parent
+            self.panel = panel
+            self.sizer = sizer
 
-        self.si_right.Bind(wx.EVT_TEXT, self.setScore)
+            si_sizer = wx.GridBagSizer(5, 5)
+            si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
+            si_sizer.Add(wx.StaticText(panel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
 
-        si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
-        si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
-        si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
-        si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
+            self.si_name = wx.TextCtrl(panel, value="")
+            self.si_section = wx.TextCtrl(panel, value="")
+            self.si_right = wx.TextCtrl(panel, value="")
+            self.si_score = wx.TextCtrl(panel, value="")
 
-        si_sizer.AddGrowableCol(2)
+            self.si_right.Bind(wx.EVT_TEXT, self.setScore)
 
-        sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
-        sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+            si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
 
-    def updateTreeList(self, tree):
-        """Tree List on Left Side - Dynamic to Files"""
-        for name in sorted(self.assignmentStack.keys()):
-            sec = self.assignmentStack[name].getSection()
-            if sec == "MissingInformation":
-                self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Missing Lab Section")
-                self.lab_tree_list.SetItemBackgroundColour(self.tree_rootDict[sec],"#FFAAAA")
-            elif sec not in self.tree_rootDict.keys(): #creates root section if there isn't one
-                self.tree_rootDict[sec] = tree.AppendItem(self.tree_root, "Section "+sec)
-            tree.AppendItem(self.tree_rootDict[sec], name) #appends name onto section
+            si_sizer.AddGrowableCol(2)
 
-    def updateStudentInformation(self, name, section):
-        self.si_name.ChangeValue(name)
-        self.si_section.ChangeValue(section)
-        self.si_right.ChangeValue("")
-        self.si_score.ChangeValue("")
+            sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
+            sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
-        # remove check buttons
-        for qNum in self.correctButtons.keys():
-            self.correctButtons[qNum].Hide()
+        def drawQuestions(self):
+            def setCorrect(event):
+                qNum = event.GetId()
 
-    def updateQuestions(self, name):
-        # @TODO - it would be better if this variable could be set somewhere else
-        self.totalPoints = 30 #if they are floats answer will be more accurate
-        self.numberQuestions = 12
-
-        # This gets our students answers and the dictionary we're comparing their answer to.
-        qs = self.assignmentStack[name]
-        right = 0
-        self.comment_frame.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
-        for qNum in qs.getKeys():
-            self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
-
-            if qs.getGrade(qNum):
+                #changes the background color
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                self.student_answer_boxes[qNum].Refresh() #fix for delay
+
+                #hides button to prevent reclick
                 self.correctButtons[qNum].Hide()
-                right += 1
-            else:
-                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                self.correctButtons[qNum].Show()
-                self.mainpanel.Layout()
-                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.qb.getAnswer(qNum)) +".\n",redundentCheck=True)
-        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
-        self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
-    def setScore(self, event):
-        try:
-            self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
-        except:
-            pass
+                # increases score by one
+                right = int(self.si_right.GetValue().split()[0]) + 1
+                self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
-    def initializeQuestionArea(self):
-        def setCorrect(event):
-            qNum = event.GetId()
+            self.questions_area = wx.ScrolledWindow(self.panel)
+            self.questions_area.SetScrollbars(1, 1, 500, 1000)
+            self.questions_area.EnableScrolling(True,True)
+            self.sizer.Add(self.questions_area, 1, wx.EXPAND)
 
-            #changes the background color
-            self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-            self.student_answer_boxes[qNum].Refresh() #fix for delay
+            self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
+            self.questions_area.SetSizer(self.questions_area_sizer)
 
-            #hides button to prevent reclick
-            self.correctButtons[qNum].Hide()
+            self.student_answer_boxes = {}
+            self.correctButtons = {}
+            for qNum in self.parent.questionBank.getKeys():
 
-            # increases score by one
-            right = int(self.si_right.GetValue().split()[0]) + 1
+
+                # Question Num
+                # Question 1:
+                qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
+                qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":") #,pos=(-1,-1),size=(100,-1)
+                boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
+                qNumText.SetFont(boldFont) # applies bold font
+                qNum_sizer.Add(qNumText)
+
+                # Answer
+                # 3.34
+                answer = str(self.parent.questionBank.getAnswer(qNum))
+                answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
+                qNum_sizer.AddStretchSpacer(1) #to push button to end
+                qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=20) # TODO: this boarder is not working
+
+                #adds qNum_sizer to the panel
+                self.questions_area_sizer.Add(qNum_sizer, 0, wx.EXPAND)
+
+                # Question and Answer
+                # What is the 3rd term of the sequence? 
+                c_sizer = wx.BoxSizer(wx.HORIZONTAL)
+                question = self.parent.questionBank.getQuestion(qNum)
+                sizeQArea = self.questions_area.GetVirtualSize()[0]
+                textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
+                textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
+                c_sizer.Add(textInQandA)
+
+                # Correct Button
+                correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
+                correct.SetForegroundColour((0,150,0))
+                correct.SetToolTipString("Sets the question as correct")
+                correct.Bind(wx.EVT_BUTTON, setCorrect)
+                correct.Hide()
+                self.correctButtons[qNum] = correct #add it to the dictionary
+                c_sizer.AddStretchSpacer(1) #to push button to end
+                c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=20) # TODO: this boarder is not working
+                self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
+
+                # Student Answer Section
+                q_sizer = wx.BoxSizer(wx.HORIZONTAL)
+                student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
+                self.student_answer_boxes[qNum] = student_answer
+                q_sizer.Add(student_answer, 1) #1, wx.EXPAND|wx.TOP|wx.RIGHT, 5
+                self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
+
+                # The Last Question Cleanup
+                if qNum != self.parent.questionBank.getKeys()[-1]:
+                    self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
+
+            # I've got this initialized variable here to keep track
+            # of whether we should warn about loading the question bank
+            # when trying to select a student's responses.
+            self.parent.initialized = True
+
+        def updateStudentAnswers(self, name):
+            # @TODO - it would be better if this variable could be set somewhere else
+            self.totalPoints = 30 #if they are floats answer will be more accurate
+            self.numberQuestions = 12
+
+            # This gets our students answers and the dictionary we're comparing their answer to.
+            qs = self.parent.assignmentStack[name]
+            right = 0
+            self.parent.commentWindow.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
+            for qNum in qs.getKeys():
+                self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
+
+                if qs.getGrade(qNum):
+                    self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                    self.correctButtons[qNum].Hide()
+                    right += 1
+                else:
+                    self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                    self.correctButtons[qNum].Show()
+                    self.panel.Layout()
+                    self.parent.commentWindow.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.parent.questionBank.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.parent.questionBank.getAnswer(qNum)) +".\n",redundentCheck=True)
+            self.parent.commentWindow.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
             self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
-        self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 500, 1000)
-        self.questions_area.EnableScrolling(True,True)
-        self.right_sizer.Add(self.questions_area, 1, wx.EXPAND)
+        def updateStudentInformation(self, name, section):
+            self.si_name.ChangeValue(name)
+            self.si_section.ChangeValue(section)
+            self.si_right.ChangeValue("")
+            self.si_score.ChangeValue("")
 
-        self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.questions_area.SetSizer(self.questions_area_sizer)
+        def setScore(self, event):
+            try:
+                self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
+            except:
+                pass
 
-        self.student_answer_boxes = {}
-        self.correctButtons = {}
-        for qNum in self.qb.getKeys():
+    def __init__(self):
+        self.questionBank = Question_Bank()
+        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
+        self.SetMinSize((800,600))
 
+        # We need a panel in order to put stuff on
+        # and then we are adding the things we want to see on this panel.
+        mainpanel = wx.Panel(self, wx.ID_ANY)
 
-            # Question Num
-            # Question 1:
-            qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":") #,pos=(-1,-1),size=(100,-1)
-            boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
-            qNumText.SetFont(boldFont) # applies bold font
-            qNum_sizer.Add(qNumText)
+        # Define most of our main sizers here
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        main_sizer_a = wx.BoxSizer(wx.HORIZONTAL)
+        main_sizer_b = wx.BoxSizer(wx.HORIZONTAL)
+        tree_sizer = wx.BoxSizer(wx.VERTICAL)
+        right_sizer = wx.BoxSizer(wx.VERTICAL)
 
-            # Answer
-            # 3.34
-            answer = str(self.qb.getAnswer(qNum))
-            answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
-            qNum_sizer.AddStretchSpacer(1) #to push button to end
-            qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=20) # TODO: this boarder is not working
+        # Set up the first layer of sizers for the top and
+        # bottom panels separated by a line.
+        main_sizer.Add(main_sizer_a, 1, wx.EXPAND)
+        main_sizer.Add(wx.StaticLine(mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        main_sizer.Add(main_sizer_b, 0, wx.EXPAND)
 
-            #adds qNum_sizer to the panel
-            self.questions_area_sizer.Add(qNum_sizer, 0, wx.EXPAND)
+        # Our top sizer contains the left hand tree list and
+        # the right hand side list for the student information
+        main_sizer_a.Add(tree_sizer,0,wx.ALL|wx.EXPAND,5)
+        main_sizer_a.Add(right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.EXPAND,5)
+        mainpanel.SetSizer(main_sizer)
 
-            # Question and Answer
-            # What is the 3rd term of the sequence? 
-            c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            question = self.qb.getQuestion(qNum)
-            sizeQArea = self.questions_area.GetVirtualSize()[0]
-            textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
-            textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
-            c_sizer.Add(textInQandA)
+        # Creat our Comment Browswer so that we can use it later,
+        # it's hidden by default.
+        self.commentWindow = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
 
-            # Correct Button
-            correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
-            correct.SetForegroundColour((0,150,0))
-            correct.SetToolTipString("Sets the question as correct")
-            correct.Bind(wx.EVT_BUTTON, setCorrect)
-            correct.Hide()
-            self.correctButtons[qNum] = correct #add it to the dictionary
-            c_sizer.AddStretchSpacer(1) #to push button to end
-            c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=20) # TODO: this boarder is not working
-            self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
+        # We create the MenuNav class here and pass in the self
+        # arguement so that we can catch it and set it as the parent
+        # for the MenuClass to use as it's parent.
+        self.menuNavigation = self.MenuNav(self)
 
-            # Student Answer Section
-            q_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
-            self.student_answer_boxes[qNum] = student_answer
-            q_sizer.Add(student_answer, 1) #1, wx.EXPAND|wx.TOP|wx.RIGHT, 5
-            self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
+        # Now we call the routines to build the main content
+        self.studentTree = self.TreeNav(self, mainpanel, tree_sizer)
+        self.questionsArea = self.QuestionsArea(self, mainpanel, right_sizer)
+        self.buttonArea = self.BottomNav(self, mainpanel, main_sizer_b)
 
-            # The Last Question Cleanup
-            if qNum != self.qb.getKeys()[-1]:
-                self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
+        mainpanel.Layout()
 
-        # I've got this initialized variable here to keep track
-        # of whether we should warn about loading the question bank
-        # when trying to select a student's responses.
-        self.initialized = True
+        self.Show()
+
+    def deleteMeLater(self, event):
+        self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+        self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
+        self.studentTree.updateTreeList()
+        self.questionBank.load(os.getcwd()+"\\lab1.dat")
+        self.questionsArea.drawQuestions()
+        print "Done With Sample Load"
+
+    def getImportFilePath(self):
+        #TODO: if we make sub classes we can embed this into buildMenuNav
+        return self.importFilePath
 
 def newSession():
     main = MainApp()
