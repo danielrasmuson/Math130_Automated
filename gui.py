@@ -5,9 +5,9 @@ from question_bank import *
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 
-class EquationsBrowser(wx.Frame):
+class CommentBrowser(wx.Frame):
     def __init__(self, parent, initialPosition, initialSize):
-        wx.Frame.__init__(self, parent, title='Equation Browser', pos=initialPosition, size=initialSize)
+        wx.Frame.__init__(self, parent, title='Comment Browser', pos=initialPosition, size=initialSize)
         self.panel = wx.Panel(self)
         self.parent = parent
 
@@ -15,11 +15,11 @@ class EquationsBrowser(wx.Frame):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
 
-        self.createEquations()
+        self.createComments()
 
-    def createEquations(self):
+    def createComments(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
-        title = wx.StaticText(self.panel, wx.ID_ANY, label="Equations Browser")
+        title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments Browser")
         titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
         title.SetFont(titlefont)
         sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
@@ -36,7 +36,7 @@ class MainApp(wx.Frame):
     initialized = False
     def __init__(self):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
-        self.eq_frame = EquationsBrowser(self, initialSize=(500,500),initialPosition=(0,0))
+        self.eq_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
 
         self.buildMenuNav()
@@ -70,6 +70,17 @@ class MainApp(wx.Frame):
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
         
+        self.Show() 
+        
+        def deleteMeLater():
+            self.importFilePath = os.getcwd()+"Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+            self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
+            self.updateTreeList(self.lab_tree_list)
+            self.qb.load(os.getcwd()+"\\lab1.dat")
+            self.initializeQuestionArea()
+            print "Done With Sample Load"
+            
+        deleteMeLater()
         
     def getImportFilePath(self):
         #TODO: if we make sub classes we can embed this into buildMenuNav
@@ -221,11 +232,11 @@ class MainApp(wx.Frame):
 
         sizer.AddStretchSpacer(1)
         
-        self.b_equations = wx.Button(panel, wx.ID_ANY, "Equations")
-        self.b_equations.Disable()
-        self.b_equations.SetToolTipString("Opens a new dialog box with extra equations (if available) for the current student.")
-        self.b_equations.Bind(wx.EVT_BUTTON, self.equationsBrowser)
-        sizer.Add(self.b_equations, 0,wx.ALL,5)
+        self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
+        self.b_comments.Disable()
+        self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
+        self.b_comments.Bind(wx.EVT_BUTTON, self.commentBrowser)
+        sizer.Add(self.b_comments, 0,wx.ALL,5)
 
         b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
         b_open.SetToolTipString("Opens the document in word.")
@@ -238,7 +249,7 @@ class MainApp(wx.Frame):
         b_grade.Bind(wx.EVT_BUTTON, sendGrade)
         sizer.Add(b_grade, 0,wx.ALL,5)
 
-    def equationsBrowser(self, event):
+    def commentBrowser(self, event):
         w,h = self.GetSizeTuple()
         x,y = self.GetPositionTuple()
         self.eq_frame.SetPosition((w+x,y))
@@ -255,10 +266,10 @@ class MainApp(wx.Frame):
                 name = str(currentSelection.strip(u"\u2714 "))
                 section = self.assignmentStack[name].getSection()
                 self.updateStudentInformation(name, section)
-                uni_str = u""
-                for number, line in enumerate(self.assignmentStack[name].getMisc()):
-                    uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
-                self.si_misc.ChangeValue(unicode(uni_str))
+                # uni_str = u""
+                # for number, line in enumerate(self.assignmentStack[name].getMisc()):
+                    # uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
+                # self.si_misc.ChangeValue(unicode(uni_str))
                 if self.initialized:
                     self.updateQuestions(name)
         self.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
@@ -319,10 +330,6 @@ class MainApp(wx.Frame):
         # This gets our students answers and the dictionary we're comparing their answer to.
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
-        if self.assignmentStack[name].getMisc() != []:
-            self.b_equations.Enable()
-        else:
-            self.b_equations.Disable()
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
 
@@ -372,7 +379,6 @@ class MainApp(wx.Frame):
 
 def newSession():
     main = MainApp()
-    main.Show()
 
 if __name__ == "__main__":
     # Error messages go to pop-up window
