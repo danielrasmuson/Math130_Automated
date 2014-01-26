@@ -14,18 +14,38 @@ class CommentBrowser(wx.Frame):
         def onClose(event):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
-
+        
+        self.commentsDict = {}
+        
+        self.selectedStudent = "<<Student Name>>"
         self.createComments()
+        
+    def setStudent(self, student):
+        if student not in self.commentsDict.keys():
+            defaultText = "Hi "+student.split()[0]+",\n\n"
+            self.commentsDict[student] = defaultText
+        self.selectedStudent = student
+        self.title.SetLabel("Comments for: "+self.selectedStudent)
+        self.currentComment.ChangeValue(self.commentsDict[student])
+        
+    def saveComment(self, event):
+        self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
+        
+    def addComment(self, comment, redundentCheck=False):
+        if comment not in self.currentComment.GetValue():
+            original = self.currentComment.GetValue()
+            self.currentComment.SetValue(original + comment)
 
     def createComments(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
-        title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments Browser")
+        self.title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments for: <<Student Name>>")
         titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        title.SetFont(titlefont)
-        sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
+        self.title.SetFont(titlefont)
+        sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
-        self.parent.si_misc = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
-        sizer.Add(self.parent.si_misc, 1, flag=wx.ALL|wx.GROW, border=0)
+        self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
+        self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
+        sizer.Add(self.currentComment, 1, flag=wx.ALL|wx.GROW, border=0)
 
         self.panel.SetSizer(sizer)
         self.Layout()
@@ -36,7 +56,7 @@ class MainApp(wx.Frame):
     initialized = False
     def __init__(self):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
-        self.eq_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
+        self.comment_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
 
         self.buildMenuNav()
@@ -233,7 +253,6 @@ class MainApp(wx.Frame):
         sizer.AddStretchSpacer(1)
         
         self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
-        self.b_comments.Disable()
         self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
         self.b_comments.Bind(wx.EVT_BUTTON, self.commentBrowser)
         sizer.Add(self.b_comments, 0,wx.ALL,5)
@@ -252,9 +271,9 @@ class MainApp(wx.Frame):
     def commentBrowser(self, event):
         w,h = self.GetSizeTuple()
         x,y = self.GetPositionTuple()
-        self.eq_frame.SetPosition((w+x,y))
-        self.eq_frame.Show()
-        self.eq_frame.Raise()
+        self.comment_frame.SetPosition((w+x,y))
+        self.comment_frame.Show()
+        self.comment_frame.Raise()
 
     def buildTreeNav(self, panel, sizer):
         """ Builds our tree list of students """
@@ -266,6 +285,7 @@ class MainApp(wx.Frame):
                 name = str(currentSelection.strip(u"\u2714 "))
                 section = self.assignmentStack[name].getSection()
                 self.updateStudentInformation(name, section)
+                self.comment_frame.setStudent(name)
                 # uni_str = u""
                 # for number, line in enumerate(self.assignmentStack[name].getMisc()):
                     # uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
@@ -330,14 +350,17 @@ class MainApp(wx.Frame):
         # This gets our students answers and the dictionary we're comparing their answer to.
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
+        self.comment_frame.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
 
             if studentQD[qNum]['grade']:
-                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColour)
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.questionsDict[qNum]["question"])+"\nThe correct answer should have been " + str(self.qb.questionsDict[qNum]["answer"]) +".\n",redundentCheck=True)
+        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)      
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
         
     def setScore(self, event):
@@ -348,7 +371,7 @@ class MainApp(wx.Frame):
 
     def initializeQuestionArea(self):
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 650, 1000)
+        self.questions_area.SetScrollbars(1, 1, 500, 1000)
         self.questions_area.EnableScrolling(True,True)
         self.right_sizer.Add(self.questions_area, 1, wx.EXPAND)
 

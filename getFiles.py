@@ -24,7 +24,7 @@ def getDocxsStr(subFolder):
         # A way of dealing with equations and pictures kind of. 
         # It's not fool proof and there isn't any realy way to
         # do this without utilizing the clipboard as far as I know.
-        if doc.Content.OMaths.Count != 0:
+        if (doc.Content.OMaths.Count != 0) & False:
             for i in range(1,doc.Content.OMaths.Count+1):
                 try:
                     doc.OMaths.Item(i).ConvertToMathText()
