@@ -359,12 +359,35 @@ class MainApp(wx.Frame):
         self.correctButtons = {}
         for qNum in self.qb.getKeys():
 
-            #question and answer
-            c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestion(qNum)+" "+str(self.qb.getAnswer(qNum)), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
-            c_sizer.Add(label)
 
-            #add correct button
+            # Question Num
+            # Question 1:
+            qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":") #,pos=(-1,-1),size=(100,-1)
+            boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
+            qNumText.SetFont(boldFont) # applies bold font
+            qNum_sizer.Add(qNumText)
+
+            # Answer
+            # 3.34
+            answer = str(self.qb.getAnswer(qNum))
+            answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
+            qNum_sizer.AddStretchSpacer(1) #to push button to end
+            qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=20) # TODO: this boarder is not working
+
+            #adds qNum_sizer to the panel
+            self.questions_area_sizer.Add(qNum_sizer, 0, wx.EXPAND)
+
+            # Question and Answer
+            # What is the 3rd term of the sequence? 
+            c_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            question = self.qb.getQuestion(qNum)
+            sizeQArea = self.questions_area.GetVirtualSize()[0]
+            textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
+            textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
+            c_sizer.Add(textInQandA)
+
+            # Correct Button
             correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
             correct.SetForegroundColour((0,150,0))
             correct.SetToolTipString("Sets the question as correct")
@@ -372,16 +395,17 @@ class MainApp(wx.Frame):
             correct.Hide()
             self.correctButtons[qNum] = correct #add it to the dictionary
             c_sizer.AddStretchSpacer(1) #to push button to end
-            c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.RIGHT|wx.ALIGN_BOTTOM, border=10)
+            c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=20) # TODO: this boarder is not working
             self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
 
-            #student answer section
+            # Student Answer Section
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
             student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
             self.student_answer_boxes[qNum] = student_answer
-            q_sizer.Add(student_answer, 1, wx.EXPAND|wx.TOP|wx.RIGHT, 5)
+            q_sizer.Add(student_answer, 1) #1, wx.EXPAND|wx.TOP|wx.RIGHT, 5
             self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
 
+            # The Last Question Cleanup
             if qNum != self.qb.getKeys()[-1]:
                 self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
