@@ -14,18 +14,38 @@ class CommentBrowser(wx.Frame):
         def onClose(event):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
-
+        
+        self.commentsDict = {}
+        
+        self.selectedStudent = "<<Student Name>>"
         self.createComments()
+        
+    def setStudent(self, student):
+        if student not in self.commentsDict.keys():
+            defaultText = "Hi "+student.split()[0]+",\n\n"
+            self.commentsDict[student] = defaultText
+        self.selectedStudent = student
+        self.title.SetLabel("Comments for: "+self.selectedStudent)
+        self.currentComment.ChangeValue(self.commentsDict[student])
+        
+    def saveComment(self, event):
+        self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
+        
+    def addComment(self, comment, redundentCheck=False):
+        if comment not in self.currentComment.GetValue():
+            original = self.currentComment.GetValue()
+            self.currentComment.SetValue(original + comment)
 
     def createComments(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
-        title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments Browser")
+        self.title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments for: <<Student Name>>")
         titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        title.SetFont(titlefont)
-        sizer.Add(title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
+        self.title.SetFont(titlefont)
+        sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
-        self.parent.si_misc = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
-        sizer.Add(self.parent.si_misc, 1, flag=wx.ALL|wx.GROW, border=0)
+        self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
+        self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
+        sizer.Add(self.currentComment, 1, flag=wx.ALL|wx.GROW, border=0)
 
         self.panel.SetSizer(sizer)
         self.Layout()
@@ -36,7 +56,7 @@ class MainApp(wx.Frame):
     initialized = False
     def __init__(self):
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
-        self.eq_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
+        self.comment_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
 
         self.buildMenuNav()
@@ -69,19 +89,19 @@ class MainApp(wx.Frame):
 
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
-
-        self.Show()
-
+        
+        self.Show() 
+        
         def deleteMeLater():
-            self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+            self.importFilePath = os.getcwd()+"Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
             self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
             self.updateTreeList(self.lab_tree_list)
             self.qb.load(os.getcwd()+"\\lab1.dat")
             self.initializeQuestionArea()
             print "Done With Sample Load"
-
+            
         deleteMeLater()
-
+        
     def getImportFilePath(self):
         #TODO: if we make sub classes we can embed this into buildMenuNav
         return self.importFilePath
@@ -111,7 +131,7 @@ class MainApp(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 self.importFilePath = dlg.GetPath()
             dlg.Destroy()
-
+ 
         def onAbout(event):
             dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
             result = dlg.ShowModal()
@@ -218,7 +238,6 @@ class MainApp(wx.Frame):
             score = self.si_score.GetValue()
             sendToImport(self.importFilePath, name[0], " ".join(name[1:]), score)
             self.lab_tree_list.SetItemText(self.lab_tree_list.GetSelection(), u"\u2714"+self.si_name.GetValue())
-            self.lab_tree_list.SetItemTextColour(self.lab_tree_list.GetSelection(), (0,150,0))
 
 
         b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
@@ -232,32 +251,31 @@ class MainApp(wx.Frame):
         sizer.Add(b_next, 0,wx.ALL,5)
 
         sizer.AddStretchSpacer(1)
-
+        
         self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
-        self.b_comments.Disable()
         self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
         self.b_comments.Bind(wx.EVT_BUTTON, self.commentBrowser)
         sizer.Add(self.b_comments, 0,wx.ALL,5)
 
-        b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
+        b_open = wx.Button(panel, wx.ID_ANY, "Open Document")   
         b_open.SetToolTipString("Opens the document in word.")
         b_open.Bind(wx.EVT_BUTTON, openDocument)
-        sizer.Add(b_open, 0,wx.ALL,5)
+        sizer.Add(b_open, 0,wx.ALL,5)    
 
         # A button for sending the grade to the excel file
         b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
         b_grade.SetToolTipString("Sends the grade to excel file")
         b_grade.Bind(wx.EVT_BUTTON, sendGrade)
-        sizer.Add(b_grade, 0,wx.ALL,5)
+        sizer.Add(b_grade, 0,wx.ALL,5)  
 
     def commentBrowser(self, event):
-        w,h = self.GetSizeTuple()
+        w,h = self.GetSizeTuple()  
         x,y = self.GetPositionTuple()
-        self.eq_frame.SetPosition((w+x,y))
-        self.eq_frame.Show()
-        self.eq_frame.Raise()
-
-    def buildTreeNav(self, panel, sizer):
+        self.comment_frame.SetPosition((w+x,y))
+        self.comment_frame.Show()
+        self.comment_frame.Raise()
+  
+    def buildTreeNav(self, panel, sizer):     
         """ Builds our tree list of students """
         def onSelChanged(event):
             # Get our item that updated
@@ -267,6 +285,7 @@ class MainApp(wx.Frame):
                 name = str(currentSelection.strip(u"\u2714 "))
                 section = self.assignmentStack[name].getSection()
                 self.updateStudentInformation(name, section)
+                self.comment_frame.setStudent(name)
                 # uni_str = u""
                 # for number, line in enumerate(self.assignmentStack[name].getMisc()):
                     # uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
@@ -331,6 +350,7 @@ class MainApp(wx.Frame):
         # This gets our students answers and the dictionary we're comparing their answer to.
         studentQD = self.assignmentStack[name].getStudentDictionary()
         right = 0
+        self.comment_frame.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
         for qNum in studentQD.keys():
             self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
 
@@ -339,10 +359,10 @@ class MainApp(wx.Frame):
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                self.correctButtons[qNum].Show()
-                self.mainpanel.Layout()
+                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.questionsDict[qNum]["question"])+"\nThe correct answer should have been " + str(self.qb.questionsDict[qNum]["answer"]) +".\n",redundentCheck=True)
+        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)      
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
-
+        
     def setScore(self, event):
         try:
             self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
@@ -350,16 +370,8 @@ class MainApp(wx.Frame):
             pass
 
     def initializeQuestionArea(self):
-        def setCorrect(event):
-            qNum = event.GetId()
-            self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-            self.correctButtons[qNum].Hide()
-            right = int(self.si_right.GetValue().split()[0]) + 1
-            self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
-            self.mainpanel.Layout()
-
-
-            # print "setCorrect!!!"
+        def setCorrect(self):
+            print "setCorrect!!!"
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
         self.questions_area.SetScrollbars(1, 1, 500, 1000)
         self.questions_area.EnableScrolling(True,True)
@@ -369,24 +381,22 @@ class MainApp(wx.Frame):
         self.questions_area.SetSizer(self.questions_area_sizer)
 
         self.student_answer_boxes = {}
-        self.correctButtons = {}
+
         for qNum in self.qb.getQuestionsDict().keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
 
             #add correct button here
-            correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
-            correct.SetForegroundColour((0,150,0))
+            correct = wx.Button(self.mainpanel, wx.ID_ANY, "Correct")
             correct.SetToolTipString("Sets the question as correct")
             correct.Bind(wx.EVT_BUTTON, setCorrect)
-            correct.Hide()
-            self.questions_area_sizer.Add(correct, 0, wx.RIGHT)
-            self.correctButtons[qNum] = correct
+            self.questions_area_sizer.Add(correct)
+            # newsizer.Add(correct, 0,wx.ALL,5)
 
 
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
+            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="" )
             self.student_answer_boxes[qNum] = student_answer
 
             q_sizer.Add(student_answer, 1, wx.EXPAND|wx.TOP|wx.RIGHT, 5)
