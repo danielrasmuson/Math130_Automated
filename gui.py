@@ -73,7 +73,7 @@ class MainApp(wx.Frame):
         self.Show() 
         
         def deleteMeLater():
-            self.importFilePath = os.getcwd()+"Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+            self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
             self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
             self.updateTreeList(self.lab_tree_list)
             self.qb.load(os.getcwd()+"\\lab1.dat")
@@ -218,6 +218,7 @@ class MainApp(wx.Frame):
             score = self.si_score.GetValue()
             sendToImport(self.importFilePath, name[0], " ".join(name[1:]), score)
             self.lab_tree_list.SetItemText(self.lab_tree_list.GetSelection(), u"\u2714"+self.si_name.GetValue())
+            self.lab_tree_list.SetItemTextColour(self.lab_tree_list.GetSelection(), (0,150,0))
 
 
         b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
@@ -334,10 +335,12 @@ class MainApp(wx.Frame):
             self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
 
             if studentQD[qNum]['grade']:
-                self.student_answer_boxes[qNum].SetBackgroundColour(wx.NullColour)
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                self.correctButtons[qNum].Show()
+                self.mainpanel.Layout()
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
         
     def setScore(self, event):
@@ -347,10 +350,18 @@ class MainApp(wx.Frame):
             pass
 
     def initializeQuestionArea(self):
-        def setCorrect(self):
-            print "setCorrect!!!"
+        def setCorrect(event):
+            qNum = event.GetId()
+            self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+            self.correctButtons[qNum].Hide()
+            right = int(self.si_right.GetValue().split()[0]) + 1
+            self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
+            self.mainpanel.Layout()
+
+
+            # print "setCorrect!!!"
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
-        self.questions_area.SetScrollbars(1, 1, 650, 1000)
+        self.questions_area.SetScrollbars(1, 1, 500, 1000)
         self.questions_area.EnableScrolling(True,True)
         self.right_sizer.Add(self.questions_area, 1, wx.EXPAND)
 
@@ -358,22 +369,24 @@ class MainApp(wx.Frame):
         self.questions_area.SetSizer(self.questions_area_sizer)
 
         self.student_answer_boxes = {}
-
+        self.correctButtons = {}
         for qNum in self.qb.getQuestionsDict().keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
 
             #add correct button here
-            correct = wx.Button(self.mainpanel, wx.ID_ANY, "Correct")
+            correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
+            correct.SetForegroundColour((0,150,0))
             correct.SetToolTipString("Sets the question as correct")
             correct.Bind(wx.EVT_BUTTON, setCorrect)
-            self.questions_area_sizer.Add(correct)
-            # newsizer.Add(correct, 0,wx.ALL,5)
+            correct.Hide()
+            self.questions_area_sizer.Add(correct, 0, wx.RIGHT)
+            self.correctButtons[qNum] = correct            
 
 
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="" )
+            student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
             self.student_answer_boxes[qNum] = student_answer
 
             q_sizer.Add(student_answer, 1, wx.EXPAND|wx.TOP|wx.RIGHT, 5)
