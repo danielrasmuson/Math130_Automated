@@ -52,9 +52,9 @@ class CommentBrowser(wx.Frame):
 
 
 class MainApp(wx.Frame):
-    qb = Question_Bank()
     initialized = False
     def __init__(self):
+        self.qb = Question_Bank() 
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.comment_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
@@ -366,7 +366,7 @@ class MainApp(wx.Frame):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                 self.correctButtons[qNum].Show()
                 self.mainpanel.Layout()
-                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.questionsDict[qNum]["question"])+"\nThe correct answer should have been " + str(self.qb.questionsDict[qNum]["answer"]) +".\n",redundentCheck=True)
+                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.qb.getAnswer(qNum)) +".\n",redundentCheck=True)
         self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
@@ -401,11 +401,11 @@ class MainApp(wx.Frame):
 
         self.student_answer_boxes = {}
         self.correctButtons = {}
-        for qNum in self.qb.getQuestionsDict().keys():
+        for qNum in self.qb.getKeys():
 
             #question and answer
             c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestion(qNum)+" "+str(self.qb.getAnswer(qNum)), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             c_sizer.Add(label)
 
             #add correct button
@@ -426,7 +426,7 @@ class MainApp(wx.Frame):
             q_sizer.Add(student_answer, 1, wx.EXPAND|wx.TOP|wx.RIGHT, 5)
             self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
 
-            if qNum != self.qb.getQuestionsDict().keys()[-1]:
+            if qNum != self.qb.getKeys()[-1]:
                 self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
         # I've got this initialized variable here to keep track

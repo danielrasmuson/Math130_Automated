@@ -1,7 +1,7 @@
 from getFiles import getDocxsStr
-from question_bank import Question_Bank
+from question_bank import *
 
-def getGradesStudentsLab(quesBank, studentDict):
+def getGradesStudentsLab(qb, studentDict):
     """A more robust system for grading labs
     grade could be either a 1 or 0
     can add a lot more to function but I just started it"""
@@ -32,39 +32,38 @@ def getGradesStudentsLab(quesBank, studentDict):
         return 1
 
 
-    for k in studentDict.keys():
-        for key, value in studentDict[k].items():
-            answer = quesBank[k]["answer"]
-            if type(answer) == list:
-                grade = gradeList(value, answer)
+    for qNum in studentDict.keys():
+        for key, value in studentDict[qNum].items():
+            if type(qb.getAnswer(qNum)) == list:
+                grade = gradeList(value, qb.getAnswer(qNum))
             else:
-                grade = roundingError(value, answer, .05)
+                grade = roundingError(value, qb.getAnswer(qNum), .05)
             
-            studentDict[k]["grade"] = grade
+            studentDict[qNum]["grade"] = grade
 
     return studentDict
 
 
-def getStudentAnswersFromLab(qDict, lab):
+def getStudentAnswersFromLab(qb, lab):
     # I changed this to using a new dictionary and only returning that dictionary
     # because I'd rather have that so we can keep the two different dictionaries
-    # separate.  Otherwise there was a lot of overlap in the two qDict and studentDict.
+    # separate.  Otherwise there was a lot of overlap in the two qb and studentDict.
     # fair point - Dan
     studentDict = {}
-    for qNum in qDict.keys():
+    for qNum in qb.getKeys():
         # @TODO need some error handling on these indexes
         try:
-            start = lab.index(qDict[qNum]["question"])
-            start += len(qDict[qNum]["question"]) # to not include question
+            start = lab.index(qb.getQuestion(qNum))
+            start += len(qb.getQuestion(qNum)) # to not include question
         except ValueError:
             print "Unable to find before text. Returning blank answers."
             start = -1
 
         try:
-            if qDict[qNum]["aText"] == -1: # if its the last question it doesn't have aText
+            if qb.getAText(qNum) == -1: # if its the last question it doesn't have aText
                 end = -1
             else:
-                end = lab.index(qDict[qNum]["aText"])
+                end = lab.index(qb.getAText(qNum))
         except ValueError:
             print "Unable to find after text. Returning partial document string."
             end = -1
@@ -140,8 +139,8 @@ def getAssignmentStack(subPath, importFilePath):
     for i in range(len(labs)):
         name = fileNameList[i].split("-")[0]
 
-        studentQD = getStudentAnswersFromLab(qb.getQuestionsDict(), labs[i])
-        studentQD = getGradesStudentsLab(qb.getQuestionsDict(), studentQD)
+        studentQD = getStudentAnswersFromLab(qb, labs[i])
+        studentQD = getGradesStudentsLab(qb, studentQD)
 
         assignObj = assignment(labs[i])
 
@@ -158,3 +157,5 @@ def getAssignmentStack(subPath, importFilePath):
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test", "C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv")
+    for name, assignObj in assignmentStack.items():
+        print assignObj.getStudentDictionary()

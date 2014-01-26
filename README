@@ -23,8 +23,8 @@ Possible ideas for future
 redo document importing (faster with equations) - Greg
     noticing when document has and does not have equations
     speed up word document opening
+update assignment class with getAnswer() etc
 Run results vs attendance quiz
-update question bank for getAnswer(qNum)
 inner classes - re structure code
 wizard for loading files
 disable buttons when you cant use them - Greg
@@ -38,5 +38,6 @@ ability to move students from incorrect or missing section
 
 Done
 -----------------------------
-change value of question right changes value of score - Greg
-file name support - Dan
+change value of question right changes value of score
+file name support
+update question bank for getAnswer(qNum)

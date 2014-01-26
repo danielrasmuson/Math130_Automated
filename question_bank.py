@@ -1,5 +1,9 @@
 import cPickle as pickle
 
+def getCurrentLab():
+    return "lab1" #@TODO: this is where we will adjust the wizard
+
+
 class Question_Bank():
     """
     Create a class called Question_Bank
@@ -9,8 +13,9 @@ class Question_Bank():
     """
 
     def __init__(self):
-        # I think maybe we should put this inside a lab 1 then we can include more data for example total points
-        self.questionsDict = {
+        self.setLab(getCurrentLab()) 
+
+        self.qb = {"lab1": {
         1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence"},
         2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?"},
         3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?"},
@@ -23,21 +28,28 @@ class Question_Bank():
         10:{"question":"How many seats will there be in the 16th row?","answer":"40","aText":"How many total seats are there in the auditorium"},
         11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods."},
         12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","aText":-1}
-        }
+        }}
 
     def getQuestionsDict(self):
-        return self.questionsDict
+        return self.qb
         
-    # def setLab(self, lab):
-        # self.lab = lab
+    def setLab(self, labNum):
+        self.lab = labNum
+
+    def getTotalQuestions(self):
+        return len(self.qb[self.lab])
+
+    def getQuestion(self, qNum):
+        return self.qb[self.lab][qNum]["question"]
         
-    # def getAnswer(self, qNum):
-        # return self.questionsDict[self.lab]
-# qb["lab1"]["question"][1]
-# qb["lab1"]["answer"][1]
-# qb["lab1"]["questionPoints"][1]
-# qb["lab1"]["totalPoints"]
-# qb["lab1"]["
+    def getAnswer(self, qNum):
+        return self.qb[self.lab][qNum]["answer"]
+
+    def getAText(self, qNum):
+        return self.qb[self.lab][qNum]["aText"]
+
+    def getKeys(self):
+        return self.qb[self.lab].keys()
 
     def save(self,filename="lab1.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
@@ -62,12 +74,17 @@ class Question_Bank():
         """ Just a quick test function to print all the data to the console """
         #Note this is assuming lab 1
         # Wont work right now because of lists
-        for key in self.questionsDict.keys():
-            print "Question " + str(key) + ": " + self.questionsDict[key]["question"] + " " + self.questionsDict[key]["answer"]
+        for qNum in self.getKeys():
+            if type(self.getAnswer(qNum)) == list:
+                print "Question " + str(qNum) + ": " + " ".join(self.getAnswer(qNum)) + " " + self.getQuestion(qNum)
+            else:
+                print "Question " + str(qNum) + ": " + self.getAnswer(qNum) + " " + self.getQuestion(qNum)
 
 
 if __name__ == "__main__":
     qb = Question_Bank()
-    qb.save()
+    # print qb.getKeys()
+    qb.print_questions_to_console()
+    # qb.save()
     # qb.add_question(15,"asdf","lkasdj")
     # qb.print_questions_to_console()
