@@ -69,9 +69,9 @@ class MainApp(wx.Frame):
 
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
-        
-        self.Show() 
-        
+
+        self.Show()
+
         def deleteMeLater():
             self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
             self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
@@ -79,9 +79,9 @@ class MainApp(wx.Frame):
             self.qb.load(os.getcwd()+"\\lab1.dat")
             self.initializeQuestionArea()
             print "Done With Sample Load"
-            
+
         deleteMeLater()
-        
+
     def getImportFilePath(self):
         #TODO: if we make sub classes we can embed this into buildMenuNav
         return self.importFilePath
@@ -111,7 +111,7 @@ class MainApp(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 self.importFilePath = dlg.GetPath()
             dlg.Destroy()
- 
+
         def onAbout(event):
             dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
             result = dlg.ShowModal()
@@ -232,7 +232,7 @@ class MainApp(wx.Frame):
         sizer.Add(b_next, 0,wx.ALL,5)
 
         sizer.AddStretchSpacer(1)
-        
+
         self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
         self.b_comments.Disable()
         self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
@@ -342,7 +342,7 @@ class MainApp(wx.Frame):
                 self.correctButtons[qNum].Show()
                 self.mainpanel.Layout()
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
-        
+
     def setScore(self, event):
         try:
             self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
@@ -381,7 +381,7 @@ class MainApp(wx.Frame):
             correct.Bind(wx.EVT_BUTTON, setCorrect)
             correct.Hide()
             self.questions_area_sizer.Add(correct, 0, wx.RIGHT)
-            self.correctButtons[qNum] = correct            
+            self.correctButtons[qNum] = correct
 
 
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
