@@ -14,12 +14,12 @@ class CommentBrowser(wx.Frame):
         def onClose(event):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
-        
+
         self.commentsDict = {}
-        
+
         self.selectedStudent = "<<Student Name>>"
         self.createComments()
-        
+
     def setStudent(self, student):
         if student not in self.commentsDict.keys():
             defaultText = "Hi "+student.split()[0]+",\n\n"
@@ -27,10 +27,10 @@ class CommentBrowser(wx.Frame):
         self.selectedStudent = student
         self.title.SetLabel("Comments for: "+self.selectedStudent)
         self.currentComment.ChangeValue(self.commentsDict[student])
-        
+
     def saveComment(self, event):
         self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
-        
+
     def addComment(self, comment, redundentCheck=False):
         if comment not in self.currentComment.GetValue():
             original = self.currentComment.GetValue()
@@ -343,6 +343,10 @@ class MainApp(wx.Frame):
         self.si_right.ChangeValue("")
         self.si_score.ChangeValue("")
 
+        # remove check buttons
+        for qNum in self.correctButtons.keys():
+            self.correctButtons[qNum].Hide()
+
     def updateQuestions(self, name):
         # @TODO - it would be better if this variable could be set somewhere else
         self.totalPoints = 30 #if they are floats answer will be more accurate
@@ -363,7 +367,7 @@ class MainApp(wx.Frame):
                 self.correctButtons[qNum].Show()
                 self.mainpanel.Layout()
                 self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.questionsDict[qNum]["question"])+"\nThe correct answer should have been " + str(self.qb.questionsDict[qNum]["answer"]) +".\n",redundentCheck=True)
-        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)      
+        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
     def setScore(self, event):
@@ -375,14 +379,18 @@ class MainApp(wx.Frame):
     def initializeQuestionArea(self):
         def setCorrect(event):
             qNum = event.GetId()
+
+            #changes the background color
             self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+            self.student_answer_boxes[qNum].Refresh() #fix for delay
+
+            #hides button to prevent reclick
             self.correctButtons[qNum].Hide()
+
+            # increases score by one
             right = int(self.si_right.GetValue().split()[0]) + 1
             self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
-            self.questions_area.Layout()
 
-
-            # print "setCorrect!!!"
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
         self.questions_area.SetScrollbars(1, 1, 500, 1000)
         self.questions_area.EnableScrolling(True,True)
@@ -394,26 +402,30 @@ class MainApp(wx.Frame):
         self.student_answer_boxes = {}
         self.correctButtons = {}
         for qNum in self.qb.getQuestionsDict().keys():
-            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
-            self.questions_area_sizer.Add(label)
 
-            #add correct button here
+            #question and answer
+            c_sizer = wx.BoxSizer(wx.HORIZONTAL)
+            label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
+            c_sizer.Add(label)
+
+            #add correct button
             correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
             correct.SetForegroundColour((0,150,0))
             correct.SetToolTipString("Sets the question as correct")
             correct.Bind(wx.EVT_BUTTON, setCorrect)
             correct.Hide()
-            self.questions_area_sizer.Add(correct, 0, wx.RIGHT)
-            self.correctButtons[qNum] = correct
+            self.correctButtons[qNum] = correct #add it to the dictionary
+            c_sizer.AddStretchSpacer(1) #to push button to end
+            c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.RIGHT|wx.ALIGN_BOTTOM, border=10)
+            self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
 
-
+            #student answer section
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
             student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
             self.student_answer_boxes[qNum] = student_answer
-
             q_sizer.Add(student_answer, 1, wx.EXPAND|wx.TOP|wx.RIGHT, 5)
             self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
+
             if qNum != self.qb.getQuestionsDict().keys()[-1]:
                 self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
