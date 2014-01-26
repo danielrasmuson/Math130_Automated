@@ -219,8 +219,8 @@ class MainApp(wx.Frame):
         b_next.Bind(wx.EVT_BUTTON, nextButton)
         sizer.Add(b_next, 0,wx.ALL,5)
 
-        sizer.Add(wx.BoxSizer(wx.HORIZONTAL), 1, wx.EXPAND, 0)
-
+        sizer.AddStretchSpacer(1)
+        
         self.b_equations = wx.Button(panel, wx.ID_ANY, "Equations")
         self.b_equations.Disable()
         self.b_equations.SetToolTipString("Opens a new dialog box with extra equations (if available) for the current student.")
@@ -377,6 +377,6 @@ def newSession():
 if __name__ == "__main__":
     # Error messages go to pop-up window
     # because of the redirect=True.
-    app = wx.App(redirect=True)
+    app = wx.App(redirect=False)
     newSession()
     app.MainLoop()
