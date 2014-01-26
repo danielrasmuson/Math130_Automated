@@ -95,10 +95,10 @@ class MainApp(wx.Frame):
         def onClose(event):
             dlg = wx.MessageDialog(self,
                 "Do you really want to close this application?",
-                "Confirm Exit", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
+                "Confirm Exit", wx.YES_NO|wx.ICON_EXCLAMATION)
             result = dlg.ShowModal()
             dlg.Destroy()
-            if result == wx.ID_OK:
+            if result == wx.ID_YES:
                 self.Destroy()
 
         def onNew(event):
@@ -316,6 +316,7 @@ class MainApp(wx.Frame):
 
             if qs.getGrade(qNum):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
+                self.correctButtons[qNum].Hide()
                 right += 1
             else:
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
