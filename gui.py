@@ -8,13 +8,190 @@ from commentBrowser import CommentBrowser # split this to a new file because thi
 
 class MainApp(wx.Frame):
     initialized = False
+    class MenuNav:
+        '''
+        Create our menu bar with all the appropriate buttons and methods.
+        '''
+        def __init__(self, parent):
+            self.parent = parent
+            self.parent.Bind(wx.EVT_CLOSE, self.onClose)
+
+            menuBar = wx.MenuBar()
+
+            fileMenu = wx.Menu()
+            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
+            m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
+            m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
+            m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
+            fileMenu.AppendSeparator()
+            m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tAlt-D", "Loads all of the above stuff in one click.  Will get deleted later.")
+            fileMenu.AppendSeparator()
+            m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
+            self.parent.Bind(wx.EVT_MENU, self.onNew, m_new)
+            self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
+            self.parent.Bind(wx.EVT_MENU, self.loadBank, m_load)
+            self.parent.Bind(wx.EVT_MENU, self.loadImportFile, m_import)
+            self.parent.Bind(wx.EVT_MENU, self.parent.deleteMeLater, m_default)
+            self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
+            menuBar.Append(fileMenu, "&File")
+
+            helpMenu = wx.Menu()
+            m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
+            self.parent.Bind(wx.EVT_MENU, self.onAbout, m_about)
+            menuBar.Append(helpMenu, "&Help")
+
+            self.parent.SetMenuBar(menuBar)
+
+            self.parent.statusbar = self.parent.CreateStatusBar()
+
+        def loadBank(self, event):
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.parent.qb.load(dlg.GetPath())
+                try:
+                    self.parent.questions_area.Destroy()
+                except:
+                    pass
+                self.parent.initializeQuestionArea()
+            dlg.Destroy()
+
+        def loadImportFile(self, event):
+            """The user finds the template import file
+            downloaded from d2l and then the program will
+            fill in the values."""
+            dlg = wx.FileDialog(self.parent, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg.SetWildcard("Lab Import File (*.csv)|*.csv")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.parent.importFilePath = dlg.GetPath()
+            dlg.Destroy()
+
+        def onAbout(self, event):
+            dlg = wx.MessageDialog(self.parent, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
+            result = dlg.ShowModal()
+            dlg.Destroy()
+
+        def onClose(self, event):
+            dlg = wx.MessageDialog(self.parent,
+                "Do you really want to close this application?",
+                "Confirm Exit", wx.YES_NO|wx.ICON_EXCLAMATION)
+            result = dlg.ShowModal()
+            dlg.Destroy()
+            if result == wx.ID_YES:
+                self.parent.Destroy()
+
+        def onNew(self, event):
+            dlg = wx.MessageDialog(self.parent,
+                "Do you want to clear everything and start a new session?",
+                "Confirm New", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
+            result = dlg.ShowModal()
+            dlg.Destroy()
+            if result == wx.ID_OK:
+                self.parent.Show(False)
+                newSession()
+                self.parent.Destroy()
+
+        def onOpen(self, event):
+            # I get the current working directory + the examples test stuff
+            # so that while testing it'll default to our test directory.
+            # Later we can navigate anywhere we want and cut that part.
+            dlg = wx.DirDialog(self.parent, "Choose a directory:",os.getcwd()+"\\Examples\\test")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.parent.assignmentStack = getAssignmentStack(dlg.GetPath(), self.parent.getImportFilePath())
+                # Call our initial tree list build
+                self.parent.updateTreeList(self.parent.lab_tree_list)
+            dlg.Destroy()
+            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+
+    class BottomNav:
+        '''
+        Builds a predefined set of buttons on a specific panel and utilizing the sizer provided
+        '''
+        def __init__(self, parent, panel, sizer):
+            self.parent = parent
+            self.panel = panel
+            self.sizer = sizer
+
+            b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
+            b_prev.SetToolTipString("Selects the previous student of the current section.")
+            b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
+            sizer.Add(b_prev, 0,wx.ALL,5)
+
+            b_next = wx.Button(panel, wx.ID_ANY, "Next")
+            b_next.SetToolTipString("Selects the next student of the current section")
+            b_next.Bind(wx.EVT_BUTTON, self.nextButton)
+            sizer.Add(b_next, 0,wx.ALL,5)
+
+            sizer.AddStretchSpacer(1)
+
+            self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
+            self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
+            self.b_comments.Bind(wx.EVT_BUTTON, self.parent.commentBrowser)
+            sizer.Add(self.b_comments, 0,wx.ALL,5)
+
+            b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
+            b_open.SetToolTipString("Opens the document in word.")
+            b_open.Bind(wx.EVT_BUTTON, self.openDocument)
+            sizer.Add(b_open, 0,wx.ALL,5)
+
+            # A button for sending the grade to the excel file
+            b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
+            b_grade.SetToolTipString("Sends the grade to excel file")
+            b_grade.Bind(wx.EVT_BUTTON, self.sendGrade)
+            sizer.Add(b_grade, 0,wx.ALL,5)
+
+        def openDocument(self, event):
+            current_item = str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
+            if "Section" not in current_item:
+                os.system("\""+self.parent.assignmentStack[current_item].getStudentFilepath()+"\"")
+
+        def previousButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            prev = self.parent.lab_tree_list.GetPrevSibling(current)
+            if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(prev)
+            elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
+            else:
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if parent != self.parent.lab_tree_list.GetRootItem():
+                    self.parent.lab_tree_list.SelectItem(parent)
+
+        def nextButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            if self.parent.lab_tree_list.ItemHasChildren(current):
+                next = self.parent.lab_tree_list.GetFirstChild(current)[0]
+            else:
+                next = self.parent.lab_tree_list.GetNextSibling(current)
+            if next.IsOk():
+                self.parent.lab_tree_list.SelectItem(next)
+            else:
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
+                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
+
+        def sendGrade(self, event):
+            # @TODO: right answers should be divided by the total score (30 points)
+            name = self.parent.si_name.GetValue().split()
+            score = self.parent.si_score.GetValue()
+            sendToImport(self.parent.importFilePath, name[0], " ".join(name[1:]), score)
+            self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.si_name.GetValue())
+            self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
+
     def __init__(self):
-        self.qb = Question_Bank() 
+        self.qb = Question_Bank()
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
-        self.comment_frame = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
         self.SetMinSize((800,600))
 
-        self.buildMenuNav()
+        # Creat our Comment Browswer so that we can use it later,
+        # it's hidden by default.
+        self.commentWindow = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
+
+        # We create the MenuNav class here and pass in the self
+        # arguement so that we can catch it and set it as the parent
+        # for the MenuClass to use as it's parent.
+        self.menuNavigation = self.MenuNav(self)
+
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
         self.mainpanel = wx.Panel(self, wx.ID_ANY)
@@ -40,196 +217,31 @@ class MainApp(wx.Frame):
         # Now we call the routines to build the main content
         self.buildTreeNav(self.mainpanel, self.tree_sizer)
         self.buildRightQuestionsArea(self.mainpanel, self.right_sizer)
-        self.buildBottomNav(self.mainpanel,self.main_sizer_b)
+        self.BottomNav(self,self.mainpanel,self.main_sizer_b)
 
         self.mainpanel.SetSizer(self.main_sizer)
         self.mainpanel.Layout()
 
         self.Show()
 
-        def deleteMeLater():
-            self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-            self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
-            self.updateTreeList(self.lab_tree_list)
-            self.qb.load(os.getcwd()+"\\lab1.dat")
-            self.initializeQuestionArea()
-            print "Done With Sample Load"
-
-        deleteMeLater()
+    def deleteMeLater(self, event):
+        self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+        self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
+        self.updateTreeList(self.lab_tree_list)
+        self.qb.load(os.getcwd()+"\\lab1.dat")
+        self.initializeQuestionArea()
+        print "Done With Sample Load"
 
     def getImportFilePath(self):
         #TODO: if we make sub classes we can embed this into buildMenuNav
         return self.importFilePath
 
-    def buildMenuNav(self):
-        """ Builds the menu bar, status bar, and the associated
-        functions required for these things to work including loading
-        questions and also selecting folders/directories."""
-        def loadBank(event):
-            dlg = wx.FileDialog(self, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
-            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.qb.load(dlg.GetPath())
-                try:
-                    self.questions_area.Destroy()
-                except:
-                    pass
-                self.initializeQuestionArea()
-            dlg.Destroy()
-
-        def loadImportFile(event):
-            """The user finds the template import file
-            downloaded from d2l and then the program will
-            fill in the values."""
-            dlg = wx.FileDialog(self, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
-            dlg.SetWildcard("Lab Import File (*.csv)|*.csv")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.importFilePath = dlg.GetPath()
-            dlg.Destroy()
-
-        def onAbout(event):
-            dlg = wx.MessageDialog(self, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
-            result = dlg.ShowModal()
-            dlg.Destroy()
-
-        def onClose(event):
-            dlg = wx.MessageDialog(self,
-                "Do you really want to close this application?",
-                "Confirm Exit", wx.YES_NO|wx.ICON_EXCLAMATION)
-            result = dlg.ShowModal()
-            dlg.Destroy()
-            if result == wx.ID_YES:
-                self.Destroy()
-
-        def onNew(event):
-            dlg = wx.MessageDialog(self,
-                "Do you want to clear everything and start a new session?",
-                "Confirm New", wx.OK|wx.CANCEL|wx.ICON_QUESTION)
-            result = dlg.ShowModal()
-            dlg.Destroy()
-            if result == wx.ID_OK:
-                self.Show(False)
-                newSession()
-                self.Destroy()
-
-        def onOpen(event):
-            # I get the current working directory + the examples test stuff
-            # so that while testing it'll default to our test directory.
-            # Later we can navigate anywhere we want and cut that part.
-            dlg = wx.DirDialog(self, "Choose a directory:",os.getcwd()+"\\Examples\\test")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.assignmentStack = getAssignmentStack(dlg.GetPath(), self.getImportFilePath())
-                # Call our initial tree list build
-                self.updateTreeList(self.lab_tree_list)
-            dlg.Destroy()
-            self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
-
-        self.Bind(wx.EVT_CLOSE, onClose)
-
-        menuBar = wx.MenuBar()
-
-        fileMenu = wx.Menu()
-        m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
-        m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
-        m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
-        m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
-        fileMenu.AppendSeparator()
-        m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
-        self.Bind(wx.EVT_MENU, onNew, m_new)
-        self.Bind(wx.EVT_MENU, onOpen, m_open)
-        self.Bind(wx.EVT_MENU, loadBank, m_load)
-        self.Bind(wx.EVT_MENU, loadImportFile, m_import)
-        self.Bind(wx.EVT_MENU, onClose, m_exit)
-        menuBar.Append(fileMenu, "&File")
-
-        helpMenu = wx.Menu()
-        m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
-        self.Bind(wx.EVT_MENU, onAbout, m_about)
-        menuBar.Append(helpMenu, "&Help")
-
-        self.SetMenuBar(menuBar)
-
-        self.statusbar = self.CreateStatusBar()
-
-    def buildBottomNav(self, panel, sizer):
-        """Builds a predefined set of buttons on a specific panel
-         and utilizing the sizer provided"""
-        def openDocument(event):
-            current_item = str(self.lab_tree_list.GetItemText(self.lab_tree_list.GetSelection()).strip(u"\u2714"))
-            if "Section" not in current_item:
-                os.system("\""+self.assignmentStack[current_item].getStudentFilepath()+"\"")
-
-        def previousButton(event):
-            current = self.lab_tree_list.GetSelection()
-            prev = self.lab_tree_list.GetPrevSibling(current)
-            if prev.IsOk() and not self.lab_tree_list.ItemHasChildren(prev):
-                self.lab_tree_list.SelectItem(prev)
-            elif prev.IsOk() and  self.lab_tree_list.ItemHasChildren(prev):
-                self.lab_tree_list.SelectItem(self.lab_tree_list.GetLastChild(prev))
-            else:
-                parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
-                if parent != self.lab_tree_list.GetRootItem():
-                    self.lab_tree_list.SelectItem(parent)
-
-        def nextButton(event):
-            current = self.lab_tree_list.GetSelection()
-            if self.lab_tree_list.ItemHasChildren(current):
-                next = self.lab_tree_list.GetFirstChild(current)[0]
-            else:
-                next = self.lab_tree_list.GetNextSibling(current)
-            if next.IsOk():
-                self.lab_tree_list.SelectItem(next)
-            else:
-                parent = self.lab_tree_list.GetItemParent(self.lab_tree_list.GetSelection())
-                if self.lab_tree_list.GetNextSibling(parent).IsOk():
-                    self.lab_tree_list.SelectItem(self.lab_tree_list.GetNextSibling(parent))
-
-        def sendGrade(event):
-            # Do you know how to do complete this first check greg?
-            # @TODO: when you change the value of the score box in the gui it needs change the value of the variable
-            # @TODO: Hoping to add \xe2 to the start of tree names if sendGrade has been executed
-            # @TODO: right answers should be divided by the total score (30 points)
-            name = self.si_name.GetValue().split()
-            score = self.si_score.GetValue()
-            sendToImport(self.importFilePath, name[0], " ".join(name[1:]), score)
-            self.lab_tree_list.SetItemText(self.lab_tree_list.GetSelection(), u"\u2714"+self.si_name.GetValue())
-            self.lab_tree_list.SetItemTextColour(self.lab_tree_list.GetSelection(), (0,150,0))
-
-
-        b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
-        b_prev.SetToolTipString("Selects the previous student of the current section.")
-        b_prev.Bind(wx.EVT_BUTTON, previousButton)
-        sizer.Add(b_prev, 0,wx.ALL,5)
-
-        b_next = wx.Button(panel, wx.ID_ANY, "Next")
-        b_next.SetToolTipString("Selects the next student of the current section")
-        b_next.Bind(wx.EVT_BUTTON, nextButton)
-        sizer.Add(b_next, 0,wx.ALL,5)
-
-        sizer.AddStretchSpacer(1)
-
-        self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
-        self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
-        self.b_comments.Bind(wx.EVT_BUTTON, self.commentBrowser)
-        sizer.Add(self.b_comments, 0,wx.ALL,5)
-
-        b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
-        b_open.SetToolTipString("Opens the document in word.")
-        b_open.Bind(wx.EVT_BUTTON, openDocument)
-        sizer.Add(b_open, 0,wx.ALL,5)
-
-        # A button for sending the grade to the excel file
-        b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
-        b_grade.SetToolTipString("Sends the grade to excel file")
-        b_grade.Bind(wx.EVT_BUTTON, sendGrade)
-        sizer.Add(b_grade, 0,wx.ALL,5)
-
     def commentBrowser(self, event):
         w,h = self.GetSizeTuple()
         x,y = self.GetPositionTuple()
-        self.comment_frame.SetPosition((w+x,y))
-        self.comment_frame.Show()
-        self.comment_frame.Raise()
+        self.commentWindow.SetPosition((w+x,y))
+        self.commentWindow.Show()
+        self.commentWindow.Raise()
 
     def buildTreeNav(self, panel, sizer):
         """ Builds our tree list of students """
@@ -241,7 +253,7 @@ class MainApp(wx.Frame):
                 name = str(currentSelection.strip(u"\u2714 "))
                 section = self.assignmentStack[name].getSection()
                 self.updateStudentInformation(name, section)
-                self.comment_frame.setStudent(name)
+                self.commentWindow.setStudent(name)
                 # uni_str = u""
                 # for number, line in enumerate(self.assignmentStack[name].getMisc()):
                     # uni_str += u"Equation #"+unicode(number)+u" "+line+u"\n"
@@ -310,7 +322,7 @@ class MainApp(wx.Frame):
         # This gets our students answers and the dictionary we're comparing their answer to.
         qs = self.assignmentStack[name]
         right = 0
-        self.comment_frame.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
+        self.commentWindow.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
         for qNum in qs.getKeys():
             self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
 
@@ -322,8 +334,8 @@ class MainApp(wx.Frame):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                 self.correctButtons[qNum].Show()
                 self.mainpanel.Layout()
-                self.comment_frame.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.qb.getAnswer(qNum)) +".\n",redundentCheck=True)
-        self.comment_frame.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
+                self.commentWindow.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.qb.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.qb.getAnswer(qNum)) +".\n",redundentCheck=True)
+        self.commentWindow.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
         self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
     def setScore(self, event):
