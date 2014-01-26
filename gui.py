@@ -4,52 +4,7 @@ from assignment import getAssignmentStack
 from question_bank import *
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
-
-class CommentBrowser(wx.Frame):
-    def __init__(self, parent, initialPosition, initialSize):
-        wx.Frame.__init__(self, parent, title='Comment Browser', pos=initialPosition, size=initialSize)
-        self.panel = wx.Panel(self)
-        self.parent = parent
-
-        def onClose(event):
-            self.Hide()
-        self.Bind(wx.EVT_CLOSE, onClose)
-
-        self.commentsDict = {}
-
-        self.selectedStudent = "<<Student Name>>"
-        self.createComments()
-
-    def setStudent(self, student):
-        if student not in self.commentsDict.keys():
-            defaultText = "Hi "+student.split()[0]+",\n\n"
-            self.commentsDict[student] = defaultText
-        self.selectedStudent = student
-        self.title.SetLabel("Comments for: "+self.selectedStudent)
-        self.currentComment.ChangeValue(self.commentsDict[student])
-
-    def saveComment(self, event):
-        self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
-
-    def addComment(self, comment, redundentCheck=False):
-        if comment not in self.currentComment.GetValue():
-            original = self.currentComment.GetValue()
-            self.currentComment.SetValue(original + comment)
-
-    def createComments(self):
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        self.title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments for: <<Student Name>>")
-        titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        self.title.SetFont(titlefont)
-        sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
-
-        self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
-        self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
-        sizer.Add(self.currentComment, 1, flag=wx.ALL|wx.GROW, border=0)
-
-        self.panel.SetSizer(sizer)
-        self.Layout()
-
+from commentBrowser import CommentBrowser # split this to a new file because this one is so big
 
 class MainApp(wx.Frame):
     initialized = False
@@ -353,13 +308,13 @@ class MainApp(wx.Frame):
         self.numberQuestions = 12
 
         # This gets our students answers and the dictionary we're comparing their answer to.
-        studentQD = self.assignmentStack[name].getStudentDictionary()
+        qs = self.assignmentStack[name]
         right = 0
         self.comment_frame.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
-        for qNum in studentQD.keys():
-            self.student_answer_boxes[qNum].SetLabel(str(studentQD[qNum]["answer"]))
+        for qNum in qs.getKeys():
+            self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
 
-            if studentQD[qNum]['grade']:
+            if qs.getGrade(qNum):
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 right += 1
             else:

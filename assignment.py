@@ -96,7 +96,7 @@ class assignment():
         self.sAnswers = sAnswers
 
     def setStudentDictionary(self, qD):
-        self.studentQD = qD
+        self.qs = qD
 
     def setStudentFilepath(self, path):
         self.filePath = path
@@ -119,9 +119,24 @@ class assignment():
     def getStudentDictionary(self):
         """A dictionary containing the question bank
         along with the students answer
-        ex: self.studentQD[1][sAnswer]
-        ex: self.studentQD[Question Number][Student Answer]"""
-        return self.studentQD
+        ex: self.qs[1][sAnswer]
+        ex: self.qs[Question Number][Student Answer]"""
+        return self.qs
+
+    def getQuestion(self, qNum):
+        return self.qs[qNum]["question"]
+        
+    def getAnswer(self, qNum):
+        return self.qs[qNum]["answer"]
+
+    def getAText(self, qNum):
+        return self.qs[qNum]["aText"]
+
+    def getGrade(self, qNum):
+        return self.qs[qNum]["grade"]
+
+    def getKeys(self):
+        return self.qs.keys()
 
     def getStudentFilepath(self):
         return self.filePath
@@ -139,15 +154,15 @@ def getAssignmentStack(subPath, importFilePath):
     for i in range(len(labs)):
         name = fileNameList[i].split("-")[0]
 
-        studentQD = getStudentAnswersFromLab(qb, labs[i])
-        studentQD = getGradesStudentsLab(qb, studentQD)
+        qs = getStudentAnswersFromLab(qb, labs[i])
+        qs = getGradesStudentsLab(qb, qs)
 
         assignObj = assignment(labs[i])
 
         #assign the attributes
         assignObj.setName(name)
         assignObj.setSection(section)
-        assignObj.setStudentDictionary(studentQD)
+        assignObj.setStudentDictionary(qs)
         assignObj.setStudentFilepath(fileList[i])
         assignObj.setMisc(miscObjects[i])
 
