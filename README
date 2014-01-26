@@ -23,17 +23,13 @@ Possible ideas for future
 redo document importing (faster with equations) - Greg
     noticing when document has and does not have equations
     speed up word document opening
-update assignment class with getAnswer() etc
 Run results vs attendance quiz
 inner classes - re structure code
 wizard for loading files
 disable buttons when you cant use them - Greg
-add checkmark to done students - Greg
-    look into wrapper for trees
 ability to add more answers ($10.40 | 10 dollar 40 cents) - Dan
 Add multiple lines to student quesitons
 grading support for multiple sections
-ability to move students from incorrect or missing section
 
 
 Done
@@ -41,3 +37,7 @@ Done
 change value of question right changes value of score
 file name support
 update question bank for getAnswer(qNum)
+update assignment class with getAnswer() etc
+add checkmark to done students - Greg
+    look into wrapper for trees
+ability to move students from incorrect or missing section
