@@ -18,7 +18,7 @@ def sendToImport(path, fName, lName, score):
     newText = startText
     for line in startText.split("\n"):
         if fName.lower() in line.lower() and lName.lower() in line.lower():
-            newLine = re.sub(r",\d*?,#",","+str(score)+",", line) # matches ,,# or ,23343,#
+            newLine = re.sub(r",\d*?,#",","+str(score)+",#", line) # matches ,,# or ,23343,#
             newText = newText.replace(line,newLine)
 
     textFile = open(path,"w")
