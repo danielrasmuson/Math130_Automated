@@ -340,6 +340,8 @@ class MainApp(wx.Frame):
             pass
 
     def initializeQuestionArea(self):
+        def setCorrect(self):
+            print "setCorrect!!!"
         self.questions_area = wx.ScrolledWindow(self.mainpanel)
         self.questions_area.SetScrollbars(1, 1, 650, 1000)
         self.questions_area.EnableScrolling(True,True)
@@ -353,6 +355,14 @@ class MainApp(wx.Frame):
         for qNum in self.qb.getQuestionsDict().keys():
             label = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":\n"+ str(wordwrap(self.qb.getQuestionsDict()[qNum]["question"]+" "+str(self.qb.getQuestionsDict()[qNum]["answer"]), self.questions_area.GetVirtualSize()[0], wx.ClientDC(self.questions_area))) )
             self.questions_area_sizer.Add(label)
+
+            #add correct button here
+            correct = wx.Button(self.mainpanel, wx.ID_ANY, "Correct")
+            correct.SetToolTipString("Sets the question as correct")
+            correct.Bind(wx.EVT_BUTTON, setCorrect)
+            self.questions_area_sizer.Add(correct)
+            # newsizer.Add(correct, 0,wx.ALL,5)
+
 
             q_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -377,6 +387,6 @@ def newSession():
 if __name__ == "__main__":
     # Error messages go to pop-up window
     # because of the redirect=True.
-    app = wx.App(redirect=True)
+    app = wx.App(redirect=False)
     newSession()
     app.MainLoop()
