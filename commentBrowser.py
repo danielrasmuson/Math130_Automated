@@ -44,3 +44,10 @@ class CommentBrowser(wx.Frame):
 
         self.panel.SetSizer(sizer)
         self.Layout()
+
+    def display(self, event):
+        w,h = self.parent.GetSizeTuple()
+        x,y = self.parent.GetPositionTuple()
+        self.SetPosition((w+x,y))
+        self.Show()
+        self.Raise()
