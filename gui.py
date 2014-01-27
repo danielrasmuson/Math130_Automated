@@ -266,7 +266,7 @@ class MainApp(wx.Frame):
             self.questions_area.Scroll((0,0))
 
         def drawQuestions(self):
-            def setCorrect(event):
+            def setFullCorrect(event):
                 qNum = event.GetId()
                 self.parent.commentWindow.removeWrong(qNum)
                 #changes the background color
@@ -274,10 +274,42 @@ class MainApp(wx.Frame):
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
 
                 #hides button to prevent reclick
-                self.correctButtons[qNum].Hide()
+                self.fullCorrectButtons[qNum].Hide()
+                self.halfCorrectButtons[qNum].Hide()
+                self.markWrongButtons[qNum].Hide()
 
                 # increases score by one
-                right = int(self.si_right.GetValue().split()[0]) + 1
+                right = float(self.si_right.GetValue().split()[0]) + 1
+                self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
+            def setHalfCorrect(event):
+                qNum = event.GetId()-100
+                self.parent.commentWindow.removeWrong(qNum)
+                #changes the background color
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAA00")
+                self.student_answer_boxes[qNum].Refresh() #fix for delay
+
+                #hides button to prevent reclick
+                self.fullCorrectButtons[qNum].Hide()
+                self.halfCorrectButtons[qNum].Hide()
+                self.markWrongButtons[qNum].Hide()
+
+                # increases score by one
+                right = float(self.si_right.GetValue().split()[0]) + 1.0/2.0
+                self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
+            def setWrong(event):
+                qNum = event.GetId()-1000
+                # self.parent.commentWindow.removeWrong(qNum)
+                #changes the background color
+                self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                self.student_answer_boxes[qNum].Refresh() #fix for delay
+
+                #hides button to prevent reclick
+                self.fullCorrectButtons[qNum].Hide()
+                self.halfCorrectButtons[qNum].Hide()
+                self.markWrongButtons[qNum].Hide()
+
+                # increases score by one
+                right = float(self.si_right.GetValue().split()[0]) - 1
                 self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
@@ -289,7 +321,9 @@ class MainApp(wx.Frame):
             self.questions_area.SetSizer(self.questions_area_sizer)
 
             self.student_answer_boxes = {}
-            self.correctButtons = {}
+            self.fullCorrectButtons = {}
+            self.halfCorrectButtons = {}
+            self.markWrongButtons = {}
             for qNum in self.parent.questionBank.getKeys():
 
 
@@ -320,15 +354,34 @@ class MainApp(wx.Frame):
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
                 c_sizer.Add(textInQandA)
 
-                # Correct Button
-                correct = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
-                correct.SetForegroundColour((0,150,0))
-                correct.SetToolTipString("Sets the question as correct")
-                correct.Bind(wx.EVT_BUTTON, setCorrect)
-                correct.Hide()
-                self.correctButtons[qNum] = correct #add it to the dictionary
-                c_sizer.AddStretchSpacer(1) #to push button to end
-                c_sizer.Add(correct, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=20) # TODO: this boarder is not working
+                # Correct Buttons \u2714
+                c_sizer.AddStretchSpacer(1) #to push buttons to end
+                fullCorrect = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
+                fullCorrect.SetForegroundColour((0,150,0))
+                fullCorrect.SetToolTipString("Sets the question as correct")
+                fullCorrect.Bind(wx.EVT_BUTTON, setFullCorrect)
+                fullCorrect.Hide()
+                self.fullCorrectButtons[qNum] = fullCorrect #add it to the dictionary
+                c_sizer.Add(fullCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
+
+                # Half Correct Buttons \u00BD
+                halfCorrect = wx.Button(self.questions_area, size=(20,20), id=qNum+100, label=u"\u00BD")
+                halfCorrect.SetForegroundColour("#FFAA00")
+                halfCorrect.SetToolTipString("Sets the question as half correct")
+                halfCorrect.Bind(wx.EVT_BUTTON, setHalfCorrect)
+                halfCorrect.Hide()
+                self.halfCorrectButtons[qNum] = halfCorrect #add it to the dictionary
+                c_sizer.Add(halfCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
+
+                # Wrong Buttons \u2717
+                markWrong = wx.Button(self.questions_area, size=(20,20), id=qNum+1000, label=u"\u2717")
+                markWrong.SetForegroundColour("#FF0000")
+                markWrong.SetToolTipString("Sets the question as wrong")
+                markWrong.Bind(wx.EVT_BUTTON, setWrong)
+                markWrong.Hide()
+                self.markWrongButtons[qNum] = markWrong #add it to the dictionary
+                c_sizer.Add(markWrong, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
+
                 self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
 
                 # Student Answer Section
@@ -360,11 +413,15 @@ class MainApp(wx.Frame):
                 self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
                 if qs.getGrade(qNum):
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-                    self.correctButtons[qNum].Hide()
+                    self.fullCorrectButtons[qNum].Hide()
+                    self.halfCorrectButtons[qNum].Hide()
+                    self.markWrongButtons[qNum].Show()
                     right += 1
                 else:
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                    self.correctButtons[qNum].Show()
+                    self.fullCorrectButtons[qNum].Show()
+                    self.halfCorrectButtons[qNum].Show()
+                    self.markWrongButtons[qNum].Hide()
                     self.panel.Layout()
                     self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), qs.getAnswer(qNum))
             self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
