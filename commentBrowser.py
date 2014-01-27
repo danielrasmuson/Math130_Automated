@@ -89,7 +89,7 @@ class CommentBrowser(wx.Frame):
         self.Layout()
 
     def resetComment(self, event):
-        self.currentComment.ChangeValue()
+        self.currentComment.ChangeValue("")
 
 
     def display(self, event):

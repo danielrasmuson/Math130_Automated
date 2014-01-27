@@ -333,7 +333,7 @@ class MainApp(wx.Frame):
 
                 # Student Answer Section
                 q_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY, value="")
+                student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH, value="")
                 self.student_answer_boxes[qNum] = student_answer
                 q_sizer.Add(student_answer, 1) #1, wx.EXPAND|wx.TOP|wx.RIGHT, 5
                 self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
@@ -358,7 +358,6 @@ class MainApp(wx.Frame):
 
             for qNum in qs.getKeys():
                 self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
-
                 if qs.getGrade(qNum):
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                     self.correctButtons[qNum].Hide()
