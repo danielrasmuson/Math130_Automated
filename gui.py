@@ -5,6 +5,7 @@ from question_bank import *
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
+from importWizard import *
 
 class MainApp(wx.Frame):
     initialized = False
@@ -20,7 +21,8 @@ class MainApp(wx.Frame):
             m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
             m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
             m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
-            m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "will write grades to this document for later import.")
+            m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "Will write grades to this document for later import.")
+            m_wizard = fileMenu.Append(wx.ID_ANY, "Guided &Wizard\tCtrl-W", "Opens the guided wizard for the setup process.")
             fileMenu.AppendSeparator()
             m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tAlt-D", "Loads all of the above stuff in one click.  Will get deleted later.")
             fileMenu.AppendSeparator()
@@ -29,6 +31,7 @@ class MainApp(wx.Frame):
             self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
             self.parent.Bind(wx.EVT_MENU, self.loadBank, m_load)
             self.parent.Bind(wx.EVT_MENU, self.loadImportFile, m_import)
+            self.parent.Bind(wx.EVT_MENU, self.wizardEvent, m_wizard)
             self.parent.Bind(wx.EVT_MENU, self.parent.deleteMeLater, m_default)
             self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
             menuBar.Append(fileMenu, "&File")
@@ -41,6 +44,19 @@ class MainApp(wx.Frame):
             self.parent.SetMenuBar(menuBar)
 
             self.parent.statusbar = self.parent.CreateStatusBar()
+
+        def wizardEvent(self, event):
+            tempwiz = ImportWizard()
+            start = time.clock()
+            self.parent.importFilePath = tempwiz.gradingSheet.GetValue()
+            self.parent.assignmentStack = getAssignmentStack(tempwiz.gradingDirectory.GetValue(),self.parent.importFilePath)
+            end = time.clock()
+            print "Time taken to load files:",end-start
+            self.parent.studentTree.updateTreeList()
+            self.parent.questionBank.load(tempwiz.labDictionaryFile.GetValue())
+            self.parent.questionsArea.drawQuestions()
+            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+            print "Done With Wizard Load"
 
         def loadBank(self, event):
             dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
