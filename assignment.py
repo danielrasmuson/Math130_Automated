@@ -1,5 +1,6 @@
 from getFiles import getDocxsFromFolder
 from question_bank import *
+import re
 
 def getGradesStudentsLab(qb, studentDict):
     """A more robust system for grading labs
@@ -45,13 +46,14 @@ def getGradesStudentsLab(qb, studentDict):
 
 
 def getStudentAnswersFromLab(qb, lab):
-    # I changed this to using a new dictionary and only returning that dictionary
-    # because I'd rather have that so we can keep the two different dictionaries
-    # separate.  Otherwise there was a lot of overlap in the two qb and studentDict.
-    # fair point - Dan
+    #remove numbers for start of aText to work
+    #ex. 1. What is the 45th term?
+    lab = re.sub(r'\n +\d\. ',"", lab)
+    lab = lab.replace("*","")
+
+
     studentDict = {}
     for qNum in qb.getKeys():
-        # @TODO need some error handling on these indexes
         try:
             start = lab.index(qb.getQuestion(qNum))
             start += len(qb.getQuestion(qNum)) # to not include question
@@ -68,15 +70,7 @@ def getStudentAnswersFromLab(qb, lab):
             print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string."
             end = -1
 
-        #NOTE - I'm removing strange symbols here
-        # might remove squared and stuff from answers
-        answerUnicode = lab[start:end]
-        answer = ""
-        for char in answerUnicode:
-            if 14 < ord(char) < 128:
-                answer += char
-
-        # Added some more automated grading here
+        answer = lab[start:end]
         studentDict[qNum] = {"answer": answer.strip()}
 
     return studentDict

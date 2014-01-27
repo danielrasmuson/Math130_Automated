@@ -32,6 +32,6 @@ def getDocxsFromFolder(folderPath):
 
 
 if __name__ == "__main__":
-    docxStack, fileNameList = getDocxsFromFolder("C:\\Users\\Daniel\\Google Drive\\Classes\\Math 130 TA\\Lab1_TA130\\Lab1_Grading_Spring2014\\labs")
+    docxStack, fileNameList, fullPath = getDocxsFromFolder("C:\\Users\\Daniel\\Google Drive\\Classes\\Math 130 TA\\Lab1_TA130\\Lab1_Grading_Spring2014\\labs")
     print len(docxStack)
     print docxStack[2]

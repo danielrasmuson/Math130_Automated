@@ -260,7 +260,7 @@ class MainApp(wx.Frame):
                 self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
-            self.questions_area.SetScrollbars(1, 1, 500, 1000)
+            self.questions_area.SetScrollbars(1, 5, 500, 1000)
             self.questions_area.EnableScrolling(True,True)
             self.sizer.Add(self.questions_area, 1, wx.EXPAND)
 
