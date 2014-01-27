@@ -162,6 +162,7 @@ class MainApp(wx.Frame):
             prev = self.parent.lab_tree_list.GetPrevSibling(current)
             if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
                 self.parent.lab_tree_list.SelectItem(prev)
+                self.parent.questionsArea.scrollTop()
             elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
                 self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
             else:
@@ -177,6 +178,7 @@ class MainApp(wx.Frame):
                 next = self.parent.lab_tree_list.GetNextSibling(current)
             if next.IsOk():
                 self.parent.lab_tree_list.SelectItem(next)
+                self.parent.questionsArea.scrollTop()
             else:
                 parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
                 if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
@@ -260,10 +262,13 @@ class MainApp(wx.Frame):
             sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
             sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
+        def scrollTop(self):
+            self.questions_area.Scroll((0,0))
+
         def drawQuestions(self):
             def setCorrect(event):
                 qNum = event.GetId()
-
+                self.parent.commentWindow.removeWrong(qNum)
                 #changes the background color
                 self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
@@ -350,7 +355,7 @@ class MainApp(wx.Frame):
             # This gets our students answers and the dictionary we're comparing their answer to.
             qs = self.parent.assignmentStack[name]
             right = 0
-            self.parent.commentWindow.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n",redundentCheck=True)
+
             for qNum in qs.getKeys():
                 self.student_answer_boxes[qNum].SetLabel(str(qs.getAnswer(qNum)))
 
@@ -362,8 +367,7 @@ class MainApp(wx.Frame):
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                     self.correctButtons[qNum].Show()
                     self.panel.Layout()
-                    self.parent.commentWindow.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.parent.questionBank.getAnswer(qNum))+"\nThe correct answer should have been " + str(self.parent.questionBank.getAnswer(qNum)) +".\n",redundentCheck=True)
-            self.parent.commentWindow.addComment("\nIf you've got any questions or still aren't sure feel free to email me.\n",redundentCheck=True)
+                    self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), qs.getAnswer(qNum))
             self.si_right.SetValue(str(right) + " / " + str(int(self.numberQuestions)))
 
         def updateStudentInformation(self, name, section):

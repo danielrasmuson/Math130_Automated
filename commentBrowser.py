@@ -12,6 +12,8 @@ class CommentBrowser(wx.Frame):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
 
+        self.defaultComments = {}
+
         self.commentsDict = {}
 
         self.selectedStudent = "<<Student Name>>"
@@ -26,6 +28,10 @@ class CommentBrowser(wx.Frame):
         if student not in self.commentsDict.keys():
             defaultText = "Hi "+student.split()[0]+",\n\n"
             self.commentsDict[student] = defaultText
+        else:
+            # Clear previous student default comments.
+            del self.defaultComments
+            self.defaultComments = {}
         self.selectedStudent = student
         self.title.SetLabel("Comments for: "+self.selectedStudent)
         self.currentComment.ChangeValue(self.commentsDict[student])
@@ -33,10 +39,9 @@ class CommentBrowser(wx.Frame):
     def saveComment(self, event):
         self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
 
-    def addComment(self, comment, redundentCheck=False):
-        if comment not in self.currentComment.GetValue():
-            original = self.currentComment.GetValue()
-            self.currentComment.SetValue(original + comment)
+    def addComment(self, comment):
+        original = self.currentComment.GetValue()
+        self.currentComment.SetValue(original + comment)
 
     def createCommentsWindow(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -49,23 +54,43 @@ class CommentBrowser(wx.Frame):
         self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
         self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
 
-        #copy button
+
+        #default comments
+        b_copy = wx.Button(self.panel, wx.ID_ANY, "Default Comment")
+        b_copy.SetToolTipString("Loads the default comments using the wrong answers from the student.")
+        b_copy.Bind(wx.EVT_BUTTON, self.defaultCommentButton)
+        bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
+
+        #copy comments
         b_copy = wx.Button(self.panel, wx.ID_ANY, "Copy Comment")
         b_copy.SetToolTipString("Copies the current comment to the clipboard.")
         b_copy.Bind(wx.EVT_BUTTON, self.copyComment)
-        bsizer.Add(b_copy, 1, flag=wx.GROW|wx.ALL, border=5)
+        bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
 
-        #email button
+        #email comments
         b_copy = wx.Button(self.panel, wx.ID_ANY, "Email")
         b_copy.SetToolTipString("Once Email List has been loaded it will send this to a students email.")
         b_copy.Bind(wx.EVT_BUTTON, self.sendEmail)
-        bsizer.Add(b_copy, 0, flag=wx.ALIGN_RIGHT|wx.ALL, border=5)
+        bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
+
+        bsizer.AddStretchSpacer(1)
+
+        #reset comments
+        b_reset = wx.Button(self.panel, wx.ID_ANY, "Reset Comments")
+        b_reset.SetToolTipString("Clears the comments area to start again fresh.")
+        b_reset.Bind(wx.EVT_BUTTON, self.resetComment)
+        bsizer.Add(b_reset, 0, flag=wx.ALL, border=5)
+
 
         sizer.Add(self.currentComment, 1, flag=wx.ALL|wx.GROW, border=0)
-        sizer.Add(bsizer,0,flag=wx.ALL|wx.GROW,border=0)
+        sizer.Add(bsizer,0,flag=wx.ALIGN_CENTER|wx.ALL|wx.GROW,border=0)
 
         self.panel.SetSizer(sizer)
         self.Layout()
+
+    def resetComment(self, event):
+        self.currentComment.ChangeValue()
+
 
     def display(self, event):
         w,h = self.parent.GetSizeTuple()
@@ -79,6 +104,22 @@ class CommentBrowser(wx.Frame):
         win32clipboard.EmptyClipboard()
         win32clipboard.SetClipboardText(self.currentComment.GetValue())
         win32clipboard.CloseClipboard()
+
+    def addWrong(self, qNum, question, answer, studentAnswer):
+        self.defaultComments[qNum] = {"question":question, "answer":answer, "sAnswer":studentAnswer}
+
+    def removeWrong(self, qNum):
+        if qNum in self.defaultComments:
+            del self.defaultComments[qNum]
+
+    def defaultCommentButton(self, event):
+        if len(self.defaultComments) > 0:
+            self.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n")
+            for qNum in self.defaultComments:
+                self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]) +".\n")
+            self.addComment("\nIf you've got any questions or still aren't sure why you're wrong feel free to email me.\n")
+        else:
+            self.addComment("Everything looked great, but if you've got questions feel free to email me.\n")
 
     def sendEmail(self, event):
         def getEmailCredentials(self):
