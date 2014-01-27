@@ -1,4 +1,4 @@
-import wx, os, time
+import wx, os, time, win32clipboard 
 
 class CommentBrowser(wx.Frame):
     def __init__(self, parent, initialPosition, initialSize):
@@ -13,7 +13,7 @@ class CommentBrowser(wx.Frame):
         self.commentsDict = {}
 
         self.selectedStudent = "<<Student Name>>"
-        self.createComments()
+        self.createCommentsWindow()
 
     def setStudent(self, student):
         if student not in self.commentsDict.keys():
@@ -31,16 +31,25 @@ class CommentBrowser(wx.Frame):
             original = self.currentComment.GetValue()
             self.currentComment.SetValue(original + comment)
 
-    def createComments(self):
+    def createCommentsWindow(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
+        bsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.title = wx.StaticText(self.panel, wx.ID_ANY, label="Comments for: <<Student Name>>")
-        titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
-        self.title.SetFont(titlefont)
+        self.titlefont = wx.Font(18,wx.FONTFAMILY_ROMAN, wx.NORMAL, wx.NORMAL)
+        self.title.SetFont(self.titlefont)
         sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
         self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
         self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
+
+
+        b_copy = wx.Button(self.panel, wx.ID_ANY, "Copy Comment")
+        b_copy.SetToolTipString("Copies the current comment to the clipboard.")
+        b_copy.Bind(wx.EVT_BUTTON, self.copyComment)
+        bsizer.Add(b_copy, 1, flag=wx.GROW|wx.ALL, border=5)
+
         sizer.Add(self.currentComment, 1, flag=wx.ALL|wx.GROW, border=0)
+        sizer.Add(bsizer,0,flag=wx.ALL|wx.GROW,border=0)
 
         self.panel.SetSizer(sizer)
         self.Layout()
@@ -51,3 +60,9 @@ class CommentBrowser(wx.Frame):
         self.SetPosition((w+x,y))
         self.Show()
         self.Raise()
+
+    def copyComment(self, event):
+        win32clipboard.OpenClipboard()
+        win32clipboard.EmptyClipboard()
+        win32clipboard.SetClipboardText(self.currentComment.GetValue())
+        win32clipboard.CloseClipboard()
