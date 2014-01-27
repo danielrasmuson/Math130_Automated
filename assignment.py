@@ -49,8 +49,7 @@ def getStudentAnswersFromLab(qb, lab):
     #remove numbers for start of aText to work
     #ex. 1. What is the 45th term?
     lab = re.sub(r'\n +\d\. ',"", lab)
-    lab = lab.replace("*","")
-
+    lab = lab.replace("**","")
 
     studentDict = {}
     for qNum in qb.getKeys():

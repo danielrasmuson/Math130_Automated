@@ -13,11 +13,7 @@ I'm thinking of starting export CSV grades
 
 Possible ideas for future
 -------------------------
-redo document importing (faster with equations) - Greg
-    noticing when document has and does not have equations
-    speed up word document opening
 Run results vs attendance quiz
-inner classes - re structure code
 wizard for loading files
 disable buttons when you cant use them - Greg
 ability to add more answers ($10.40 | 10 dollar 40 cents) - Dan
@@ -34,3 +30,7 @@ update assignment class with getAnswer() etc
 add checkmark to done students - Greg
     look into wrapper for trees
 ability to move students from incorrect or missing section
+redo document importing (faster with equations)
+    noticing when document has and does not have equations
+    speed up word document opening
+inner classes - re structure code
