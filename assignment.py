@@ -38,7 +38,7 @@ def getGradesStudentsLab(qb, studentDict):
                 grade = gradeList(value, qb.getAnswer(qNum))
             else:
                 grade = roundingError(value, qb.getAnswer(qNum), .05)
-            
+
             studentDict[qNum]["grade"] = grade
 
     return studentDict
@@ -56,7 +56,7 @@ def getStudentAnswersFromLab(qb, lab):
             start = lab.index(qb.getQuestion(qNum))
             start += len(qb.getQuestion(qNum)) # to not include question
         except ValueError:
-            print "Unable to find before text. Returning blank answers."
+            print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers."
             start = -1
 
         try:
@@ -65,7 +65,7 @@ def getStudentAnswersFromLab(qb, lab):
             else:
                 end = lab.index(qb.getAText(qNum))
         except ValueError:
-            print "Unable to find after text. Returning partial document string."
+            print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string."
             end = -1
 
         #NOTE - I'm removing strange symbols here
@@ -75,7 +75,7 @@ def getStudentAnswersFromLab(qb, lab):
         for char in answerUnicode:
             if 14 < ord(char) < 128:
                 answer += char
-        
+
         # Added some more automated grading here
         studentDict[qNum] = {"answer": answer.strip()}
 
@@ -125,7 +125,7 @@ class assignment():
 
     def getQuestion(self, qNum):
         return self.qs[qNum]["question"]
-        
+
     def getAnswer(self, qNum):
         return self.qs[qNum]["answer"]
 
@@ -143,7 +143,7 @@ class assignment():
 
 def getAssignmentStack(subPath, importFilePath):
     """Returns a list assignments"""
-    labs, fileNameList = getDocxsFromFolder(subPath)
+    labs, fileNameList, filePathList = getDocxsFromFolder(subPath)
 
     qb = Question_Bank()
     assignmentStack = {}
@@ -163,8 +163,7 @@ def getAssignmentStack(subPath, importFilePath):
         assignObj.setName(name)
         assignObj.setSection(section)
         assignObj.setStudentDictionary(qs)
-        assignObj.setStudentFilepath(fileNameList[i])
-        # assignObj.setMisc(miscObjects[i])
+        assignObj.setStudentFilepath(filePathList[i])
 
         assignmentStack[name] = assignObj
 
@@ -172,5 +171,5 @@ def getAssignmentStack(subPath, importFilePath):
 
 if __name__ == "__main__":
     assignmentStack = getAssignmentStack("Examples\\test", "C:\\Users\\Daniel\\Documents\\GitHub\\Math130_Automated\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv")
-    for name, assignObj in assignmentStack.items():
-        print assignObj.getStudentDictionary()
+    # for name, assignObj in assignmentStack.items():
+    #     print assignObj.getStudentDictionary()

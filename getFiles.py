@@ -12,7 +12,7 @@ def getDocxStr(docxFile):
         if ord(char) < 128: #unicode problems
             newText += char
         else:
-            newText += "~" 
+            newText += "~"
 
     # get text from html file
     fileStr = html2text(newText)
@@ -22,11 +22,13 @@ def getDocxStr(docxFile):
 def getDocxsFromFolder(folderPath):
     fileList = []
     fileNameList = []
+    fullPath = []
     for filePath in glob.glob(folderPath+"\*.docx"):
         fileNameList.append(filePath.split("\\")[-1])
         fileStr = getDocxStr(filePath)
         fileList.append(fileStr)
-    return fileList, fileNameList
+        fullPath.append(filePath)
+    return fileList, fileNameList, fullPath
 
 
 if __name__ == "__main__":

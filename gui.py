@@ -409,8 +409,11 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
+        start = time.clock()
         self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
         self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
+        end = time.clock()
+        print "Time taken to load files:",end-start
         self.studentTree.updateTreeList()
         self.questionBank.load(os.getcwd()+"\\lab1.dat")
         self.questionsArea.drawQuestions()
