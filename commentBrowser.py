@@ -28,10 +28,9 @@ class CommentBrowser(wx.Frame):
         if student not in self.commentsDict.keys():
             defaultText = "Hi "+student.split()[0]+",\n\n"
             self.commentsDict[student] = defaultText
-        else:
-            # Clear previous student default comments.
-            del self.defaultComments
-            self.defaultComments = {}
+        # Clear previous student default comments.
+        del self.defaultComments
+        self.defaultComments = {}
         self.selectedStudent = student
         self.title.SetLabel("Comments for: "+self.selectedStudent)
         self.currentComment.ChangeValue(self.commentsDict[student])
@@ -40,8 +39,7 @@ class CommentBrowser(wx.Frame):
         self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
 
     def addComment(self, comment):
-        original = self.currentComment.GetValue()
-        self.currentComment.SetValue(original + comment)
+        self.currentComment.AppendText(comment)
 
     def createCommentsWindow(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -51,7 +49,7 @@ class CommentBrowser(wx.Frame):
         self.title.SetFont(self.titlefont)
         sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
-        self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE, value="")
+        self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE|wx.TE_RICH, value="")
         self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
 
 
@@ -89,7 +87,7 @@ class CommentBrowser(wx.Frame):
         self.Layout()
 
     def resetComment(self, event):
-        self.currentComment.ChangeValue("")
+        self.currentComment.SetValue("")
 
 
     def display(self, event):
@@ -115,7 +113,7 @@ class CommentBrowser(wx.Frame):
     def defaultCommentButton(self, event):
         if len(self.defaultComments) > 0:
             self.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n")
-            for qNum in self.defaultComments:
+            for qNum in sorted(self.defaultComments):
                 self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]) +".\n")
             self.addComment("\nIf you've got any questions or still aren't sure why you're wrong feel free to email me.\n")
         else:
