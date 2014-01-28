@@ -1,25 +1,12 @@
 Math 130 Automated Grading
 ==============
 
-Just a readme so we can communicate about stuffs.
-
-I'm thinking of starting export CSV grades 
-  heres I'm thinking it might look.
-  1. Button that pushes student results to CSV
-  2. After this button is pressed it puts a green check next to student name
-  3. You have to press this button to confirm the grading on each students report
-
-@TODO - Current send to grade won't overlap already pushed grade  
-
 Possible ideas for future
 -------------------------
 Run results vs attendance quiz
-wizard for loading files
 disable buttons when you cant use them - Greg
 ability to add more answers ($10.40 | 10 dollar 40 cents) - Dan
-Add multiple lines to student quesitons
-grading support for multiple sections
-
+hookup wizard click lab button
 
 Done
 -----------------------------
@@ -34,3 +21,12 @@ redo document importing (faster with equations)
     noticing when document has and does not have equations
     speed up word document opening
 inner classes - re structure code
+wizard for loading files
+Add multiple lines to student quesitons
+Current send to grade won't overlap already pushed grade  
+export CSV grades 
+error handling emails
+right answers should be divided by the total score (30 points)
+this boarder is not working
+if we make sub classes we can embed this into buildMenuNav
+Insert somewhat detailed description in wizard

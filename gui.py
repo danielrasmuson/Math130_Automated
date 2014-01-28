@@ -185,7 +185,6 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
 
         def sendGrade(self, event):
-            # @TODO: right answers should be divided by the total score (30 points)
             name = self.parent.questionsArea.si_name.GetValue().split()
             score = self.parent.questionsArea.si_score.GetValue()
             sendToImport(self.parent.importFilePath, name[0], " ".join(name[1:]), score)
@@ -345,7 +344,7 @@ class MainApp(wx.Frame):
                 answer = str(self.parent.qb.getAnswer(qNum))
                 answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
                 qNum_sizer.AddStretchSpacer(1) #to push button to end
-                qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=20) # TODO: this boarder is not working
+                qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=0)
 
                 #adds qNum_sizer to the panel
                 self.questions_area_sizer.Add(qNum_sizer, 0, wx.EXPAND)
@@ -497,7 +496,6 @@ class MainApp(wx.Frame):
         print "Done With Sample Load"
 
     def getImportFilePath(self):
-        #TODO: if we make sub classes we can embed this into buildMenuNav
         return self.importFilePath
 
 def newSession():
