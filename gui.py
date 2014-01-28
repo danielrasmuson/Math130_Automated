@@ -53,7 +53,7 @@ class MainApp(wx.Frame):
             end = time.clock()
             print "Time taken to load files:",end-start
             self.parent.studentTree.updateTreeList()
-            self.parent.qb.load(tempwiz.labDictionaryFile.GetValue())
+            self.parent.qb.load(tempwiz.labDictionaryFile)
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
             print "Done With Wizard Load"
@@ -491,7 +491,7 @@ class MainApp(wx.Frame):
         end = time.clock()
         print "Time taken to load files:",end-start
         self.studentTree.updateTreeList()
-        self.qb.load(os.getcwd()+"\\lab1.dat")
+        self.qb.load(os.getcwd()+"\\Labs\\lab1.dat")
         self.questionsArea.drawQuestions()
         print "Done With Sample Load"
 
