@@ -1,11 +1,10 @@
 from getFiles import getDocxsFromFolder
-import re, cPickle as Pickle
-
+import re, cPickle as pickle
 
 class MasterDatabase():
     """ Holds all of our question information and student supplied information. """
     class Student():
-        def __init__(self, parent, name, section, sAnswers, documentStr, filePath):
+        def __init__(self, parent, name, section, sAnswers, filePath, documentStr):
             self.documentStr = documentStr
             self.name = name
             self.section = section
@@ -13,12 +12,22 @@ class MasterDatabase():
             self.filePath = filePath
             self.parent = parent
 
+            self.gradeSubmitted = False
+
             self.scoreDict = {}
-            for qNum in self.parent.getQuestionKeys():
-                self.scoreDict[qNum] = {"weight":0,"points":self.parent.getQuestionPoints(qNum)}
+            # Don't do this if we're loading data.
+            if len(self.scoreDict) == 0:
+                for qNum in self.parent.getQuestionKeys():
+                    self.scoreDict[qNum] = {"weight":0,"points":self.parent.getQuestionPoints(qNum)}
 
         def _getName(self):
             return self.name
+
+        def _getGradeSubmitted(self):
+            return self.gradeSubmitted
+
+        def _setGradeSubmitted(self, status=False):
+            self.gradeSubmitted = status
 
         def _getSection(self):
             return self.section
@@ -56,6 +65,8 @@ class MasterDatabase():
     def __init__(self, currentLab = "lab1"):
         """ Initializes our function and gets everything ready for us. """
         self.currentLab = currentLab
+        self.gradeFile = ""
+        self.labFolder = ""
         self.studentList = {}
 
         self.qb = {
@@ -135,6 +146,14 @@ class MasterDatabase():
         """ Returns the supplied student's answer for the question number. """
         return self.studentList[student]._getAnswer(qNum)
 
+    def getStudentSubmittedGrade(self, student):
+        """ Returns true if the students grade was submitted. """
+        return self.studentList[student]._getGradeSubmitted()
+
+    def setStudentSubmittedGrade(self, student, status):
+        """ Returns true if the students grade was submitted. """
+        self.studentList[student]._setGradeSubmitted(status)
+
     def getStudentSection(self, student):
         """ Returns the supplied student's section. """
         return self.studentList[student]._getSection()
@@ -173,6 +192,46 @@ class MasterDatabase():
     def setStudentQuestionWeight(self, student, qNum, weight):
         """ Sets the student's question's specified weight. """
         self.studentList[student]._setQuestionWeight(qNum, weight)
+
+    def saveProgress(self, filename="lab1.dat"):
+        """ Function to allow us to save multiple things to one file that is specified while saving. """
+        f = open(filename, "wb")
+        pickle.dump(len(self.studentList), f , protocol=-1)
+        pickle.dump(self.currentLab, f , protocol=-1)
+        pickle.dump(self.gradeFile, f , protocol=-1)
+        pickle.dump(self.labFolder, f , protocol=-1)
+        for student in self.studentList:
+            pickle.dump(self.studentList[student].name, f , protocol=-1)
+            pickle.dump(self.studentList[student].section, f , protocol=-1)
+            pickle.dump(self.studentList[student].sAnswers, f , protocol=-1)
+            pickle.dump(self.studentList[student].filePath, f , protocol=-1)
+            pickle.dump(self.studentList[student].scoreDict, f , protocol=-1)
+            pickle.dump(self.studentList[student].documentStr, f , protocol=-1)
+            pickle.dump(self.studentList[student]._getGradeSubmitted(), f , protocol=-1)
+        f.close()
+
+    def loadProgress(self, filename="lab1.dat"):
+        """ Function to allow us to save multiple things to one file that is specified while saving. """
+        f = open(filename, "rb")
+        students = pickle.load(f)
+        self.currentLab = pickle.load(f)
+        self.gradeFile = pickle.load(f)
+        self.labFolder = pickle.load(f)
+        for i in range(1,students+1):
+            name = pickle.load(f)
+            section = pickle.load(f)
+            sAnswers = pickle.load(f)
+            filePath = pickle.load(f)
+            scoreDict = pickle.load(f)
+            documentStr = pickle.load(f)
+            gradeSubmitted = pickle.load(f)
+
+            newStudent = self.Student(self, name, section, sAnswers, filePath=filePath, documentStr=documentStr)
+            newStudent.scoreDict = scoreDict
+            newStudent._setGradeSubmitted(gradeSubmitted)
+            self.studentList[name] = newStudent
+            print "Processed "+name
+        f.close()
 
     def _getAssignments(self, subPath, importFilePath):
         """ Loads all of the assignments and gets the student information from them. """
@@ -257,14 +316,10 @@ class MasterDatabase():
 if __name__ == '__main__':
     md = MasterDatabase()
     md._getAssignments("Examples\\test","07_GradesExport_2014-01-25-16-06.csv")
-    md._getGradesStudentsLab
-    print md.getStudentQuestionWeight("Emily Kasparek", 1)
-    # md.setStudentQuestionWeight("Emily Kasparek", 5, 15)
-    # print md.getStudentQuestionScore("Emily Kasparek", 1)
-    # print md.getTotalQuestions()
-    # print md.getQuestion(5)
-    # print md.getAnswer(5)
-    # print md.getAText(5)
-    # print md.getQuestionKeys()
-    # print md.getQuestionPoints(5)
-    # print md.getTotalPoints()
+    # md._autoGradeStudentsLab
+    # for student in md.getStudentKeys():
+    #     print md.setStudentQuestionWeight(student,1,5)
+    # md.saveProgress()
+    md.loadProgress()
+    for student in md.getStudentKeys():
+        print md.getStudentQuestionWeight(student,1)

@@ -16,13 +16,17 @@ class MainApp(wx.Frame):
             menuBar = wx.MenuBar()
 
             fileMenu = wx.Menu()
-            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
-            m_wizard = fileMenu.Append(wx.ID_ANY, "&Import Wizard\tAlt-I", "Opens the guided wizard for the setup process.")
+            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
+            m_save = fileMenu.Append(wx.ID_SAVE, "&Save Grading Session\tCtrl-S", "Saves the current grading progress to disk.")
+            m_open = fileMenu.Append(wx.ID_OPEN, "&Open Grading Session\tCtrl-O", "Opens a previous grading session from disk.")
+            m_wizard = fileMenu.Append(wx.ID_ANY, "&Import Wizard\tCtrl-I", "Opens the guided wizard for the setup process.")
             fileMenu.AppendSeparator()
-            m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tAlt-D", "Loads all of the above stuff in one click.  Will get deleted later.")
+            m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tCtrl-D", "Loads all of the above stuff in one click.  Will get deleted later.")
             fileMenu.AppendSeparator()
             m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
             self.parent.Bind(wx.EVT_MENU, self.onNew, m_new)
+            self.parent.Bind(wx.EVT_MENU, self.onSave, m_save)
+            self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
             self.parent.Bind(wx.EVT_MENU, self.wizardEvent, m_wizard)
             self.parent.Bind(wx.EVT_MENU, self.parent.deleteMeLater, m_default)
             self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
@@ -40,14 +44,31 @@ class MainApp(wx.Frame):
         def wizardEvent(self, event):
             tempwiz = ImportWizard()
 
-            self.parent.gradeFile = tempwiz.gradingSheet.GetValue()
-            self.parent.labFolder = tempwiz.gradingDirectory.GetValue()
-            self.parent.masterDatabase.loadLabs(self.parent.labFolder, self.parent.gradeFile)
+            self.parent.masterDatabase.gradeFile = tempwiz.gradingSheet.GetValue()
+            self.parent.masterDatabase.labFolder = tempwiz.gradingDirectory.GetValue()
+            self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
 
             self.parent.studentTree.updateTreeList()
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
             print "Done With Wizard Load"
+
+        def onSave(self, event):
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_SAVE)
+            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.parent.masterDatabase.saveProgress(dlg.GetPath())
+            dlg.Destroy()
+
+        def onOpen(self, event):
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
+            if dlg.ShowModal() == wx.ID_OK:
+                self.parent.masterDatabase.loadProgress(dlg.GetPath())
+                self.parent.studentTree.updateTreeList()
+                self.parent.questionsArea.drawQuestions()
+                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+            dlg.Destroy()
 
         def onAbout(self, event):
             dlg = wx.MessageDialog(self.parent, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
@@ -143,9 +164,11 @@ class MainApp(wx.Frame):
 
         def sendGrade(self, event):
             # @TODO: right answers should be divided by the total score (30 points)
-            name = self.parent.questionsArea.si_name.GetValue().split()
+            name = self.parent.questionsArea.si_name.GetValue()
+            self.parent.masterDatabase.setStudentSubmittedGrade(str(name),True)
+            name = name.split()
             score = self.parent.questionsArea.si_score.GetValue()
-            sendToImport(self.parent.gradeFile, name[0], " ".join(name[1:]), score)
+            sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
             self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
             self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
 
@@ -186,7 +209,12 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SetItemBackgroundColour(self.parent.tree_rootDict[sec],"#FFAAAA")
                 elif sec not in self.parent.tree_rootDict.keys(): #creates root section if there isn't one
                     self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Section "+sec)
-                self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name) #appends name onto section
+                # During update check if submitted or not and then append on to tree.
+                if self.parent.masterDatabase.getStudentSubmittedGrade(name):
+                    temp = self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], u"\u2714" + name)
+                    self.parent.lab_tree_list.SetItemTextColour(temp, (0,150,0))
+                else:
+                    self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
 
     class QuestionsArea:
         def __init__(self, parent, panel, sizer):
@@ -387,9 +415,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-        self.labFolder = os.getcwd()+"\\Examples\\Test"
-        self.masterDatabase.loadLabs(self.labFolder, self.gradeFile)
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test"
+        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+        self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()
         self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
