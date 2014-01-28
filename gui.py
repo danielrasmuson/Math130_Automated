@@ -1,5 +1,5 @@
 from __future__ import division
-import wx, os, time
+import wx, os, time, subprocess
 from assignment import getAssignmentStack
 from question_bank import *
 from wx.lib.wordwrap import wordwrap
@@ -156,7 +156,7 @@ class MainApp(wx.Frame):
         def openDocument(self, event):
             current_item = self.parent.studentTree.getSelected()
             if "Section" not in current_item:
-                os.system("\""+self.parent.assignmentStack[current_item].getStudentFilepath()+"\"")
+                subprocess.Popen(["explorer",self.parent.assignmentStack[current_item].getStudentFilepath()], shell=False)
 
         def previousButton(self, event):
             current = self.parent.lab_tree_list.GetSelection()
