@@ -54,7 +54,7 @@ class MainApp(wx.Frame):
             end = time.clock()
             print "Time taken to load files:",end-start
             self.parent.studentTree.updateTreeList()
-            self.parent.questionBank.load(tempwiz.labDictionaryFile.GetValue())
+            # self.parent.questionBank.load(tempwiz.labDictionaryFile.GetValue())
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
             print "Done With Wizard Load"
