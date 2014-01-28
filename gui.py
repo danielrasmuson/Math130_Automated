@@ -1,15 +1,12 @@
 from __future__ import division
 import wx, os, time, subprocess
-from assignment import getAssignmentStack
-from question_bank import *
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
 from importWizard import *
-from scorekeeper import *
+from MasterDatabase import *
 
 class MainApp(wx.Frame):
-    initialized = False
     class MenuNav:
         """ Create our menu bar with all the appropriate buttons and methods. """
         def __init__(self, parent):
@@ -20,18 +17,12 @@ class MainApp(wx.Frame):
 
             fileMenu = wx.Menu()
             m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tAlt-N", "Removes all of the students and the currently loaded dictionary.")
-            m_open = fileMenu.Append(wx.ID_OPEN, "&Open Document Directory\tAlt-O", "Select the directory containing the student documents.")
-            m_load = fileMenu.Append(wx.ID_ANY, "&Load Question Bank\tAlt-L", "Load's a new question bank for grading purposes.")
-            m_import = fileMenu.Append(wx.ID_ANY, "&Load Import Template\tAlt-I", "Will write grades to this document for later import.")
-            m_wizard = fileMenu.Append(wx.ID_ANY, "Guided &Wizard\tAlt-W", "Opens the guided wizard for the setup process.")
+            m_wizard = fileMenu.Append(wx.ID_ANY, "&Import Wizard\tAlt-I", "Opens the guided wizard for the setup process.")
             fileMenu.AppendSeparator()
             m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tAlt-D", "Loads all of the above stuff in one click.  Will get deleted later.")
             fileMenu.AppendSeparator()
             m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
             self.parent.Bind(wx.EVT_MENU, self.onNew, m_new)
-            self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
-            self.parent.Bind(wx.EVT_MENU, self.loadBank, m_load)
-            self.parent.Bind(wx.EVT_MENU, self.loadImportFile, m_import)
             self.parent.Bind(wx.EVT_MENU, self.wizardEvent, m_wizard)
             self.parent.Bind(wx.EVT_MENU, self.parent.deleteMeLater, m_default)
             self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
@@ -48,38 +39,15 @@ class MainApp(wx.Frame):
 
         def wizardEvent(self, event):
             tempwiz = ImportWizard()
-            start = time.clock()
-            self.parent.importFilePath = tempwiz.gradingSheet.GetValue()
-            self.parent.assignmentStack = getAssignmentStack(tempwiz.gradingDirectory.GetValue(),self.parent.importFilePath)
-            end = time.clock()
-            print "Time taken to load files:",end-start
+
+            self.parent.gradeFile = tempwiz.gradingSheet.GetValue()
+            self.parent.labFolder = tempwiz.gradingDirectory.GetValue()
+            self.parent.masterDatabase.loadLabs(self.parent.labFolder, self.parent.gradeFile)
+
             self.parent.studentTree.updateTreeList()
-            # self.parent.questionBank.load(tempwiz.labDictionaryFile.GetValue())
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
             print "Done With Wizard Load"
-
-        def loadBank(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
-            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.parent.questionBank.load(dlg.GetPath())
-                try:
-                    self.parent.questions_area.Destroy()
-                except:
-                    pass
-                self.parent.questionsArea.drawQuestions()
-            dlg.Destroy()
-
-        def loadImportFile(self, event):
-            """The user finds the template import file
-            downloaded from d2l and then the program will
-            fill in the values."""
-            dlg = wx.FileDialog(self.parent, "Choose an import file:",defaultDir=os.getcwd(), style=wx.FD_OPEN)
-            dlg.SetWildcard("Lab Import File (*.csv)|*.csv")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.parent.importFilePath = dlg.GetPath()
-            dlg.Destroy()
 
         def onAbout(self, event):
             dlg = wx.MessageDialog(self.parent, "Written by Daniel Rasmuson and Gregory Dosh", "About", wx.OK)
@@ -105,18 +73,6 @@ class MainApp(wx.Frame):
                 self.parent.Show(False)
                 newSession()
                 self.parent.Destroy()
-
-        def onOpen(self, event):
-            # I get the current working directory + the examples test stuff
-            # so that while testing it'll default to our test directory.
-            # Later we can navigate anywhere we want and cut that part.
-            dlg = wx.DirDialog(self.parent, "Choose a directory:",os.getcwd()+"\\Examples\\test")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.parent.assignmentStack = getAssignmentStack(dlg.GetPath(), self.parent.getImportFilePath())
-                # Call our initial tree list build
-                self.parent.studentTree.updateTreeList()
-            dlg.Destroy()
-            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
 
     class BottomNav:
         """ Builds a predefined set of buttons on a specific panel and utilizing the sizer provided """
@@ -156,7 +112,7 @@ class MainApp(wx.Frame):
         def openDocument(self, event):
             current_item = self.parent.studentTree.getSelected()
             if "Section" not in current_item:
-                subprocess.Popen(["explorer",self.parent.assignmentStack[current_item].getStudentFilepath()], shell=False)
+                subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentFilepath(current_item)], shell=False)
 
         def previousButton(self, event):
             current = self.parent.lab_tree_list.GetSelection()
@@ -189,7 +145,7 @@ class MainApp(wx.Frame):
             # @TODO: right answers should be divided by the total score (30 points)
             name = self.parent.questionsArea.si_name.GetValue().split()
             score = self.parent.questionsArea.si_score.GetValue()
-            sendToImport(self.parent.importFilePath, name[0], " ".join(name[1:]), score)
+            sendToImport(self.parent.gradeFile, name[0], " ".join(name[1:]), score)
             self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
             self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
 
@@ -216,16 +172,15 @@ class MainApp(wx.Frame):
             item = event.GetItem()
             currentSelection = self.getSelected()
             if "Section" not in currentSelection:
-                section = self.parent.assignmentStack[currentSelection].getSection()
+                section = self.parent.masterDatabase.getStudentSection(currentSelection)
                 self.parent.questionsArea.updateStudentInformation(currentSelection, section)
                 self.parent.commentWindow.setStudent(currentSelection)
-                if self.parent.initialized:
-                    self.parent.questionsArea.updateStudentAnswers(currentSelection)
+                self.parent.questionsArea.updateStudentAnswers(currentSelection)
 
         def updateTreeList(self):
             """Tree List on Left Side - Dynamic to Files"""
-            for name in sorted(self.parent.assignmentStack.keys()):
-                sec = self.parent.assignmentStack[name].getSection()
+            for name in sorted(self.parent.masterDatabase.getStudentKeys()):
+                sec = self.parent.masterDatabase.getStudentSection(name)
                 if sec == "MissingInformation":
                     self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Missing Lab Section")
                     self.parent.lab_tree_list.SetItemBackgroundColour(self.parent.tree_rootDict[sec],"#FFAAAA")
@@ -268,6 +223,7 @@ class MainApp(wx.Frame):
 
         def drawQuestions(self):
             def setCorrect(qNum, weight):
+                name = self.si_name.GetValue()
                 if weight == 1:
                     self.parent.commentWindow.removeWrong(qNum)
                     color = "#FFFFFF"
@@ -276,13 +232,13 @@ class MainApp(wx.Frame):
                         color = "#FFAAAA"
                     else:
                         color = "#FFAA00"
-                    self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), self.student_answer_boxes[qNum].GetValue())
+                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
 
                 self.student_answer_boxes[qNum].SetBackgroundColour(color)
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
 
-                self.parent.scoreKeeper.setQuestionWeight(qNum,weight)
-                self.si_right.SetValue(str(self.parent.scoreKeeper.getRawRight()) + " / " + str(int(self.numberQuestions)))
+                self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
+                self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
             self.questions_area.SetScrollbars(1, 5, 500, 1000)
@@ -293,7 +249,7 @@ class MainApp(wx.Frame):
             self.questions_area.SetSizer(self.questions_area_sizer)
 
             self.student_answer_boxes = {}
-            for qNum in self.parent.questionBank.getKeys():
+            for qNum in self.parent.masterDatabase.getQuestionKeys():
 
 
                 # Question Num
@@ -306,7 +262,7 @@ class MainApp(wx.Frame):
 
                 # Answer
                 # 3.34
-                answer = str(self.parent.questionBank.getAnswer(qNum))
+                answer = str(self.parent.masterDatabase.getAnswer(qNum))
                 answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
                 qNum_sizer.AddStretchSpacer(1) #to push button to end
                 qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=0)
@@ -317,7 +273,7 @@ class MainApp(wx.Frame):
                 # Question and Answer
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                question = self.parent.questionBank.getQuestion(qNum)
+                question = self.parent.masterDatabase.getQuestion(qNum)
                 sizeQArea = self.questions_area.GetVirtualSize()[0]
                 textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
@@ -355,35 +311,21 @@ class MainApp(wx.Frame):
                 self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
 
                 # The Last Question Cleanup
-                if qNum != self.parent.questionBank.getKeys()[-1]:
+                if qNum != self.parent.masterDatabase.getQuestionKeys()[-1]:
                     self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
-            # I've got this initialized variable here to keep track
-            # of whether we should warn about loading the question bank
-            # when trying to select a student's responses.
-            self.parent.initialized = True
-
         def updateStudentAnswers(self, name):
-            # @TODO - it would be better if this variable could be set somewhere else
-            self.totalPoints = 30 #if they are floats answer will be more accurate
-            self.numberQuestions = 12
-
-            # This gets our students answers and the dictionary we're comparing their answer to.
-            self.qs = self.parent.assignmentStack[name]
             right = 0
-
-            for qNum in self.qs.getKeys():
-                self.student_answer_boxes[qNum].SetLabel(str(self.qs.getAnswer(qNum)))
-                if self.qs.getGrade(qNum):
+            for qNum in self.parent.masterDatabase.getQuestionKeys():
+                self.student_answer_boxes[qNum].SetLabel(str(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
+                if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum):
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-                    self.parent.scoreKeeper.setQuestionWeight(qNum,1)
                     right += 1
                 else:
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                    self.parent.scoreKeeper.setQuestionWeight(qNum,0)
                     self.panel.Layout()
-                    self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), self.qs.getAnswer(qNum))
-            self.si_right.SetValue(str(self.parent.scoreKeeper.getRawRight()) + " / " + str(int(self.numberQuestions)))
+                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
+            self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
         def updateStudentInformation(self, name, section):
             self.si_name.ChangeValue(name)
@@ -392,14 +334,14 @@ class MainApp(wx.Frame):
             self.si_score.ChangeValue("")
 
         def setScore(self, event):
+            name = self.si_name.GetValue()
             try:
-                self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
+                self.si_score.ChangeValue( str(self.parent.masterDatabase.getStudentTotalScore(name)) + " / " + str(self.parent.masterDatabase.getTotalPoints()) )
             except:
                 pass
 
     def __init__(self):
-        self.questionBank = Question_Bank()
-        self.scoreKeeper = ScoreKeeper(self.questionBank.getKeys(),totalPoints=30,numberQuestions=12)
+        self.masterDatabase = MasterDatabase()
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.SetMinSize((800,600))
 
@@ -445,18 +387,13 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        start = time.clock()
-        self.importFilePath = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-        self.assignmentStack = getAssignmentStack(os.getcwd()+"\\Examples\\Test", self.getImportFilePath())
-        end = time.clock()
-        print "Time taken to load files:",end-start
+        self.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+        self.labFolder = os.getcwd()+"\\Examples\\Test"
+        self.masterDatabase.loadLabs(self.labFolder, self.gradeFile)
         self.studentTree.updateTreeList()
-        self.questionBank.load(os.getcwd()+"\\Labs\lab1.dat")
         self.questionsArea.drawQuestions()
+        self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
         print "Done With Sample Load"
-
-    def getImportFilePath(self):
-        return self.importFilePath
 
 def newSession():
     main = MainApp()

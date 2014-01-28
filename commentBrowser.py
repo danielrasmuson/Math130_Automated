@@ -1,6 +1,4 @@
-import wx, os, time, win32clipboard 
-import smtplib  
-from question_bank import getCurrentLab
+import wx, win32clipboard, smtplib
 
 class CommentBrowser(wx.Frame):
     def __init__(self, parent, initialPosition, initialSize):
@@ -149,20 +147,20 @@ class CommentBrowser(wx.Frame):
 
         def send(self):
             # Lab 1 - Score 27/30 - Math 130
-            lab = getCurrentLab().title()
+            lab = self.parent.masterDatabase.getLab()
             score = self.parent.questionsArea.si_score.GetValue()
             subject = lab + " - Score " + str(score) +" - Math 130" #make this the lab name
 
             message = 'Subject: %s\n\n%s' % (subject, self.currentComment.GetValue())
             fromaddr = self.username
             toaddrs = self.emailDict[self.selectedStudent] #this would come from the list
-            
-            # The actual mail send  
+
+            # The actual mail send
             try:
-                server = smtplib.SMTP('smtp.gmail.com:587')  
-                server.starttls()  
-                server.login(self.username, self.password)  
-                server.sendmail(fromaddr, toaddrs, message)  
+                server = smtplib.SMTP('smtp.gmail.com:587')
+                server.starttls()
+                server.login(self.username, self.password)
+                server.sendmail(fromaddr, toaddrs, message)
                 server.quit()
 
                 # confirmation
@@ -173,7 +171,7 @@ class CommentBrowser(wx.Frame):
 
         if self.username == False or self.password == False:
             getEmailCredentials(self)
-            
+
         if self.emailDict == False:
             loadEmailList(self)
 
