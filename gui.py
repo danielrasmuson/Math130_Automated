@@ -1,5 +1,5 @@
 from __future__ import division
-import wx, os, time, subprocess
+import wx, os, subprocess
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
@@ -232,7 +232,7 @@ class MainApp(wx.Frame):
                         color = "#FFAAAA"
                     else:
                         color = "#FFAA00"
-                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
+                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
 
                 self.student_answer_boxes[qNum].SetBackgroundColour(color)
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
@@ -273,7 +273,7 @@ class MainApp(wx.Frame):
                 # Question and Answer
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                question = self.parent.masterDatabase.getQuestion(qNum)
+                question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
                 sizeQArea = self.questions_area.GetVirtualSize()[0]
                 textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
@@ -324,7 +324,7 @@ class MainApp(wx.Frame):
                 else:
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                     self.panel.Layout()
-                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
+                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
         def updateStudentInformation(self, name, section):

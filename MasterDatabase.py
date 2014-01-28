@@ -102,6 +102,7 @@ class MasterDatabase():
     def loadLabs(self, subPath, importFilePath):
         """ Imports the labs in the subPath directory and uses the importFilePath for validation """
         self._getAssignments(subPath, importFilePath)
+        self._autoGradeStudentsLab()
 
     def getTotalQuestions(self):
         """ Returns the number of questions of the current lab. """
@@ -214,7 +215,7 @@ class MasterDatabase():
             studentAnswerDict[qNum] = answer.strip()
         return studentAnswerDict
 
-    def _getGradesStudentsLab(self, studentAnswerDict):
+    def _autoGradeStudentsLab(self):
         """A more robust system for grading labs
         grade could be either a 1 or 0
         can add a lot more to function but I just started it"""
@@ -244,22 +245,20 @@ class MasterDatabase():
                     return 0
             return 1
 
-
-        for qNum in studentAnswerDict.keys():
-            for key, value in studentAnswerDict[qNum].items():
+        for student in self.getStudentKeys():
+            for qNum in self.getQuestionKeys():
+                # for key, value in studentAnswerDict[qNum].items():
                 if type(self.getAnswer(qNum)) == list:
-                    grade = gradeList(value, self.getAnswer(qNum))
+                    grade = gradeList(self.getStudentAnswer(student,qNum), self.getAnswer(qNum))
                 else:
-                    grade = roundingError(value, self.getAnswer(qNum), .05)
-
-                studentAnswerDict[qNum]["grade"] = grade*self.getPoints(qNum)
-
-        return studentAnswerDict
+                    grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum), .05)
+                self.setStudentQuestionWeight(student,qNum,grade) #studentAnswerDict[qNum]["grade"] = grade*self.getPoints(qNum)
 
 if __name__ == '__main__':
     md = MasterDatabase()
     md._getAssignments("Examples\\test","07_GradesExport_2014-01-25-16-06.csv")
-    # print md.getStudentQuestionWeight("Emily Kasparek", 5)
+    md._getGradesStudentsLab
+    print md.getStudentQuestionWeight("Emily Kasparek", 1)
     # md.setStudentQuestionWeight("Emily Kasparek", 5, 15)
     # print md.getStudentQuestionScore("Emily Kasparek", 1)
     # print md.getTotalQuestions()
