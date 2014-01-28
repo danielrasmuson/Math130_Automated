@@ -54,7 +54,7 @@ class MainApp(wx.Frame):
             end = time.clock()
             print "Time taken to load files:",end-start
             self.parent.studentTree.updateTreeList()
-            self.parent.qb.load(tempwiz.labDictionaryFile)
+            self.parent.questionBank.load(tempwiz.labDictionaryFile.GetValue())
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
             print "Done With Wizard Load"
@@ -63,7 +63,7 @@ class MainApp(wx.Frame):
             dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
-                self.parent.qb.load(dlg.GetPath())
+                self.parent.questionBank.load(dlg.GetPath())
                 try:
                     self.parent.questions_area.Destroy()
                 except:
@@ -186,6 +186,7 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
 
         def sendGrade(self, event):
+            # @TODO: right answers should be divided by the total score (30 points)
             name = self.parent.questionsArea.si_name.GetValue().split()
             score = self.parent.questionsArea.si_score.GetValue()
             sendToImport(self.parent.importFilePath, name[0], " ".join(name[1:]), score)
@@ -305,7 +306,7 @@ class MainApp(wx.Frame):
 
                 # Answer
                 # 3.34
-                answer = str(self.parent.qb.getAnswer(qNum))
+                answer = str(self.parent.questionBank.getAnswer(qNum))
                 answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
                 qNum_sizer.AddStretchSpacer(1) #to push button to end
                 qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=0)
@@ -316,7 +317,7 @@ class MainApp(wx.Frame):
                 # Question and Answer
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                question = self.parent.qb.getQuestion(qNum)
+                question = self.parent.questionBank.getQuestion(qNum)
                 sizeQArea = self.questions_area.GetVirtualSize()[0]
                 textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
@@ -354,7 +355,7 @@ class MainApp(wx.Frame):
                 self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
 
                 # The Last Question Cleanup
-                if qNum != self.parent.qb.getKeys()[-1]:
+                if qNum != self.parent.questionBank.getKeys()[-1]:
                     self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
             # I've got this initialized variable here to keep track
@@ -363,8 +364,12 @@ class MainApp(wx.Frame):
             self.parent.initialized = True
 
         def updateStudentAnswers(self, name):
+            # @TODO - it would be better if this variable could be set somewhere else
+            self.totalPoints = 30 #if they are floats answer will be more accurate
+            self.numberQuestions = 12
+
             # This gets our students answers and the dictionary we're comparing their answer to.
-            self.qs = self.parent.assignmentStack[name] # current student sheet
+            self.qs = self.parent.assignmentStack[name]
             right = 0
 
             for qNum in self.qs.getKeys():
@@ -377,7 +382,7 @@ class MainApp(wx.Frame):
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                     self.parent.scoreKeeper.setQuestionWeight(qNum,0)
                     self.panel.Layout()
-                    self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), qs.getAnswer(qNum))
+                    self.parent.commentWindow.addWrong(qNum, self.parent.questionBank.getQuestion(qNum), self.parent.questionBank.getAnswer(qNum), self.qs.getAnswer(qNum))
             self.si_right.SetValue(str(self.parent.scoreKeeper.getRawRight()) + " / " + str(int(self.numberQuestions)))
 
         def updateStudentInformation(self, name, section):
@@ -387,10 +392,10 @@ class MainApp(wx.Frame):
             self.si_score.ChangeValue("")
 
         def setScore(self, event):
-            # try:
-            self.si_score.ChangeValue(str(self.qs.getTotalScore()) + " / " + str(self.parent.qb.getTotalPoints()))
-            # except:
-            #     pass
+            try:
+                self.si_score.ChangeValue( str(float(self.si_right.GetValue().split(" ")[0])/self.numberQuestions*self.totalPoints) + " / " + str(self.totalPoints) )
+            except:
+                pass
 
     def __init__(self):
         self.questionBank = Question_Bank()
@@ -446,7 +451,7 @@ class MainApp(wx.Frame):
         end = time.clock()
         print "Time taken to load files:",end-start
         self.studentTree.updateTreeList()
-        self.qb.load(os.getcwd()+"\\Labs\\lab1.dat")
+        self.questionBank.load(os.getcwd()+"\\Labs\lab1.dat")
         self.questionsArea.drawQuestions()
         print "Done With Sample Load"
 
