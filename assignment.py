@@ -40,7 +40,7 @@ def getGradesStudentsLab(qb, studentDict):
             else:
                 grade = roundingError(value, qb.getAnswer(qNum), .05)
 
-            studentDict[qNum]["grade"] = grade
+            studentDict[qNum]["grade"] = grade*qb.getPoints(qNum)
 
     return studentDict
 
@@ -76,8 +76,9 @@ def getStudentAnswersFromLab(qb, lab):
 
 
 class assignment():
-    def __init__(self, documentStr):
+    def __init__(self, documentStr, qb):
         self.documentStr = documentStr
+        self.qb = qb
 
     def setName(self, name):
         self.name = name
@@ -134,6 +135,15 @@ class assignment():
     def getStudentFilepath(self):
         return self.filePath
 
+    def getTotalScore(self):
+        totalScore = 0
+        for qNum in self.qs.keys():
+            totalScore += self.qs[qNum]["grade"]
+        return totalScore
+
+    def setGrade(self, qNum, percent):
+        self.qs[qNum]["grade"] = self.qb.getPoints(qNum) * percent
+
 def getAssignmentStack(subPath, importFilePath):
     """Returns a list assignments"""
     labs, fileNameList, filePathList = getDocxsFromFolder(subPath)
@@ -150,7 +160,7 @@ def getAssignmentStack(subPath, importFilePath):
         qs = getStudentAnswersFromLab(qb, labs[i])
         qs = getGradesStudentsLab(qb, qs)
 
-        assignObj = assignment(labs[i])
+        assignObj = assignment(labs[i], qb)
 
         #assign the attributes
         assignObj.setName(name)

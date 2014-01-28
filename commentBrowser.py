@@ -89,7 +89,6 @@ class CommentBrowser(wx.Frame):
     def resetComment(self, event):
         self.currentComment.SetValue("")
 
-
     def display(self, event):
         w,h = self.parent.GetSizeTuple()
         x,y = self.parent.GetPositionTuple()
@@ -159,16 +158,18 @@ class CommentBrowser(wx.Frame):
             toaddrs = self.emailDict[self.selectedStudent] #this would come from the list
             
             # The actual mail send  
-            # @TODO: error handleing on credentials 
-            server = smtplib.SMTP('smtp.gmail.com:587')  
-            server.starttls()  
-            server.login(self.username, self.password)  
-            server.sendmail(fromaddr, toaddrs, message)  
-            server.quit()
+            try:
+                server = smtplib.SMTP('smtp.gmail.com:587')  
+                server.starttls()  
+                server.login(self.username, self.password)  
+                server.sendmail(fromaddr, toaddrs, message)  
+                server.quit()
 
-            # confirmation
-            wx.MessageBox('Email Sent', '', 
-                    wx.OK | wx.ICON_INFORMATION)
+                # confirmation
+                wx.MessageBox('Email Sent', '', wx.OK | wx.ICON_INFORMATION)
+            except smtplib.SMTPAuthenticationError:
+                # Error
+                wx.MessageBox('Error - Email Credentials', '', wx.OK | wx.ICON_INFORMATION)
 
         if self.username == False or self.password == False:
             getEmailCredentials(self)
