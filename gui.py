@@ -1,5 +1,5 @@
 from __future__ import division
-import wx, os, subprocess
+import wx, os, subprocess, difflib
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
@@ -219,6 +219,17 @@ class MainApp(wx.Frame):
                 else:
                     self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
             self.cheatCheck()
+            self.ratioCheck()
+
+        def ratioCheck(self):
+            """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
+            names = self.parent.masterDatabase.getStudentKeys()
+            for i,name1 in enumerate(names):
+                for j,name2 in enumerate(names):
+                    if i < j:
+                        ratio = difflib.SequenceMatcher(None,self.parent.masterDatabase.getStudentLabString(name1),self.parent.masterDatabase.getStudentLabString(name2)).ratio()
+                        if ratio > .98:
+                            wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
 
         def cheatCheck(self):
             """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
@@ -230,7 +241,7 @@ class MainApp(wx.Frame):
                 if labNoName in labs.values():
                     for name2, labString2 in labs.items():
                         if labString2 == labNoName:
-                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", '', wx.OK | wx.ICON_INFORMATION)
+                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
                 else:
                     labs[name] = labNoName
 
