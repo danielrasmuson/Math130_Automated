@@ -195,8 +195,7 @@ class MainApp(wx.Frame):
             item = event.GetItem()
             currentSelection = self.getSelected()
             if "Section" not in currentSelection:
-                section = self.parent.masterDatabase.getStudentSection(currentSelection)
-                self.parent.questionsArea.updateStudentInformation(currentSelection, section)
+                self.parent.questionsArea.updateStudentInformation(currentSelection, self.parent.masterDatabase.getLastModified(currentSelection))
                 self.parent.commentWindow.setStudent(currentSelection)
                 self.parent.questionsArea.updateStudentAnswers(currentSelection)
 
@@ -225,19 +224,19 @@ class MainApp(wx.Frame):
             si_sizer = wx.GridBagSizer(5, 5)
             si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
             # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
-            si_sizer.Add(wx.StaticText(panel, label="Section:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Last Author:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
             si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
             si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
 
             self.si_name = wx.TextCtrl(panel, value="")
-            self.si_section = wx.TextCtrl(panel, value="")
+            self.si_author = wx.TextCtrl(panel, value="")
             self.si_right = wx.TextCtrl(panel, value="")
             self.si_score = wx.TextCtrl(panel, value="")
 
             self.si_right.Bind(wx.EVT_TEXT, self.setScore)
 
             si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_section, pos=(1, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_author, pos=(1, 1), flag=wx.ALL, border=0)
             si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
             si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
 
@@ -355,9 +354,9 @@ class MainApp(wx.Frame):
                     self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
-        def updateStudentInformation(self, name, section):
+        def updateStudentInformation(self, name, author):
             self.si_name.ChangeValue(name)
-            self.si_section.ChangeValue(section)
+            self.si_author.ChangeValue(author)
             self.si_right.ChangeValue("")
             self.si_score.ChangeValue("")
 

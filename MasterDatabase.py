@@ -4,13 +4,14 @@ import re, cPickle as pickle
 class MasterDatabase():
     """ Holds all of our question information and student supplied information. """
     class Student():
-        def __init__(self, parent, name, section, sAnswers, filePath, documentStr):
-            self.documentStr = documentStr
+        def __init__(self, parent, name, section, sAnswers, lastModified, filePath, documentStr):
+            self.parent = parent
             self.name = name
             self.section = section
             self.sAnswers = sAnswers
+            self.lastModified = lastModified
+            self.documentStr = documentStr
             self.filePath = filePath
-            self.parent = parent
 
             self.gradeSubmitted = False
 
@@ -22,6 +23,9 @@ class MasterDatabase():
 
         def _getName(self):
             return self.name
+
+        def _getLastModified(self):
+            return self.lastModified
 
         def _getGradeSubmitted(self):
             return self.gradeSubmitted
@@ -142,6 +146,10 @@ class MasterDatabase():
         """ Returns the student dictionary keys. """
         return self.studentList.keys()
 
+    def getLastModified(self, student):
+        """ Returns the last person to modify the word document. """
+        return self.studentList[student]._getLastModified()
+
     def getStudentAnswer(self, student, qNum):
         """ Returns the supplied student's answer for the question number. """
         return self.studentList[student]._getAnswer(qNum)
@@ -204,9 +212,10 @@ class MasterDatabase():
             pickle.dump(self.studentList[student].name, f , protocol=-1)
             pickle.dump(self.studentList[student].section, f , protocol=-1)
             pickle.dump(self.studentList[student].sAnswers, f , protocol=-1)
+            pickle.dump(self.studentList[student].lastModified, f , protocol=-1)
             pickle.dump(self.studentList[student].filePath, f , protocol=-1)
-            pickle.dump(self.studentList[student].scoreDict, f , protocol=-1)
             pickle.dump(self.studentList[student].documentStr, f , protocol=-1)
+            pickle.dump(self.studentList[student].scoreDict, f , protocol=-1)
             pickle.dump(self.studentList[student]._getGradeSubmitted(), f , protocol=-1)
         f.close()
 
@@ -221,12 +230,13 @@ class MasterDatabase():
             name = pickle.load(f)
             section = pickle.load(f)
             sAnswers = pickle.load(f)
+            lastModified = pickle.load(f)
             filePath = pickle.load(f)
-            scoreDict = pickle.load(f)
             documentStr = pickle.load(f)
+            scoreDict = pickle.load(f)
             gradeSubmitted = pickle.load(f)
 
-            newStudent = self.Student(self, name, section, sAnswers, filePath=filePath, documentStr=documentStr)
+            newStudent = self.Student(self, name, section, sAnswers, lastModified, filePath=filePath, documentStr=documentStr)
             newStudent.scoreDict = scoreDict
             newStudent._setGradeSubmitted(gradeSubmitted)
             self.studentList[name] = newStudent
@@ -235,7 +245,7 @@ class MasterDatabase():
 
     def _getAssignments(self, subPath, importFilePath):
         """ Loads all of the assignments and gets the student information from them. """
-        labs, fileNameList, filePathList = getDocxsFromFolder(subPath)
+        labs, fileNameList, filePathList, lastModifiedAuthors = getDocxsFromFolder(subPath)
 
         #EX: Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv
         section = importFilePath.split()[-1].split("_")[0] #this will give an error if the rename the file
@@ -244,7 +254,7 @@ class MasterDatabase():
             name = fileNameList[i].split("-")[0]
 
             sAnswers = self._getStudentAnswersFromLab(labs[i])
-            newStudent = self.Student(self, name, section, sAnswers, documentStr=labs[i], filePath=filePathList[i])
+            newStudent = self.Student(self, name, section, sAnswers, lastModified=lastModifiedAuthors[i], filePath=filePathList[i], documentStr=labs[i])
             self.studentList[name] = newStudent
 
     def _getStudentAnswersFromLab(self, lab):
@@ -311,6 +321,8 @@ class MasterDatabase():
                     grade = gradeList(self.getStudentAnswer(student,qNum), self.getAnswer(qNum))
                 else:
                     grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum), .05)
+                if qNum in [5,8]:
+                    grade = 1
                 self.setStudentQuestionWeight(student,qNum,grade) #studentAnswerDict[qNum]["grade"] = grade*self.getPoints(qNum)
 
 if __name__ == '__main__':

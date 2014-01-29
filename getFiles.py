@@ -1,7 +1,7 @@
 #must run "pip install pydocx"
 #must run "pip install html2text"
 
-import os, glob
+import os, glob, zipfile, lxml.etree
 from html2text import *
 from pydocx import *
 
@@ -23,15 +23,23 @@ def getDocxsFromFolder(folderPath):
     fileList = []
     fileNameList = []
     fullPath = []
+    lastModifiedAuthors = []
+
+
     for filePath in glob.glob(folderPath+"\*.docx"):
         fileNameList.append(filePath.split("\\")[-1])
         fileStr = getDocxStr(filePath)
         fileList.append(fileStr)
         fullPath.append(filePath)
-    return fileList, fileNameList, fullPath
+
+        zf = zipfile.ZipFile(filePath)
+        doc = lxml.etree.fromstring(zf.read('docProps/core.xml'))
+        ns = {"cp": "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"}
+        lastModifiedAuthors.append(doc.xpath("//cp:lastModifiedBy", namespaces=ns)[0].text)
+    return fileList, fileNameList, fullPath, lastModifiedAuthors
 
 
 if __name__ == "__main__":
-    docxStack, fileNameList, fullPath = getDocxsFromFolder("C:\\Users\\Daniel\\Google Drive\\Classes\\Math 130 TA\\Lab1_TA130\\Lab1_Grading_Spring2014\\labs")
-    print len(docxStack)
-    print docxStack[2]
+    docxStack, fileNameList, fullPath, lastModifiedAuthors = getDocxsFromFolder("Examples\\test")
+    # print len(docxStack)
+    # print docxStack[2]
