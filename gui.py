@@ -190,7 +190,6 @@ class MainApp(wx.Frame):
             self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
             self.parent.tree_rootDict = {}
 
-            self.cheatCheck()
 
         def getSelected(self):
             return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
@@ -219,6 +218,7 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SetItemTextColour(temp, (0,150,0))
                 else:
                     self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
+            self.cheatCheck()
 
         def cheatCheck(self):
             """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
