@@ -96,8 +96,6 @@ class MainApp(wx.Frame):
                 newSession()
                 self.parent.Destroy()
 
-
-
     class BottomNav:
         """ Builds a predefined set of buttons on a specific panel and utilizing the sizer provided """
         def __init__(self, parent, panel, sizer):
@@ -114,6 +112,14 @@ class MainApp(wx.Frame):
             b_next.SetToolTipString("Selects the next student of the current section")
             b_next.Bind(wx.EVT_BUTTON, self.nextButton)
             sizer.Add(b_next, 0,wx.ALL,5)
+
+            sizer.AddStretchSpacer(1)
+
+            self.b_cheat = wx.Button(panel, wx.ID_ANY, "Cheat Check")
+            self.b_cheat.SetToolTipString("Runs some basic cheat detection on the currently loaded students.")
+            self.b_cheat.Bind(wx.EVT_BUTTON, self.ratioCheck)
+            self.b_cheat.Bind(wx.EVT_BUTTON, self.cheatCheck)
+            sizer.Add(self.b_cheat, 0,wx.ALL,5)
 
             sizer.AddStretchSpacer(1)
 
@@ -175,6 +181,32 @@ class MainApp(wx.Frame):
             self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
             self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
 
+        def ratioCheck(self, event):
+            """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
+            names = self.parent.masterDatabase.getStudentKeys()
+            for i,name1 in enumerate(names):
+                for j,name2 in enumerate(names):
+                    if i < j:
+                        ratio = difflib.SequenceMatcher(None,self.parent.masterDatabase.getStudentLabString(name1),self.parent.masterDatabase.getStudentLabString(name2)).ratio()
+                        if ratio > .98:
+                            wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
+            event.Skip() #Let's us have the button do two things at once.
+
+        def cheatCheck(self, event):
+            """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
+            names = self.parent.masterDatabase.getStudentKeys()
+            labs = {}
+            for name in names:
+                labString = self.parent.masterDatabase.getStudentLabString(name)
+                labNoName = "\n".join(labString.split("\n")[4:])
+                if labNoName in labs.values():
+                    for name2, labString2 in labs.items():
+                        if labString2 == labNoName:
+                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
+                else:
+                    labs[name] = labNoName
+            event.Skip() #Let's us have the button do two things at once.
+
     class TreeNav:
         """ Builds our tree list of students """
         def __init__(self, parent, panel, sizer):
@@ -218,32 +250,6 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SetItemTextColour(temp, (0,150,0))
                 else:
                     self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
-            self.cheatCheck()
-            self.ratioCheck()
-
-        def ratioCheck(self):
-            """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
-            names = self.parent.masterDatabase.getStudentKeys()
-            for i,name1 in enumerate(names):
-                for j,name2 in enumerate(names):
-                    if i < j:
-                        ratio = difflib.SequenceMatcher(None,self.parent.masterDatabase.getStudentLabString(name1),self.parent.masterDatabase.getStudentLabString(name2)).ratio()
-                        if ratio > .98:
-                            wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
-
-        def cheatCheck(self):
-            """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
-            names = self.parent.masterDatabase.getStudentKeys()
-            labs = {}
-            for name in names:
-                labString = self.parent.masterDatabase.getStudentLabString(name)
-                labNoName = "\n".join(labString.split("\n")[4:])
-                if labNoName in labs.values():
-                    for name2, labString2 in labs.items():
-                        if labString2 == labNoName:
-                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
-                else:
-                    labs[name] = labNoName
 
     class QuestionsArea:
         def __init__(self, parent, panel, sizer):
