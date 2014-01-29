@@ -154,6 +154,9 @@ class MasterDatabase():
         """ Returns the supplied student's answer for the question number. """
         return self.studentList[student]._getAnswer(qNum)
 
+    def getStudentLabString(self, student):
+        return self.studentList[student]._getDocumentStr()
+
     def getStudentSubmittedGrade(self, student):
         """ Returns true if the students grade was submitted. """
         return self.studentList[student]._getGradeSubmitted()

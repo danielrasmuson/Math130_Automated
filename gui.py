@@ -51,6 +51,7 @@ class MainApp(wx.Frame):
             self.parent.studentTree.updateTreeList()
             self.parent.questionsArea.drawQuestions()
             self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+
             print "Done With Wizard Load"
 
         def onSave(self, event):
@@ -94,6 +95,8 @@ class MainApp(wx.Frame):
                 self.parent.Show(False)
                 newSession()
                 self.parent.Destroy()
+
+
 
     class BottomNav:
         """ Builds a predefined set of buttons on a specific panel and utilizing the sizer provided """
@@ -187,6 +190,8 @@ class MainApp(wx.Frame):
             self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
             self.parent.tree_rootDict = {}
 
+            self.cheatCheck()
+
         def getSelected(self):
             return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
 
@@ -214,6 +219,20 @@ class MainApp(wx.Frame):
                     self.parent.lab_tree_list.SetItemTextColour(temp, (0,150,0))
                 else:
                     self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
+
+        def cheatCheck(self):
+            """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
+            names = self.parent.masterDatabase.getStudentKeys()
+            labs = {}
+            for name in names:
+                labString = self.parent.masterDatabase.getStudentLabString(name)
+                labNoName = "\n".join(labString.split("\n")[4:])
+                if labNoName in labs.values():
+                    for name2, labString2 in labs.items():
+                        if labString2 == labNoName:
+                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", '', wx.OK | wx.ICON_INFORMATION)
+                else:
+                    labs[name] = labNoName
 
     class QuestionsArea:
         def __init__(self, parent, panel, sizer):
@@ -366,6 +385,7 @@ class MainApp(wx.Frame):
                 self.si_score.ChangeValue( str(self.parent.masterDatabase.getStudentTotalScore(name)) + " / " + str(self.parent.masterDatabase.getTotalPoints()) )
             except:
                 pass
+
 
     def __init__(self):
         self.masterDatabase = MasterDatabase()
