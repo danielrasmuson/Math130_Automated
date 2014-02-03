@@ -94,14 +94,15 @@ class MasterDatabase():
         1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":"$3,860.30","aText":"How about the cost of tuition in 2020?","points":2},
         2:{"question":"How about the cost of tuition in 2020?","answer":"$4,672.50","aText":"Did you perform interpolation or extrapolation in questions 1 and 2?","points":2},
         3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":"Extrapolation","aText":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","points":2},
-        4:{"question":"What does the value of the slope in our linear model, 162.44, represent?  (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition change","aText":"Based on the value of the R^2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
-        5:{"question":"Based on the value of the R^2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","aText":"Do you think a linear model, in general, is a good model to use for tuition rates?  Why or why not?  (Be somewhat descriptive with your answer.)","points":2},
-        # 6:{"question":"","answer":"","aText":"","points":2},
-        # 7:{"question":"","answer":"","aText":"","points":5},
-        # 8:{"question":"","answer":"","aText":"","points":2},
-        # 9:{"question":"","answer":"","aText":"","points":2},
-        # 10:{"question":"","answer":"","aText":"","points":2},
-        # 11:{"question":"","answer":"","aText":"","points":2},
+        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition change","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
+        5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
+        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
+        7:{"question":"Write your equation and your R2 value here:","answer":"","aText":"(5 points)","points":0},
+        8:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
+        9:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
+        10:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
+        11:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
+        12:{"question":"Is this likely to be an accurate model or an inaccurate model?","answer":"$1,485.95","aText":-1,"points":2}
         }
 
         }
@@ -272,6 +273,8 @@ class MasterDatabase():
                 start += len(self.getQuestion(qNum)) # to not include question
             except ValueError:
                 print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers."
+                # print lab
+                # raise ValueError("Unable to get text.")
                 start = -1
 
             try:
@@ -281,6 +284,8 @@ class MasterDatabase():
                     end = lab.index(self.getAText(qNum))
             except ValueError:
                 print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string."
+                # print lab
+                # raise ValueError("Unable to get text.")
                 end = -1
 
             answer = lab[start:end]
@@ -329,12 +334,12 @@ class MasterDatabase():
                 self.setStudentQuestionWeight(student,qNum,grade) #studentAnswerDict[qNum]["grade"] = grade*self.getPoints(qNum)
 
 if __name__ == '__main__':
-    md = MasterDatabase()
-    md._getAssignments("Examples\\test","07_GradesExport_2014-01-25-16-06.csv")
+    md = MasterDatabase("lab2")
+    md._getAssignments("Examples\\test2","07.csv")
     # md._autoGradeStudentsLab
     # for student in md.getStudentKeys():
-    #     print md.setStudentQuestionWeight(student,1,5)
+    #     print md.getStudentAnswer(student,1)
     # md.saveProgress()
-    md.loadProgress()
-    for student in md.getStudentKeys():
-        print md.getStudentQuestionWeight(student,1)
+    # md.loadProgress()
+    # for student in md.getStudentKeys():
+    #     print md.getStudentQuestionWeight(student,1)

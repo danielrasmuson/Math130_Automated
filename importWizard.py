@@ -21,7 +21,7 @@ class ImportWizard:
 
     def __init__(self):
         wizard = wiz.Wizard(None, -1, "Lab Grading Wizard", embeddedImages.SideImage.GetBitmap())
-        currentDirectory = os.getcwd()
+        currentDirectory = os.path.expanduser('~')+"/Desktop/"
 
         #page 1 - Intro
         page1 = self.TitledPage(wizard, "Introduction")

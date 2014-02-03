@@ -405,7 +405,7 @@ class MainApp(wx.Frame):
 
 
     def __init__(self):
-        self.masterDatabase = MasterDatabase()
+        self.masterDatabase = MasterDatabase("lab2")
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.SetMinSize((800,600))
 
