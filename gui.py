@@ -312,7 +312,7 @@ class MainApp(wx.Frame):
             self.questions_area.SetSizer(self.questions_area_sizer)
 
             self.student_answer_boxes = {}
-            for qNum in self.parent.masterDatabase.getQuestionKeys():
+            for qNum in sorted(self.parent.masterDatabase.getQuestionKeys()):
 
 
                 # Question Num
@@ -344,14 +344,14 @@ class MainApp(wx.Frame):
 
                 # Correct Buttons \u2714
                 c_sizer.AddStretchSpacer(1) #to push buttons to end
-                fullCorrect = wx.Button(self.questions_area, size=(20,20), id=qNum, label=u"\u2714")
+                fullCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u2714")
                 fullCorrect.SetForegroundColour((0,150,0))
                 fullCorrect.SetToolTipString("Sets the question as correct")
                 fullCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1))
                 c_sizer.Add(fullCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Half Correct Buttons \u00BD
-                halfCorrect = wx.Button(self.questions_area, size=(20,20), id=qNum+100, label=u"\u00BD")
+                halfCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u00BD")
                 halfCorrect.SetForegroundColour("#FFAA00")
                 halfCorrect.SetToolTipString("Sets the question as half correct")
                 halfCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1.0/2))

@@ -97,12 +97,13 @@ class MasterDatabase():
         4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition change","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
         5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
         6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7:{"question":"Write your equation and your R2 value here:","answer":"","aText":"(5 points)","points":0},
-        8:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
-        9:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
-        10:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
-        11:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
-        12:{"question":"Is this likely to be an accurate model or an inaccurate model?","answer":"$1,485.95","aText":-1,"points":2}
+        7.0:{"question":"Write your equation and your R2 value here:","answer":"","aText":"(5 points)","points":0},
+        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
+        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
+        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
+        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
+        11:{"question":"Is this likely to be an accurate model or an inaccurate model?","answer":"$1,485.95","aText":-1,"points":2},
+
         }
 
         }
