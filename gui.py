@@ -1,5 +1,5 @@
 from __future__ import division
-import wx, os, subprocess, difflib
+import wx, os, subprocess, difflib, glob
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
@@ -133,6 +133,12 @@ class MainApp(wx.Frame):
             b_open.Bind(wx.EVT_BUTTON, self.openDocument)
             sizer.Add(b_open, 0,wx.ALL,5)
 
+            self.b_open_excel = wx.Button(panel, wx.ID_ANY, "Excel Document")
+            self.b_open_excel.SetToolTipString("Opens the excel document if available.")
+            self.b_open_excel.Disable()
+            self.b_open_excel.Bind(wx.EVT_BUTTON, self.openExcel)
+            sizer.Add(self.b_open_excel, 0,wx.ALL,5)
+
             # A button for sending the grade to the excel file
             b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
             b_grade.SetToolTipString("Sends the grade to excel file")
@@ -143,6 +149,9 @@ class MainApp(wx.Frame):
             current_item = self.parent.studentTree.getSelected()
             if "Section" not in current_item:
                 subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentFilepath(current_item)], shell=False)
+
+        def openExcel(self, event):
+            subprocess.Popen(["explorer",self.parent.xlsx_path], shell=False)
 
         def previousButton(self, event):
             current = self.parent.lab_tree_list.GetSelection()
@@ -190,6 +199,7 @@ class MainApp(wx.Frame):
                         ratio = difflib.SequenceMatcher(None,self.parent.masterDatabase.getStudentLabString(name1),self.parent.masterDatabase.getStudentLabString(name2)).ratio()
                         if ratio > .98:
                             wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
+            wx.MessageBox("Finished with the Ratio Checking.","Done", wx.OK | wx.ICON_INFORMATION)
             event.Skip() #Let's us have the button do two things at once.
 
         def cheatCheck(self, event):
@@ -205,6 +215,7 @@ class MainApp(wx.Frame):
                             wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
                 else:
                     labs[name] = labNoName
+            wx.MessageBox("Finished with the Cheat Checking.","Done", wx.OK | wx.ICON_INFORMATION)
             event.Skip() #Let's us have the button do two things at once.
 
     class TreeNav:
@@ -234,6 +245,15 @@ class MainApp(wx.Frame):
                 self.parent.questionsArea.updateStudentInformation(currentSelection, self.parent.masterDatabase.getLastModified(currentSelection))
                 self.parent.commentWindow.setStudent(currentSelection)
                 self.parent.questionsArea.updateStudentAnswers(currentSelection)
+
+                # Turns on or off our excel button.
+                word_loc = self.parent.masterDatabase.getStudentFilepath(currentSelection).split("\\")
+                files = glob.glob("\\".join(word_loc[0:-1]) +"\\"+word_loc[-1].split("-")[0] +"*.xlsx" )
+                if len(files) > 0:
+                    self.parent.xlsx_path = files[0]
+                    self.parent.buttonArea.b_open_excel.Enable()
+                else:
+                    self.parent.buttonArea.b_open_excel.Disable()
 
         def updateTreeList(self):
             """Tree List on Left Side - Dynamic to Files"""

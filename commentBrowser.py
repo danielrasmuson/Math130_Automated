@@ -33,6 +33,19 @@ class CommentBrowser(wx.Frame):
         self.title.SetLabel("Comments for: "+self.selectedStudent)
         self.currentComment.ChangeValue(self.commentsDict[student])
 
+    def saveCommentsToDisk(self, event):
+        dlg = wx.FileDialog(self.parent, "Choose where to save file:",defaultFile="comments.txt", style=wx.FD_SAVE)
+        dlg.SetWildcard("Text File (*.txt)|*.txt")
+        if dlg.ShowModal() == wx.ID_OK:
+            f = open(dlg.GetPath(), "wb")
+            for student in sorted(self.commentsDict.keys()):
+                f.write("~~~~~~~~~~~~~ "+student+" ~~~~~~~~~~~~~\n")
+                f.write(self.commentsDict[student])
+                f.write("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+            f.close()
+            wx.MessageBox("Successfully saved comments to "+dlg.GetPath(), "Done", wx.OK | wx.ICON_INFORMATION)
+        dlg.Destroy()
+
     def saveComment(self, event):
         self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
 
@@ -52,27 +65,33 @@ class CommentBrowser(wx.Frame):
 
 
         #default comments
-        b_copy = wx.Button(self.panel, wx.ID_ANY, "Default Comment")
-        b_copy.SetToolTipString("Loads the default comments using the wrong answers from the student.")
-        b_copy.Bind(wx.EVT_BUTTON, self.defaultCommentButton)
-        bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
+        b_default = wx.Button(self.panel, wx.ID_ANY, "Default\nComment")
+        b_default.SetToolTipString("Loads the default comments using the wrong answers from the student.")
+        b_default.Bind(wx.EVT_BUTTON, self.defaultCommentButton)
+        bsizer.Add(b_default, 0, flag=wx.ALL, border=5)
 
         #copy comments
-        b_copy = wx.Button(self.panel, wx.ID_ANY, "Copy Comment")
+        b_copy = wx.Button(self.panel, wx.ID_ANY, "Copy\nComment")
         b_copy.SetToolTipString("Copies the current comment to the clipboard.")
         b_copy.Bind(wx.EVT_BUTTON, self.copyComment)
         bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
 
+        #save comments
+        b_save = wx.Button(self.panel, wx.ID_ANY, "Save All\nComments")
+        b_save.SetToolTipString("Saves the coments to disk.")
+        b_save.Bind(wx.EVT_BUTTON, self.saveCommentsToDisk)
+        bsizer.Add(b_save, 0, flag=wx.ALL, border=5)
+
         #email comments
-        b_copy = wx.Button(self.panel, wx.ID_ANY, "Email")
-        b_copy.SetToolTipString("Once Email List has been loaded it will send this to a students email.")
-        b_copy.Bind(wx.EVT_BUTTON, self.sendEmail)
-        bsizer.Add(b_copy, 0, flag=wx.ALL, border=5)
+        b_email = wx.Button(self.panel, wx.ID_ANY, "Email\nComments")
+        b_email.SetToolTipString("Once Email List has been loaded it will send this to a students email.")
+        b_email.Bind(wx.EVT_BUTTON, self.sendEmail)
+        bsizer.Add(b_email, 0, flag=wx.ALL, border=5)
 
         bsizer.AddStretchSpacer(1)
 
         #reset comments
-        b_reset = wx.Button(self.panel, wx.ID_ANY, "Reset Comments")
+        b_reset = wx.Button(self.panel, wx.ID_ANY, "Reset\nComment")
         b_reset.SetToolTipString("Clears the comments area to start again fresh.")
         b_reset.Bind(wx.EVT_BUTTON, self.resetComment)
         bsizer.Add(b_reset, 0, flag=wx.ALL, border=5)
@@ -85,7 +104,7 @@ class CommentBrowser(wx.Frame):
         self.Layout()
 
     def resetComment(self, event):
-        self.currentComment.SetValue("")
+        self.currentComment.SetValue("Hi "+self.selectedStudent.split()[0]+",\n\n")
 
     def display(self, event):
         w,h = self.parent.GetSizeTuple()
@@ -111,7 +130,10 @@ class CommentBrowser(wx.Frame):
         if len(self.defaultComments) > 0:
             self.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n")
             for qNum in sorted(self.defaultComments):
-                self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]) +".\n")
+                if (len(self.defaultComments[qNum]["sAnswer"]) == 0) and (len(self.defaultComments[qNum]["answer"]) > 0):
+                    self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nThe correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
+                elif len(self.defaultComments[qNum]["answer"]) > 0:
+                    self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
             self.addComment("\nIf you've got any questions or still aren't sure why you're wrong feel free to email me.\n")
         else:
             self.addComment("Everything looked great, but if you've got questions feel free to email me.\n")

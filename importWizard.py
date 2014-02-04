@@ -36,10 +36,10 @@ class ImportWizard:
         page2.sizer.Add(self.gradingSheet, 1, flag=wx.ALIGN_CENTER)
 
         #page 3 - Lab Directory
-        page3 = self.TitledPage(wizard, "Select Grading DIrectory")
+        page3 = self.TitledPage(wizard, "Select Grading Directory")
         page3text = "Please select the directory for grading.\nThis can be found under the lab section > dropbox > select the dropbox for the lab > files > select all > download > unzip"
         page3.sizer.Add(wx.StaticText(page3, -1, str(wordwrap(page3text, 500, wx.ClientDC(page3))) ))
-        self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory", startDirectory=currentDirectory)
+        self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory")
         page3.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
 
         wizard.FitToPage(page1)

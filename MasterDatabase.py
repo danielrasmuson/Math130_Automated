@@ -94,15 +94,15 @@ class MasterDatabase():
         1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":"$3,860.30","aText":"How about the cost of tuition in 2020?","points":2},
         2:{"question":"How about the cost of tuition in 2020?","answer":"$4,672.50","aText":"Did you perform interpolation or extrapolation in questions 1 and 2?","points":2},
         3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":"Extrapolation","aText":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","points":2},
-        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition change","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
+        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
         5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
-        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","R^2=0.2053"],"aText":"(5 points)","points":0},
+        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","aText":"You will now use the following data for remainder of this assignment.","points":2},
+        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","0.2053","0.4866","R^2=0.2053","R2=0.2053","R~ = 0.2053"],"aText":"(5 points)","points":0},
         7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
-        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
-        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
+        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x=ACT","y=GPA","X Is ACT","Y is GPA"],"aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
+        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"0.1009","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
         10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"2.7064","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
-        11:{"question":"Is this likely to be an accurate model or an inaccurate model?","answer":"Inaccurate","aText":-1,"points":2},
+        11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":"Inaccurate","aText":-1,"points":2},
 
         }
 
@@ -264,6 +264,14 @@ class MasterDatabase():
 
     def _getStudentAnswersFromLab(self, lab):
         """ Extracts the students answers from the lab using the after text set previously. """
+        lab = lab.replace("  10.","")
+        lab = lab.replace("  11.","")
+        lab = lab.replace("  12.","")
+        lab = lab.replace("  13.","")
+        lab = lab.replace("\n10.","")
+        lab = lab.replace("\n11.","")
+        lab = lab.replace("\n12.","")
+        lab = lab.replace("\n13.","")
         lab = re.sub(r'\n +\d\. ',"", lab)
         lab = lab.replace("**","")
 
@@ -274,8 +282,6 @@ class MasterDatabase():
                 start += len(self.getQuestion(qNum)) # to not include question
             except ValueError:
                 print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers."
-                # print lab
-                # raise ValueError("Unable to get text.")
                 start = -1
 
             try:
@@ -285,8 +291,6 @@ class MasterDatabase():
                     end = lab.index(self.getAText(qNum))
             except ValueError:
                 print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string."
-                # print lab
-                # raise ValueError("Unable to get text.")
                 end = -1
 
             answer = lab[start:end]
@@ -298,8 +302,8 @@ class MasterDatabase():
         grade could be either a 1 or 0
         can add a lot more to function but I just started it"""
         def roundingError(sAnswer, answer, rE):
-            answerC = answer.replace("$","").replace(",","").strip() #clean question bank value
-            studentC = sAnswer.replace("$","").replace(",","").strip()
+            answerC = answer.replace("$","").replace(",","").strip().lower() #clean question bank value
+            studentC = sAnswer.replace("$","").replace(",","").strip().lower()
 
             try: #isdigit() doesnt work on floats i guess
                 if (float(answerC)*(1-rE)) < float(studentC) < (float(answerC)*(1+rE)):
@@ -329,9 +333,9 @@ class MasterDatabase():
                 if self.getAnswer(qNum) == "":
                     grade = 0
                 elif type(self.getAnswer(qNum)) == list:
-                    grade = gradeList(self.getStudentAnswer(student,qNum), self.getAnswer(qNum))
+                    grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ] )
                 else:
-                    grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum), .05)
+                    grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum).lower(), .05)
                 self.setStudentQuestionWeight(student,qNum,grade) #studentAnswerDict[qNum]["grade"] = grade*self.getPoints(qNum)
 
 if __name__ == '__main__':
