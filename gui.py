@@ -19,7 +19,7 @@ class MainApp(wx.Frame):
             m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
             m_save = fileMenu.Append(wx.ID_SAVE, "&Save Grading Session\tCtrl-S", "Saves the current grading progress to disk.")
             m_open = fileMenu.Append(wx.ID_OPEN, "&Open Grading Session\tCtrl-O", "Opens a previous grading session from disk.")
-            m_wizard = fileMenu.Append(wx.ID_ANY, "&Import Wizard\tCtrl-I", "Opens the guided wizard for the setup process.")
+            m_wizard = fileMenu.Append(wx.ID_ANY, "Import &Wizard\tCtrl-W", "Opens the guided wizard for the setup process.")
             fileMenu.AppendSeparator()
             m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tCtrl-D", "Loads all of the above stuff in one click.  Will get deleted later.")
             fileMenu.AppendSeparator()
@@ -42,27 +42,17 @@ class MainApp(wx.Frame):
             self.parent.statusbar = self.parent.CreateStatusBar()
 
         def wizardEvent(self, event):
-            tempwiz = ImportWizard()
-
-            self.parent.masterDatabase.gradeFile = tempwiz.gradingSheet.GetValue()
-            self.parent.masterDatabase.labFolder = tempwiz.gradingDirectory.GetValue()
-            self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
-
-            self.parent.studentTree.updateTreeList()
-            self.parent.questionsArea.drawQuestions()
-            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
-
-            print "Done With Wizard Load"
+            tempwiz = ImportWizard(self.parent)
 
         def onSave(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_SAVE)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="",defaultDir=os.getcwd(), style=wx.FD_SAVE)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.saveProgress(dlg.GetPath())
             dlg.Destroy()
 
         def onOpen(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="lab1.dat",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="",defaultDir=os.getcwd(), style=wx.FD_OPEN)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.loadProgress(dlg.GetPath())
@@ -425,7 +415,7 @@ class MainApp(wx.Frame):
 
 
     def __init__(self):
-        self.masterDatabase = MasterDatabase("lab2")
+        self.masterDatabase = MasterDatabase()
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
         self.SetMinSize((800,600))
 

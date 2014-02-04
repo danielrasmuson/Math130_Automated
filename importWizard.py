@@ -10,6 +10,7 @@ class ImportWizard:
             """Constructor"""
             wiz.WizardPageSimple.__init__(self, parent)
 
+
             sizer = wx.BoxSizer(wx.VERTICAL)
             self.sizer = sizer
             self.SetSizer(sizer)
@@ -19,9 +20,11 @@ class ImportWizard:
             sizer.Add(title, 0, wx.ALIGN_CENTRE|wx.ALL, 5)
             sizer.Add(wx.StaticLine(self, -1), 0, wx.EXPAND|wx.ALL, 5)
 
-    def __init__(self):
+    def __init__(self, parent):
         wizard = wiz.Wizard(None, -1, "Lab Grading Wizard", embeddedImages.SideImage.GetBitmap())
+        self.parent = parent
         currentDirectory = os.path.expanduser('~')+"/Desktop/"
+        wizard.Bind(wiz.EVT_WIZARD_FINISHED, self.onFinished)
 
         #page 1 - Intro
         page1 = self.TitledPage(wizard, "Introduction")
@@ -39,7 +42,7 @@ class ImportWizard:
         page3 = self.TitledPage(wizard, "Select Grading Directory")
         page3text = "Please select the directory for grading.\nThis can be found under the lab section > dropbox > select the dropbox for the lab > files > select all > download > unzip"
         page3.sizer.Add(wx.StaticText(page3, -1, str(wordwrap(page3text, 500, wx.ClientDC(page3))) ))
-        self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory")
+        self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory", startDirectory=self.gradingSheet.GetValue())
         page3.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
 
         wizard.FitToPage(page1)
@@ -54,10 +57,6 @@ class ImportWizard:
         wizard.GetPageAreaSizer().Add(page1)
         wizard.RunWizard(page1)
 
-        #page 4 - Lab Number
-        labName = self.getLabName(self.gradingSheet.GetValue())
-        self.labDictionaryFile = "Labs\\"+ labName + ".dat"
-
         #end
         wizard.Destroy()
 
@@ -69,6 +68,23 @@ class ImportWizard:
 
         labNameList = fullText.split(",")[3].split()[:2]
         return "".join(labNameList).lower()
+
+    def onFinished(self, event):
+        #page 4 - Lab Number
+        self.labName = self.getLabName(self.gradingSheet.GetValue())
+        self.parent.masterDatabase.setLab(self.labName)
+        
+        self.parent.masterDatabase.gradeFile = self.gradingSheet.GetValue()
+        self.parent.masterDatabase.labFolder = self.gradingDirectory.GetValue()
+        self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
+
+        self.parent.studentTree.updateTreeList()
+        self.parent.questionsArea.drawQuestions()
+        self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+
+
+        print "Done With Wizard Load"
+
 
 
 if __name__ == "__main__":
