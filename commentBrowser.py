@@ -24,7 +24,7 @@ class CommentBrowser(wx.Frame):
 
     def setStudent(self, student):
         if student not in self.commentsDict.keys():
-            defaultText = "Hi "+student.split()[0]+",\n\n"
+            defaultText = "Hi "+student.split()[0]+",\n"
             self.commentsDict[student] = defaultText
         # Clear previous student default comments.
         del self.defaultComments
@@ -39,9 +39,10 @@ class CommentBrowser(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             f = open(dlg.GetPath(), "wb")
             for student in sorted(self.commentsDict.keys()):
-                f.write("~~~~~~~~~~~~~ "+student+" ~~~~~~~~~~~~~\n")
-                f.write(self.commentsDict[student])
-                f.write("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+                if self.commentsDict[student] != "Hi "+student.split()[0]+",\n":
+                    f.write("~~~~~~~~~~~~~ "+student+" ~~~~~~~~~~~~~\n")
+                    f.write(self.commentsDict[student])
+                    f.write("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
             f.close()
             wx.MessageBox("Successfully saved comments to "+dlg.GetPath(), "Done", wx.OK | wx.ICON_INFORMATION)
         dlg.Destroy()
@@ -128,13 +129,12 @@ class CommentBrowser(wx.Frame):
 
     def defaultCommentButton(self, event):
         if len(self.defaultComments) > 0:
-            self.addComment("There were a few errors I noticed in your lab and I'd like to give you the answers to compare with.\n")
             for qNum in sorted(self.defaultComments):
                 if (len(self.defaultComments[qNum]["sAnswer"]) == 0) and (len(self.defaultComments[qNum]["answer"]) > 0):
                     self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nThe correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
                 elif len(self.defaultComments[qNum]["answer"]) > 0:
                     self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
-            self.addComment("\nIf you've got any questions or still aren't sure why you're wrong feel free to email me.\n")
+            self.addComment("\nIf something isn't clear feel free to email me.\n")
         else:
             self.addComment("Everything looked great, but if you've got questions feel free to email me.\n")
 
