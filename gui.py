@@ -132,7 +132,7 @@ class MainApp(wx.Frame):
             # A button for sending the grade to the excel file
             b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
             b_grade.SetToolTipString("Sends the grade to excel file")
-            b_grade.Bind(wx.EVT_BUTTON, self.sendGrade)
+            b_grade.Bind(wx.EVT_BUTTON, self.submitGrade)
             sizer.Add(b_grade, 0,wx.ALL,5)
 
         def openDocument(self, event):
@@ -170,15 +170,18 @@ class MainApp(wx.Frame):
                 if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
                     self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
 
-        def sendGrade(self, event):
+        def submitGrade(self, event):
             # @TODO: right answers should be divided by the total score (30 points)
             name = self.parent.questionsArea.si_name.GetValue()
-            self.parent.masterDatabase.setStudentSubmittedGrade(str(name),True)
             name = name.split()
             score = self.parent.questionsArea.si_score.GetValue()
-            sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
-            self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
-            self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
+            result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
+            if result:
+                self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
+                self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
+                self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
+            else:
+                wx.MessageBox("Unable to find "+name[0]+" in the file "+self.parent.masterDatabase.gradeFile,"Grade Not Submitted!", wx.OK | wx.ICON_ERROR)
 
         def ratioCheck(self, event):
             """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """

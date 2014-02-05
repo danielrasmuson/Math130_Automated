@@ -24,3 +24,4 @@ def sendToImport(path, fName, lName, score):
     textFile = open(path,"w")
     textFile.write(newText)
     textFile.close()
+    return True

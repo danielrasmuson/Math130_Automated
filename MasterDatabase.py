@@ -1,4 +1,5 @@
 from getFiles import getDocxsFromFolder
+from math import ceil
 import re, cPickle as pickle, xlrd
 
 class MasterDatabase():
@@ -351,6 +352,9 @@ class MasterDatabase():
         return studentAnswerDict
 
     def _autoGradeStudentsExcel(self):
+        """ Will parse through all of the students and check if there
+        is any grading of excel that needs to be done and if it can even open an excel file. 
+        This gives fractional weights based on how many of the cells right they got. """
         # Lot's of loops and fors, sorry about that.
         co_index = {"A":0,"B":1,"C":2,"D":3,"E":4,"F":5,"G":6,"H":7,"I":8,"J":9,"K":10,"L":11,"M":12}
         # Make sure we check each student.
@@ -382,8 +386,9 @@ class MasterDatabase():
                                     self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " != " + str(cell[1]) + "\n"
                             except:
                                 self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
-                        self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(currentPoints/totalExcelPoints)
-                        self.setStudentQuestionWeight(student,qNum,currentPoints/totalExcelPoints)
+                        weight = ceil(currentPoints/totalExcelPoints * 10)/10.0
+                        self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)
+                        self.setStudentQuestionWeight(student,qNum,weight)
 
     def _autoGradeStudentsWord(self):
         """A more robust system for grading labs
