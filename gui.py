@@ -402,8 +402,8 @@ class MainApp(wx.Frame):
                     else:
                         self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                     self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
-                self.panel.Layout()
-            self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
+            self.panel.Layout()
+            self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
         def updateStudentInformation(self, name, wordauthor, excelauthor):
             self.si_name.ChangeValue(name)
