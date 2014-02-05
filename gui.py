@@ -138,7 +138,7 @@ class MainApp(wx.Frame):
         def openDocument(self, event):
             current_item = self.parent.studentTree.getSelected()
             if "Section" not in current_item:
-                subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentFilepath(current_item)], shell=False)
+                subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentWordFilepath(current_item)], shell=False)
 
         def openExcel(self, event):
             subprocess.Popen(["explorer",self.parent.xlsx_path], shell=False)
@@ -232,13 +232,12 @@ class MainApp(wx.Frame):
             item = event.GetItem()
             currentSelection = self.getSelected()
             if "Section" not in currentSelection:
-                self.parent.questionsArea.updateStudentInformation(currentSelection, self.parent.masterDatabase.getLastModified(currentSelection))
+                self.parent.questionsArea.updateStudentInformation(currentSelection, self.parent.masterDatabase.getLastWordModified(currentSelection), self.parent.masterDatabase.getLastExcelModified(currentSelection))
                 self.parent.commentWindow.setStudent(currentSelection)
                 self.parent.questionsArea.updateStudentAnswers(currentSelection)
 
                 # Turns on or off our excel button.
-                word_loc = self.parent.masterDatabase.getStudentFilepath(currentSelection).split("\\")
-                files = glob.glob("\\".join(word_loc[0:-1]) +"\\"+word_loc[-1].split("-")[0] +"*.xlsx" )
+                files = self.parent.masterDatabase.getStudentExcelFilepath(currentSelection)
                 if len(files) > 0:
                     self.parent.xlsx_path = files[0]
                     self.parent.buttonArea.b_open_excel.Enable()
@@ -269,20 +268,22 @@ class MainApp(wx.Frame):
 
             si_sizer = wx.GridBagSizer(5, 5)
             si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-            # @NOTE: we might not need the section in the student information, since its already denoted in the tree - just a thought not sure
-            si_sizer.Add(wx.StaticText(panel, label="Last Author:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Word Author:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Excel Author:"), pos=(2, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
             si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
             si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
 
             self.si_name = wx.TextCtrl(panel, value="")
-            self.si_author = wx.TextCtrl(panel, value="")
+            self.si_wordauthor = wx.TextCtrl(panel, value="")
+            self.si_excelauthor = wx.TextCtrl(panel, value="")
             self.si_right = wx.TextCtrl(panel, value="")
             self.si_score = wx.TextCtrl(panel, value="")
 
             self.si_right.Bind(wx.EVT_TEXT, self.setScore)
 
             si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_author, pos=(1, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_wordauthor, pos=(1, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_excelauthor, pos=(2, 1), flag=wx.ALL, border=0)
             si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
             si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
 
@@ -388,21 +389,23 @@ class MainApp(wx.Frame):
                     self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
         def updateStudentAnswers(self, name):
-            right = 0
             for qNum in self.parent.masterDatabase.getQuestionKeys():
                 self.student_answer_boxes[qNum].SetLabel(str(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
-                if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum):
+                if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum) == 1:
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-                    right += 1
                 else:
-                    self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                    self.panel.Layout()
+                    if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum) > 0:
+                        self.student_answer_boxes[qNum].SetBackgroundColour("#FFAA00")
+                    else:
+                        self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
                     self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
+                self.panel.Layout()
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
-        def updateStudentInformation(self, name, author):
+        def updateStudentInformation(self, name, wordauthor, excelauthor):
             self.si_name.ChangeValue(name)
-            self.si_author.ChangeValue(author)
+            self.si_wordauthor.ChangeValue(wordauthor)
+            self.si_excelauthor.ChangeValue(excelauthor)
             self.si_right.ChangeValue("")
             self.si_score.ChangeValue("")
 
@@ -463,6 +466,7 @@ class MainApp(wx.Frame):
     def deleteMeLater(self, event):
         self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test"
         self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
+        self.masterDatabase.setLab("lab3")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()

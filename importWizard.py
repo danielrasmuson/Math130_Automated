@@ -73,7 +73,7 @@ class ImportWizard:
         #page 4 - Lab Number
         self.labName = self.getLabName(self.gradingSheet.GetValue())
         self.parent.masterDatabase.setLab(self.labName)
-        
+
         self.parent.masterDatabase.gradeFile = self.gradingSheet.GetValue()
         self.parent.masterDatabase.labFolder = self.gradingDirectory.GetValue()
         self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
