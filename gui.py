@@ -322,7 +322,7 @@ class MainApp(wx.Frame):
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
 
                 self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
-                self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name)) + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
+                self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
             self.questions_area.SetScrollbars(1, 5, 500, 1000)
@@ -461,12 +461,12 @@ class MainApp(wx.Frame):
         main_sizer_a.Add(right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.EXPAND,5)
         mainpanel.SetSizer(main_sizer)
 
-        # Creat our Comment Browswer so that we can use it later,
+        # Create our Comment Browser so that we can use it later,
         # it's hidden by default.
         self.commentWindow = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
 
         # We create the MenuNav class here and pass in the self
-        # arguement so that we can catch it and set it as the parent
+        # argument so that we can catch it and set it as the parent
         # for the MenuClass to use as it's parent.
         self.menuNavigation = self.MenuNav(self)
 
@@ -480,7 +480,7 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test"
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test3"
         self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
         self.masterDatabase.setLab("lab3")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
