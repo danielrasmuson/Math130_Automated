@@ -1,5 +1,5 @@
 from getFiles import getDocxsFromFolder
-import re, cPickle as pickle, xlrd
+import re, cPickle as pickle, xlrd, csv
 
 class MasterDatabase():
     """ Holds all of our question information and student supplied information. """
@@ -16,6 +16,7 @@ class MasterDatabase():
             self.documentStr = documentStr
 
             self.gradeSubmitted = False
+            self.tookAttendance = "Unknown"
 
             self.scoreDict = {}
             # Don't do this if we're loading data.
@@ -25,6 +26,9 @@ class MasterDatabase():
 
         def _getName(self):
             return self.name
+
+        def _getAttendance(self):
+            return self.tookAttendance
 
         def _getLastWordModified(self):
             return self.lastWordModified
@@ -208,6 +212,10 @@ class MasterDatabase():
         """ Returns the supplied student's section. """
         return self.studentList[student]._getSection()
 
+    def getStudentAttendance(self, student):
+        """ Returns the time if the student took the quiz.  Otherwise returns False. """
+        return self.studentList[student]._getAttendance()
+
     def getStudentTotalWeight(self, student):
         """ Returns the total number of points the student has correct. """
         return self.studentList[student]._getTotalWeight()
@@ -247,14 +255,14 @@ class MasterDatabase():
         """ Sets the student's question's specified weight. """
         self.studentList[student]._setQuestionWeight(qNum, weight)
 
-    def saveProgress(self, filename="lab1.dat"):
+    def saveProgress(self, filename="lab.dat"):
         """ Function to allow us to save multiple things to one file that is specified while saving. """
         f = open(filename, "wb")
         pickle.dump(len(self.studentList), f , protocol=-1)
         pickle.dump(self.currentLab, f , protocol=-1)
         pickle.dump(self.gradeFile, f , protocol=-1)
         pickle.dump(self.labFolder, f , protocol=-1)
-        for student in self.studentList:
+        for student in sorted(self.studentList.keys()):
             pickle.dump(self.studentList[student].name, f , protocol=-1)
             pickle.dump(self.studentList[student].section, f , protocol=-1)
             pickle.dump(self.studentList[student].sAnswers, f , protocol=-1)
@@ -263,6 +271,7 @@ class MasterDatabase():
             pickle.dump(self.studentList[student].excelFilePath, f , protocol=-1)
             pickle.dump(self.studentList[student].documentStr, f , protocol=-1)
             pickle.dump(self.studentList[student].scoreDict, f , protocol=-1)
+            pickle.dump(self.studentList[student].tookAttendance, f , protocol=-1)
             pickle.dump(self.studentList[student]._getGradeSubmitted(), f , protocol=-1)
         f.close()
 
@@ -282,14 +291,37 @@ class MasterDatabase():
             excelFilePath = pickle.load(f)
             documentStr = pickle.load(f)
             scoreDict = pickle.load(f)
+            tookAttendance = pickle.load(f)
             gradeSubmitted = pickle.load(f)
 
             newStudent = self.Student(self, name, section, sAnswers, lastWordModified, lastExcelModified="", wordFilePath=wordFilePath, excelFilePath=excelFilePath, documentStr=documentStr)
             newStudent.scoreDict = scoreDict
+            newStudent.tookAttendance = tookAttendance
             newStudent._setGradeSubmitted(gradeSubmitted)
             self.studentList[name] = newStudent
             print "Processed "+name
         f.close()
+
+    def checkAttendance(self, file):
+        """Parses through the student list to see if a student took the attendance quiz or not."""
+        quizNames = {}
+        # First we get the names of everyone who took the quiz.
+        with open(file, 'rb') as csvfile:
+            linereader = csv.reader(csvfile, delimiter=',')
+            next(linereader, None)
+            for row in linereader:
+                name = row[2] + " " + row[3]
+                if name not in quizNames:
+                    quizNames[name] = row[5]
+        # Now we compare to students and get the time they took the quiz.
+        for student in self.studentList:
+            if student in quizNames:
+                self.studentList[student].tookAttendance = quizNames[student]
+                del quizNames[student]
+            else:
+                self.studentList[student].tookAttendance = False
+        print str(len(quizNames)) + " Students took the quiz but couldn't be found in the lab list:"
+        print ", ".join(sorted(quizNames.keys()))
 
     def _trunc(self, f, n):
         """ Truncates/pads a float f to n decimal places without rounding """

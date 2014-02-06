@@ -175,6 +175,12 @@ class MainApp(wx.Frame):
             name = self.parent.questionsArea.si_name.GetValue()
             name = name.split()
             score = self.parent.questionsArea.si_score.GetValue()
+            if self.parent.questionsArea.si_attendance.GetValue() == "No Quiz":
+                dlg = wx.MessageDialog(self.parent,name[0] + "did not take the attendance quiz. Submit 0 instead of "+str(score)+"?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
+                result = dlg.ShowModal()
+                dlg.Destroy()
+                if result == wx.ID_YES:
+                    score = "0"
             result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
             if result:
                 self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
@@ -271,26 +277,27 @@ class MainApp(wx.Frame):
 
             si_sizer = wx.GridBagSizer(5, 5)
             si_sizer.Add(wx.StaticText(panel, label="Student:"), pos=(0, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-            si_sizer.Add(wx.StaticText(panel, label="Word Author:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-            si_sizer.Add(wx.StaticText(panel, label="Excel Author:"), pos=(2, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-            si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
-            si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 3), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Attendance:"), pos=(1, 0), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Word Author:"), pos=(0, 2), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Excel Author:"), pos=(1, 2), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Questions Right:"), pos=(0, 4), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
+            si_sizer.Add(wx.StaticText(panel, label="Score:"), pos=(1, 4), flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, border=0)
 
             self.si_name = wx.TextCtrl(panel, value="")
+            self.si_attendance = wx.TextCtrl(panel, value="")
             self.si_wordauthor = wx.TextCtrl(panel, value="")
             self.si_excelauthor = wx.TextCtrl(panel, value="")
-            self.si_right = wx.TextCtrl(panel, value="")
-            self.si_score = wx.TextCtrl(panel, value="")
+            self.si_right = wx.TextCtrl(panel, value="", size=(65,-1))
+            self.si_score = wx.TextCtrl(panel, value="", size=(65,-1))
 
             self.si_right.Bind(wx.EVT_TEXT, self.setScore)
 
             si_sizer.Add(self.si_name, pos=(0, 1), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_wordauthor, pos=(1, 1), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_excelauthor, pos=(2, 1), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_right, pos=(0, 4), flag=wx.ALL, border=0)
-            si_sizer.Add(self.si_score, pos=(1, 4), flag=wx.ALL, border=0)
-
-            si_sizer.AddGrowableCol(2)
+            si_sizer.Add(self.si_attendance, pos=(1, 1), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_wordauthor, pos=(0, 3), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_excelauthor, pos=(1, 3), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_right, pos=(0, 6), flag=wx.ALL, border=0)
+            si_sizer.Add(self.si_score, pos=(1, 6), flag=wx.ALL, border=0)
 
             sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
             sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
@@ -411,6 +418,12 @@ class MainApp(wx.Frame):
             self.si_excelauthor.ChangeValue(excelauthor)
             self.si_right.ChangeValue("")
             self.si_score.ChangeValue("")
+            if self.parent.masterDatabase.getStudentAttendance(name) != False:
+                self.si_attendance.ChangeValue(self.parent.masterDatabase.getStudentAttendance(name))
+                self.si_attendance.SetBackgroundColour(wx.NullColour)
+            else:
+                self.si_attendance.SetBackgroundColour("#FFAAAA")
+                self.si_attendance.ChangeValue("No Quiz")
 
         def setScore(self, event):
             name = self.si_name.GetValue()

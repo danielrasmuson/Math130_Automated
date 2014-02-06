@@ -45,6 +45,13 @@ class ImportWizard:
         self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory", startDirectory=self.gradingSheet.GetValue())
         page3.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
 
+        #page 4 - Optional Attendance
+        page4 = self.TitledPage(wizard, "Select (Optional) Attendance Sheet")
+        page4text = "This is an optional thing you can select if you'd like to automatically check if the student took the attendance quiz or not."
+        page4.sizer.Add(wx.StaticText(page4, -1, str(wordwrap(page4text, 500, wx.ClientDC(page4))) ))
+        self.attendanceSheet = filebrowse.FileBrowseButton(page4, -1, size=(450, -1), labelText="Attendance File (.csv)", fileMask="*.csv", startDirectory=currentDirectory)
+        page4.sizer.Add(self.attendanceSheet, 1, flag=wx.ALIGN_CENTER)
+
         wizard.FitToPage(page1)
         # @TODO : add email setup in wizard
 
@@ -53,6 +60,8 @@ class ImportWizard:
         page2.SetPrev(page1)
         page2.SetNext(page3)
         page3.SetPrev(page2)
+        page3.SetNext(page4)
+        page4.SetPrev(page3)
 
         wizard.GetPageAreaSizer().Add(page1)
         wizard.RunWizard(page1)
@@ -70,18 +79,18 @@ class ImportWizard:
         return "".join(labNameList).lower()
 
     def onFinished(self, event):
-        #page 4 - Lab Number
-        self.labName = self.getLabName(self.gradingSheet.GetValue())
-        self.parent.masterDatabase.setLab(self.labName)
-
         self.parent.masterDatabase.gradeFile = self.gradingSheet.GetValue()
         self.parent.masterDatabase.labFolder = self.gradingDirectory.GetValue()
-        self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
+        if len(self.parent.masterDatabase.gradeFile) > 0 and len(self.parent.masterDatabase.labFolder) > 0:
+            self.labName = self.getLabName(self.gradingSheet.GetValue())
+            self.parent.masterDatabase.setLab(self.labName)
+            self.parent.masterDatabase.loadLabs(self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
+            self.parent.studentTree.updateTreeList()
+            self.parent.questionsArea.drawQuestions()
+            self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
 
-        self.parent.studentTree.updateTreeList()
-        self.parent.questionsArea.drawQuestions()
-        self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
-
+        if len(self.attendanceSheet.GetValue()) > 0:
+            self.parent.masterDatabase.checkAttendance(self.attendanceSheet.GetValue())
 
         print "Done With Wizard Load"
 
@@ -89,6 +98,6 @@ class ImportWizard:
 
 if __name__ == "__main__":
     app = wx.App(False)
-    w = ImportWizard()
+    w = ImportWizard("")
     print w.gradingSheet.GetValue()
     app.MainLoop()
