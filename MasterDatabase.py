@@ -338,11 +338,13 @@ class MasterDatabase():
         for i in range(len(labs)):
             name = fileNameList[i].split("-")[0]
 
-            sAnswers = self._getStudentAnswersFromLab(labs[i])
+            sAnswers = self._getStudentAnswersFromLab(labs[i], name)
             newStudent = self.Student(self, name, section, sAnswers, lastWordModified=lastWordModifiedAuthors[i], lastExcelModified="", wordFilePath=wordFilePathList[i], excelFilePath=excelFiles[name], documentStr=labs[i])
+            if name in self.studentList:
+                print "Warning: " + name + " has more than one word file.  Autograding word may fail."
             self.studentList[name] = newStudent
 
-    def _getStudentAnswersFromLab(self, lab):
+    def _getStudentAnswersFromLab(self, lab, name):
         """ Extracts the students answers from the lab using the after text set previously. """
         lab = lab.replace("  10.","")
         lab = lab.replace("  11.","")
@@ -363,7 +365,7 @@ class MasterDatabase():
                 start = lab.index(self.getQuestion(qNum))
                 start += len(self.getQuestion(qNum)) # to not include question
             except ValueError:
-                print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers."
+                print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers for " + name + "."
                 start = -1
 
             try:
@@ -375,7 +377,7 @@ class MasterDatabase():
                 else:
                     end = lab.index(self.getAText(qNum))
             except ValueError:
-                print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string."
+                print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
                 end = -1
 
             answer = lab[start:end]
@@ -393,7 +395,9 @@ class MasterDatabase():
         # Make sure we check each student.
         for student in self.getStudentKeys():
             filename = self.getStudentExcelFilepath(student)
-            # If they have excel we proceed.
+            # If they have excel files we proceed.
+            if len(filename) > 1:
+                print "Warning: " + student + " has more than one excel file.  Autograding excel may fail."
             if len(filename) > 0:
                 workbook = xlrd.open_workbook(filename[0])
                 self.studentList[student].lastExcelModified = workbook.user_name
@@ -404,21 +408,24 @@ class MasterDatabase():
                         # Clear the student answer box for excel grading report.
                         self.studentList[student].sAnswers[qNum] = ""
                         totalExcelPoints = len(self.excelQB[self.currentLab][qNum]["cells"])
-                        worksheet = workbook.sheet_by_name(self.excelQB[self.currentLab][qNum]["sheet"])
-                        for cell in self.excelQB[self.currentLab][qNum]["cells"]:
-                            # Get's the location to trunacte the answers for checking precision.
-                            if str(cell[1]).find(".")==-1:
-                                trunc_loc = 0
-                            else:
-                                trunc_loc = len(str(cell[1]).split(".")[1])
-                            # Try to find the value, if it's blank or not there we just move on.
-                            try:
-                                if self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
-                                    currentPoints += 1.
+                        try:
+                            worksheet = workbook.sheet_by_name(self.excelQB[self.currentLab][qNum]["sheet"])
+                            for cell in self.excelQB[self.currentLab][qNum]["cells"]:
+                                # Get's the location to trunacte the answers for checking precision.
+                                if str(cell[1]).find(".")==-1:
+                                    trunc_loc = 0
                                 else:
-                                    self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " != " + str(cell[1]) + "\n"
-                            except:
-                                self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
+                                    trunc_loc = len(str(cell[1]).split(".")[1])
+                                # Try to find the value, if it's blank or not there we just move on.
+                                try:
+                                    if self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
+                                        currentPoints += 1.
+                                    else:
+                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " != " + str(cell[1]) + "\n"
+                                except:
+                                    self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
+                        except:
+                            print "Student " + student + " missing worksheet " + self.excelQB[self.currentLab][qNum]["sheet"] + " in file " + filename[0] +"."
                         weight = _round( currentPoints/totalExcelPoints, 1./self.getQuestionPoints(qNum))
                         self.setStudentQuestionWeight(student,qNum,weight)
                         self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)[0:5] + ". Points earned: " +str(self.getStudentQuestionScore(student,qNum))
