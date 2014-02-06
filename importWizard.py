@@ -38,19 +38,20 @@ class ImportWizard:
         self.gradingSheet = filebrowse.FileBrowseButton(page2, -1, size=(450, -1), labelText="Grading Sheet (.csv)", fileMask="*.csv", startDirectory=currentDirectory)
         page2.sizer.Add(self.gradingSheet, 1, flag=wx.ALIGN_CENTER)
 
-        #page 3 - Lab Directory
-        page3 = self.TitledPage(wizard, "Select Grading Directory")
-        page3text = "Please select the directory for grading.\nThis can be found under the lab section > dropbox > select the dropbox for the lab > files > select all > download > unzip"
+        #page 3 - Optional Attendance
+        page3 = self.TitledPage(wizard, "Select (Optional) Attendance Sheet")
+        page3text = "This is an optional thing you can select if you'd like to automatically check if the student took the attendance quiz or not."
         page3.sizer.Add(wx.StaticText(page3, -1, str(wordwrap(page3text, 500, wx.ClientDC(page3))) ))
-        self.gradingDirectory = filebrowse.DirBrowseButton(page3, -1, size=(450, -1), labelText="Lab Directory", startDirectory=self.gradingSheet.GetValue())
-        page3.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
+        self.attendanceSheet = filebrowse.FileBrowseButton(page3, -1, size=(450, -1), labelText="Attendance File (.csv)", fileMask="*.csv", startDirectory=self.gradingSheet.GetValue())
+        page3.sizer.Add(self.attendanceSheet, 1, flag=wx.ALIGN_CENTER)
 
-        #page 4 - Optional Attendance
-        page4 = self.TitledPage(wizard, "Select (Optional) Attendance Sheet")
-        page4text = "This is an optional thing you can select if you'd like to automatically check if the student took the attendance quiz or not."
+        #page 3 - Lab Directory
+        page4 = self.TitledPage(wizard, "Select Grading Directory")
+        page4text = "Please select the directory for grading.\nThis can be found under the lab section > dropbox > select the dropbox for the lab > files > select all > download > unzip"
         page4.sizer.Add(wx.StaticText(page4, -1, str(wordwrap(page4text, 500, wx.ClientDC(page4))) ))
-        self.attendanceSheet = filebrowse.FileBrowseButton(page4, -1, size=(450, -1), labelText="Attendance File (.csv)", fileMask="*.csv", startDirectory=currentDirectory)
-        page4.sizer.Add(self.attendanceSheet, 1, flag=wx.ALIGN_CENTER)
+        self.gradingDirectory = filebrowse.DirBrowseButton(page4, -1, size=(450, -1), labelText="Lab Directory", startDirectory=self.gradingSheet.GetValue())
+        page4.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
+
 
         wizard.FitToPage(page1)
         # @TODO : add email setup in wizard
