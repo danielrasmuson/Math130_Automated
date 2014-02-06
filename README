@@ -3,13 +3,14 @@ Math 130 Automated Grading
 
 Possible ideas for future
 -------------------------
-Run results vs attendance quiz
-disable buttons when you cant use them - Greg
+add andswers on the fly, and auto regrade sometimes
 ability to add more answers ($10.40 | 10 dollar 40 cents) - Dan
-hookup wizard click lab button
 
 Done
 -----------------------------
+hookup wizard click lab button
+disable buttons when you cant use them
+Run results vs attendance quiz
 change value of question right changes value of score
 file name support
 update question bank for getAnswer(qNum)
