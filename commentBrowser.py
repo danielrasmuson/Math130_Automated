@@ -140,12 +140,17 @@ class CommentBrowser(wx.Frame):
 
     def sendEmail(self, event):
         def getEmailCredentials(self):
-            dlg = wx.TextEntryDialog(self.panel, 'Email address:',"Gmail Email Credentials","", style=wx.OK)
+            dlg = wx.TextEntryDialog(self.panel, 'MNSU Email Address:',"Email Credentials","", style=wx.OK)
             dlg.ShowModal()
             self.username = dlg.GetValue()
             dlg.Destroy()
 
-            dlg = wx.TextEntryDialog(self.panel, 'Email password:',"Gmail Email Credentials","", style=wx.OK)
+            dlg = wx.TextEntryDialog(self.panel, 'MNSU Star ID:',"Email Credentials","", style=wx.OK)
+            dlg.ShowModal()
+            self.starid = dlg.GetValue()
+            dlg.Destroy()
+
+            dlg = wx.PasswordEntryDialog(self.panel, 'Email password:',"Email Credentials","", style=wx.OK)
             dlg.ShowModal()
             self.password = dlg.GetValue()
             dlg.Destroy()
@@ -179,9 +184,9 @@ class CommentBrowser(wx.Frame):
 
             # The actual mail send
             try:
-                server = smtplib.SMTP('smtp.gmail.com:587')
+                server = smtplib.SMTP('smtp.office365.com', 587)
                 server.starttls()
-                server.login(self.username, self.password)
+                server.login(self.starid + "@campus.mnsu.edu", self.password)
                 server.sendmail(fromaddr, toaddrs, message)
                 server.quit()
 

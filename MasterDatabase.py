@@ -137,7 +137,7 @@ class MasterDatabase():
 
         }
 
-    def getLab():
+    def getLab(self):
         """ Returns currently selected lab. """
         return self.currentLab
 
