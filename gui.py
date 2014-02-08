@@ -310,19 +310,17 @@ class MainApp(wx.Frame):
             def setCorrect(qNum, weight):
                 name = self.si_name.GetValue()
                 if weight == 1:
-                    self.parent.commentWindow.removeWrong(qNum)
                     color = "#FFFFFF"
                 else:
                     if weight ==0:
                         color = "#FFAAAA"
                     else:
                         color = "#FFAA00"
-                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
-
                 self.student_answer_boxes[qNum].SetBackgroundColour(color)
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
 
                 self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
+                self.parent.commentWindow.defaultCommentButton("")
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
@@ -409,7 +407,6 @@ class MainApp(wx.Frame):
                         self.student_answer_boxes[qNum].SetBackgroundColour("#FFAA00")
                     else:
                         self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
-                    self.parent.commentWindow.addWrong(qNum, self.parent.masterDatabase.getQuestion(qNum, niceFormat=True), self.parent.masterDatabase.getAnswer(qNum), self.parent.masterDatabase.getStudentAnswer(name, qNum))
             self.panel.Layout()
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
@@ -464,7 +461,7 @@ class MainApp(wx.Frame):
 
         # Create our Comment Browser so that we can use it later,
         # it's hidden by default.
-        self.commentWindow = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0))
+        self.commentWindow = CommentBrowser(self, initialSize=(500,500),initialPosition=(0,0), database=self.masterDatabase)
 
         # We create the MenuNav class here and pass in the self
         # argument so that we can catch it and set it as the parent

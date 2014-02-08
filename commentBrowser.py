@@ -1,16 +1,15 @@
 import wx, win32clipboard, smtplib
 
 class CommentBrowser(wx.Frame):
-    def __init__(self, parent, initialPosition, initialSize):
+    def __init__(self, parent, initialPosition, initialSize, database):
         wx.Frame.__init__(self, parent, title='Comment Browser', pos=initialPosition, size=initialSize)
         self.panel = wx.Panel(self)
         self.parent = parent
+        self.database = database
 
         def onClose(event):
             self.Hide()
         self.Bind(wx.EVT_CLOSE, onClose)
-
-        self.defaultComments = {}
 
         self.commentsDict = {}
 
@@ -23,15 +22,12 @@ class CommentBrowser(wx.Frame):
         self.emailDict = False
 
     def setStudent(self, student):
-        if student not in self.commentsDict.keys():
-            defaultText = "Hi "+student.split()[0]+",\n"
-            self.commentsDict[student] = defaultText
-        # Clear previous student default comments.
-        del self.defaultComments
-        self.defaultComments = {}
         self.selectedStudent = student
         self.title.SetLabel("Comments for: "+self.selectedStudent)
-        self.currentComment.ChangeValue(self.commentsDict[student])
+        if student in self.commentsDict.keys():
+            self.currentComment.ChangeValue(self.commentsDict[student])
+        else:
+            self.defaultCommentButton("")
 
     def saveCommentsToDisk(self, event):
         dlg = wx.FileDialog(self.parent, "Choose where to save file:",defaultFile="comments.txt", style=wx.FD_SAVE)
@@ -47,7 +43,7 @@ class CommentBrowser(wx.Frame):
             wx.MessageBox("Successfully saved comments to "+dlg.GetPath(), "Done", wx.OK | wx.ICON_INFORMATION)
         dlg.Destroy()
 
-    def saveComment(self, event):
+    def autoSaveComment(self, event):
         self.commentsDict[self.selectedStudent] = self.currentComment.GetValue()
 
     def addComment(self, comment):
@@ -62,7 +58,7 @@ class CommentBrowser(wx.Frame):
         sizer.Add(self.title, proportion=0, flag=wx.ALIGN_CENTER, border=0)
 
         self.currentComment = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE|wx.TE_RICH, value="")
-        self.currentComment.Bind(wx.EVT_TEXT, self.saveComment)
+        self.currentComment.Bind(wx.EVT_TEXT, self.autoSaveComment)
 
 
         #default comments
@@ -105,7 +101,7 @@ class CommentBrowser(wx.Frame):
         self.Layout()
 
     def resetComment(self, event):
-        self.currentComment.SetValue("Hi "+self.selectedStudent.split()[0]+",\n\n")
+        self.currentComment.SetValue("")
 
     def display(self, event):
         w,h = self.parent.GetSizeTuple()
@@ -120,23 +116,17 @@ class CommentBrowser(wx.Frame):
         win32clipboard.SetClipboardText(self.currentComment.GetValue())
         win32clipboard.CloseClipboard()
 
-    def addWrong(self, qNum, question, answer, studentAnswer):
-        self.defaultComments[qNum] = {"question":question, "answer":answer, "sAnswer":studentAnswer}
-
-    def removeWrong(self, qNum):
-        if qNum in self.defaultComments:
-            del self.defaultComments[qNum]
-
     def defaultCommentButton(self, event):
-        if len(self.defaultComments) > 0:
-            for qNum in sorted(self.defaultComments):
-                if (len(self.defaultComments[qNum]["sAnswer"]) == 0) and (len(self.defaultComments[qNum]["answer"]) > 0):
-                    self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nThe correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
-                elif len(self.defaultComments[qNum]["answer"]) > 0:
-                    self.addComment("\nFor question #" + str(qNum) + ":\n"+str(self.defaultComments[qNum]["question"])+"\nYour answer was " + str(self.defaultComments[qNum]["sAnswer"]) + " but the correct answer should have been " + str(self.defaultComments[qNum]["answer"]).lower() +".\n")
+        self.currentComment.SetValue("Hi "+self.selectedStudent.split()[0]+",\n")
+        for qNum in sorted(self.database.getQuestionKeys()):
+            if (len(self.database.getReason(qNum)) > 0) & (self.database.getStudentQuestionScore(self.selectedStudent,qNum) != self.database.getQuestionPoints(qNum)):
+                self.addComment("\nFor question #" + str(qNum) + " (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\n"+self.database.getReason(qNum)+"\n")
+            elif (len(self.database.getAnswer(qNum)) > 0) & (self.database.getStudentQuestionScore(self.selectedStudent,qNum) != self.database.getQuestionPoints(qNum)):
+                self.addComment("\nFor question #" + str(qNum) + " (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\nThe answer should have been: "+str(self.database.getAnswer(qNum))+"\n")
+        if "For question #" in self.currentComment.GetValue():
             self.addComment("\nIf something isn't clear feel free to email me.\n")
         else:
-            self.addComment("Everything looked great, but if you've got questions feel free to email me.\n")
+            self.addComment("\nEverything looked great, but if you've got questions feel free to email me.\n")
 
     def sendEmail(self, event):
         def getEmailCredentials(self):
@@ -174,7 +164,7 @@ class CommentBrowser(wx.Frame):
 
         def send(self):
             # Lab 1 - Score 27/30 - Math 130
-            lab = self.parent.masterDatabase.getLab()
+            lab = self.database.getLab()
             score = self.parent.questionsArea.si_score.GetValue()
             subject = lab + " - Score " + str(score) +" - Math 130" #make this the lab name
 

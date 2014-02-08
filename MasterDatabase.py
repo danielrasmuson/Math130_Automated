@@ -87,51 +87,51 @@ class MasterDatabase():
 
         self.wordQB = {
         "lab1": {
-        1:{"question":"What is the 25th term of this sequence?","answer":"41.62","aText":"What is the 80th term of this sequence","points":2.5},
-        2:{"question":"What is the 80th term of this sequence?","answer":"131.27", "aText":"What is the sum of the first through the 75th term of this sequence?","points":2.5},
-        3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75", "aText": "What is the sum of the 10th through the 90th term of this sequence?","points":2.5},
-        4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","aText":"Recall the explicit formulas for the nth term of an arithmetic sequence","answer":"6671.97","points":2.5},
-        5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3. Show your\nwork.","aText":"Now, use your Excel workbook","answer":["2.5+1.63(25-1)","2.5+1.63(80-1)","75/2(2.5+123.12)"],"points":2.5},
-        6:{"question":"What is the 15th term of this sequence?","answer":"5.43","aText":"What is the sum of the first 30 terms of this sequence?","points":2.5},
-        7:{"question":"What is the sum of the first 30 terms of this sequence?","aText":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80","points":2.5},
-        8:{"question":"Use these formulas to verify your answers for questions 6 and 7. Show your\nwork.","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","answer":["3.59*1.03^(15-1)","3.59((1.03 ^30)-1)/(1.03-1)"],"points":2.5},
-        9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","aText":"An auditorium has","answer":"$10.40","points":2.5},
-        10:{"question":"How many seats will there be in the 16th row?","answer":"40","aText":"How many total seats are there in the auditorium","points":2.5},
-        11:{"question":"How many total seats are there in the auditorium?","answer":"580","aText":"In compound interest, time is divided into interest periods.","points":2.5},
-        12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","aText":-1,"points":2.5}
+        1:{"question":"What is the 25th term of this sequence?","answer":"41.62","reason":"","aText":"What is the 80th term of this sequence","points":2.5},
+        2:{"question":"What is the 80th term of this sequence?","answer":"131.27","reason":"", "aText":"What is the sum of the first through the 75th term of this sequence?","points":2.5},
+        3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75","reason":"", "aText": "What is the sum of the 10th through the 90th term of this sequence?","points":2.5},
+        4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","reason":"","aText":"Recall the explicit formulas for the nth term of an arithmetic sequence","answer":"6671.97","points":2.5},
+        5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3. Show your\nwork.","reason":"","aText":"Now, use your Excel workbook","answer":["2.5+1.63(25-1)","2.5+1.63(80-1)","75/2(2.5+123.12)"],"points":2.5},
+        6:{"question":"What is the 15th term of this sequence?","answer":"5.43","reason":"","aText":"What is the sum of the first 30 terms of this sequence?","points":2.5},
+        7:{"question":"What is the sum of the first 30 terms of this sequence?","reason":"","aText":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80","points":2.5},
+        8:{"question":"Use these formulas to verify your answers for questions 6 and 7. Show your\nwork.","reason":"","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","answer":["3.59*1.03^(15-1)","3.59((1.03 ^30)-1)/(1.03-1)"],"points":2.5},
+        9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","reason":"","aText":"An auditorium has","answer":"$10.40","points":2.5},
+        10:{"question":"How many seats will there be in the 16th row?","answer":"40","reason":"","aText":"How many total seats are there in the auditorium","points":2.5},
+        11:{"question":"How many total seats are there in the auditorium?","answer":"580","reason":"","aText":"In compound interest, time is divided into interest periods.","points":2.5},
+        12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","reason":"","aText":-1,"points":2.5}
         },
 
         "lab2": {
-        1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":"$3,860.30","aText":"How about the cost of tuition in 2020?","points":2},
-        2:{"question":"How about the cost of tuition in 2020?","answer":"$4,672.50","aText":"Did you perform interpolation or extrapolation in questions 1 and 2?","points":2},
-        3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":"Extrapolation","aText":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","points":2},
-        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
-        5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
-        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","0.2053","0.4866","R^2=0.2053","R2=0.2053","R~ = 0.2053"],"aText":"(5 points)","points":0},
-        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
-        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x=ACT","y=GPA","X Is ACT","Y is GPA"],"aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
-        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"0.1009","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
-        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"2.7064","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
-        11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":"Inaccurate","aText":-1,"points":2},
+        1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":"$3,860.30","reason":"","aText":"How about the cost of tuition in 2020?","points":2},
+        2:{"question":"How about the cost of tuition in 2020?","answer":"$4,672.50","reason":"","aText":"Did you perform interpolation or extrapolation in questions 1 and 2?","points":2},
+        3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":"Extrapolation","reason":"","aText":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","points":2},
+        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","reason":"","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
+        5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","reason":"","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
+        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","reason":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
+        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","0.2053","0.4866","R^2=0.2053","R2=0.2053","R~ = 0.2053"],"reason":"","aText":"(5 points)","points":0},
+        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
+        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x=ACT","y=GPA","X Is ACT","Y is GPA"],"reason":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
+        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"0.1009","reason":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
+        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"2.7064","reason":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
+        11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":"Inaccurate","reason":"","aText":-1,"points":2},
         },
 
         "lab3": {
-        1.1:{"question":"After how many months of payments will the borrower be paying off more in principal per month than interest?","answer":"152","aText":"(2) What is the total","points":2},
-        1.2:{"question":"What is the total amount of interest the borrower will pay over the life of this 30-year loan?","answer":"71,869.51","aText":"(2) What do you think","points":2},
-        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":"","aText":"Problem #2 (11","points":2},
-        2.1:{"question":"Print out this table and hand it in with your lab. (The file has been set up to print out as two pages.)","answer":"","aText":"","points":6,"excel":"2.1"},
-        2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":"32","aText":"(3) Suppose that,","points":2},
-        2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":"$75.27","aText":"Problem #3 (8","points":3},
-        3.1:{"question":"Print out these tables and hand them in with your lab. (The sheet is set up to print out as four pages total.)","answer":"","aText":"","points":6,"excel":"3.1"},
-        3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":"$4,521.15","aText":-1,"points":2},
+        1.1:{"question":"After how many months of payments will the borrower be paying off more in principal per month than interest?","answer":"152","reason":"The question asks \"after\" how many months will he be paying off more in principal than in interest.  For 152 months he's paying more in interest than principal, and then on the 153rd month he's now paying more in principal than interest. So the question is asking after which month, which would be 152.","aText":"(2) What is the total","points":2},
+        1.2:{"question":"What is the total amount of interest the borrower will pay over the life of this 30-year loan?","answer":"71,869.51","reason":"","aText":"(2) What do you think","points":2},
+        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":"","reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2 (11","points":2},
+        2.1:{"question":"Print out this table and hand it in with your lab. (The file has been set up to print out as two pages.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet.","aText":"","points":6,"excel":"2.1"},
+        2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":"32","reason":"He will have paid off half of his principal loan on the 32nd month because at the beginning of this month he still owes more than half on his loan and at the end of the month he owes less than half of his original loan.","aText":"(3) Suppose that,","points":2},
+        2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":"$75.27","reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
+        3.1:{"question":"Print out these tables and hand them in with your lab. (The sheet is set up to print out as four pages total.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet. ","aText":"","points":6,"excel":"3.1"},
+        3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":"$4,521.15","reason":"Since we're looking at total interst for both loans we have to add both together to get the total amount of interest being $4,521.15.","aText":-1,"points":2},
         }
 
         }
 
         self.excelQB = {
         "lab3":{
-        2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F3",19581.5],["F4",2182.1]]},
+        2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
         3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
         }
 
@@ -172,6 +172,10 @@ class MasterDatabase():
     def getAnswer(self, qNum):
         """ Returns the correct answer for the specified question. """
         return self.wordQB[self.currentLab][qNum]["answer"]
+
+    def getReason(self, qNum):
+        """ Returns the reason or explanation for the question. """
+        return self.wordQB[self.currentLab][qNum]["reason"]
 
     def getAText(self, qNum):
         """ Returns the after text for the current question. """
@@ -411,7 +415,7 @@ class MasterDatabase():
                         try:
                             worksheet = workbook.sheet_by_name(self.excelQB[self.currentLab][qNum]["sheet"])
                             for cell in self.excelQB[self.currentLab][qNum]["cells"]:
-                                # Get's the location to trunacte the answers for checking precision.
+                                # Gets the location to truncate the answers for checking precision.
                                 if str(cell[1]).find(".")==-1:
                                     trunc_loc = 0
                                 else:
