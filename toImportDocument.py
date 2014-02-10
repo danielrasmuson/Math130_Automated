@@ -11,16 +11,17 @@ def sendToImport(path, fName, lName, score):
 
 
     # Maybe we've got a 3 part name?
-    name = fName + " " + lName
-    name = name.split()
-    if len(name) > 2:
-        # Try first name as first 2 parts, rest as last name?
-        fName = name[0] + " " + name[1]
-        lName = " ".join(name[2:])
-
     if (fName.lower() not in startText.lower()) or (lName.lower() not in startText.lower()):
-        print "ERROR: the name \"" + fName.lower() +"\" or \"" + lName.lower() +"\" is not in the template."
-        return False
+        name = fName + " " + lName
+        name = name.split()
+        if len(name) > 2:
+            # Try first name as first 2 parts, rest as last name?
+            fName = name[0] + " " + name[1]
+            lName = " ".join(name[2:])
+
+        if (fName.lower() not in startText.lower()) or (lName.lower() not in startText.lower()):
+            print "ERROR: the name \"" + fName.lower() +"\" or \"" + lName.lower() +"\" is not in the template."
+            return False
 
     score = score.strip().split()[0] #score comes in as "25 / 30"
 

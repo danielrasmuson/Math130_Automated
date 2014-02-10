@@ -271,6 +271,7 @@ class MasterDatabase():
             pickle.dump(self.studentList[student].section, f , protocol=-1)
             pickle.dump(self.studentList[student].sAnswers, f , protocol=-1)
             pickle.dump(self.studentList[student].lastWordModified, f , protocol=-1)
+            pickle.dump(self.studentList[student].lastExcelModified, f , protocol=-1)
             pickle.dump(self.studentList[student].wordFilePath, f , protocol=-1)
             pickle.dump(self.studentList[student].excelFilePath, f , protocol=-1)
             pickle.dump(self.studentList[student].documentStr, f , protocol=-1)
@@ -291,6 +292,7 @@ class MasterDatabase():
             section = pickle.load(f)
             sAnswers = pickle.load(f)
             lastWordModified = pickle.load(f)
+            lastExcelModified = pickle.load(f)
             wordFilePath = pickle.load(f)
             excelFilePath = pickle.load(f)
             documentStr = pickle.load(f)
@@ -298,7 +300,7 @@ class MasterDatabase():
             tookAttendance = pickle.load(f)
             gradeSubmitted = pickle.load(f)
 
-            newStudent = self.Student(self, name, section, sAnswers, lastWordModified, lastExcelModified="", wordFilePath=wordFilePath, excelFilePath=excelFilePath, documentStr=documentStr)
+            newStudent = self.Student(self, name, section, sAnswers, lastWordModified, lastExcelModified=lastExcelModified, wordFilePath=wordFilePath, excelFilePath=excelFilePath, documentStr=documentStr)
             newStudent.scoreDict = scoreDict
             newStudent.tookAttendance = tookAttendance
             newStudent._setGradeSubmitted(gradeSubmitted)
