@@ -1,5 +1,5 @@
 from getFiles import getDocxsFromFolder
-import re, cPickle as pickle, xlrd, csv
+import re, cPickle as pickle, xlrd, csv, math
 
 class MasterDatabase():
     """ Holds all of our question information and student supplied information. """
@@ -122,7 +122,7 @@ class MasterDatabase():
         1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":"","reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2 (11","points":2},
         2.1:{"question":"Print out this table and hand it in with your lab. (The file has been set up to print out as two pages.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet.","aText":"","points":6,"excel":"2.1"},
         2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":"32","reason":"He will have paid off half of his principal loan on the 32nd month because at the beginning of this month he still owes more than half on his loan and at the end of the month he owes less than half of his original loan.","aText":"(3) Suppose that,","points":2},
-        2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":"$75.27","reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
+        2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":["52","75.27"],"reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
         3.1:{"question":"Print out these tables and hand them in with your lab. (The sheet is set up to print out as four pages total.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet. ","aText":"","points":6,"excel":"3.1"},
         3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":"$4,521.15","reason":"Since we're looking at total interst for both loans we have to add both together to get the total amount of interest being $4,521.15.","aText":-1,"points":2},
         },
@@ -403,12 +403,14 @@ class MasterDatabase():
             studentAnswerDict[qNum] = answer.strip()
         return studentAnswerDict
 
+    def _niceWeight(self, points, totalPoints, totalQuestionWorth):
+        """ Just a helper function to weight things nicely. """
+        return math.floor( (float(points)/float(totalPoints)) * totalQuestionWorth ) / totalQuestionWorth
+
     def _autoGradeStudentsExcel(self):
         """ Will parse through all of the students and check if there
         is any grading of excel that needs to be done and if it can even open an excel file. 
         This gives fractional weights based on how many of the cells right they got. """
-        def _round(value, step):
-            return round(value/step)*step
         # Lot's of loops and fors, sorry about that.
         co_index = {"A":0,"B":1,"C":2,"D":3,"E":4,"F":5,"G":6,"H":7,"I":8,"J":9,"K":10,"L":11,"M":12}
         # Make sure we check each student.
@@ -445,7 +447,7 @@ class MasterDatabase():
                                     self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
                         except:
                             print "Student " + student + " missing worksheet " + self.excelQB[self.currentLab][qNum]["sheet"] + " in file " + filename[0] +"."
-                        weight = _round( currentPoints/totalExcelPoints, 1./self.getQuestionPoints(qNum))
+                        weight = self._niceWeight(points=currentPoints,totalPoints=totalExcelPoints, totalQuestionWorth=self.getQuestionPoints(qNum))
                         self.setStudentQuestionWeight(student,qNum,weight)
                         self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)[0:5] + ". Points earned: " +str(self.getStudentQuestionScore(student,qNum))
 
@@ -468,16 +470,18 @@ class MasterDatabase():
                 else:
                     return 0
 
-        def gradeList(sAnswer, answerList):
+        def gradeList(sAnswer, answerList, qNum):
             """This will hopefully grade answers
-            that are show your work involving mutliple steps
+            that are show your work involving multiple steps
             and have answers such as 3.59*1.03^15-1"""
+            currentPoints = 0
             for answer in answerList:
                 answer = answer.replace(" ","")
                 sAnswer = sAnswer.replace(" ","")
-                if answer not in sAnswer:
-                    return 0
-            return 1
+                if answer in sAnswer:
+                    currentPoints += 1
+            weight = self._niceWeight(points=currentPoints,totalPoints=len(answerList), totalQuestionWorth=self.getQuestionPoints(qNum))
+            return weight
 
         for student in self.getStudentKeys():
             for qNum in self.getQuestionKeys():
@@ -485,7 +489,7 @@ class MasterDatabase():
                     if self.getAnswer(qNum) == "":
                         grade = 0
                     elif type(self.getAnswer(qNum)) == list:
-                        grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ] )
+                        grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ], qNum )
                     else:
                         grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum).lower(), .05)
                     self.setStudentQuestionWeight(student,qNum,grade)
