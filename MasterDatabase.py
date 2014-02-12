@@ -125,6 +125,15 @@ class MasterDatabase():
         2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":"$75.27","reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
         3.1:{"question":"Print out these tables and hand them in with your lab. (The sheet is set up to print out as four pages total.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet. ","aText":"","points":6,"excel":"3.1"},
         3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":"$4,521.15","reason":"Since we're looking at total interst for both loans we have to add both together to get the total amount of interest being $4,521.15.","aText":-1,"points":2},
+        },
+
+        "lab4": {
+        1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x","-4y","-7z","-8=0","-8x","-8x","-6y","+9z","-7=0","34x","+6y","-2z","-5=0"],"reason":"","aText":"Now, fill in","points":3},
+        1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":"","reason":"","aText":"Now, run Solver","points":3},
+        1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":"","reason":"","aText":"Problem #2 (10","points":4},
+        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":"","reason":"","aText":["Now, fill in",1],"points":3},
+        2.2:{"question":"Copy this\ninto the boxes below, then fill in your spreadsheet:","answer":"","reason":"","aText":"Now, you will","points":3},
+        2.3:{"question":"Finish this setup, then run solver to solve the system.\nWrite your solution here:","answer":"","reason":"","aText":-1,"points":4}
         }
 
         }
@@ -362,6 +371,7 @@ class MasterDatabase():
         lab = lab.replace("\n13.","")
         lab = re.sub(r'\n +\d\. ',"", lab)
         lab = lab.replace("**","")
+        lab = lab.replace("~","-")
 
         studentAnswerDict = {}
         # Defines the keylist for use later if we need it.
@@ -372,6 +382,7 @@ class MasterDatabase():
                 start += len(self.getQuestion(qNum)) # to not include question
             except ValueError:
                 print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers for " + name + "."
+                print lab
                 start = -1
 
             try:
@@ -380,6 +391,8 @@ class MasterDatabase():
                 # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
                 elif self.getAText(qNum) == "":
                     end = lab.index(self.getQuestion(keyList[i+1]))
+                elif type(self.getAText(qNum)) == list:
+                    end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
                 else:
                     end = lab.index(self.getAText(qNum))
             except ValueError:
@@ -479,8 +492,8 @@ class MasterDatabase():
 
 
 if __name__ == '__main__':
-    md = MasterDatabase("lab3")
-    md._getAssignments("Examples\\test","07.csv")
+    md = MasterDatabase("lab4")
+    md._getAssignments("Examples\\test4","07.csv")
     # md._autoGradeStudentsWord()
     md._autoGradeStudentsExcel()
     # for student in md.getStudentKeys():

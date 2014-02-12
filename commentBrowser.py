@@ -35,7 +35,7 @@ class CommentBrowser(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             f = open(dlg.GetPath(), "wb")
             for student in sorted(self.commentsDict.keys()):
-                if self.commentsDict[student] != "Hi "+student.split()[0]+",\n":
+                if "Everything looked great, but if you've got questions feel free to email me" not in self.commentsDict[student]:
                     f.write("~~~~~~~~~~~~~ "+student+" ~~~~~~~~~~~~~\n")
                     f.write(self.commentsDict[student])
                     f.write("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
