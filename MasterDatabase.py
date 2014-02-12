@@ -129,9 +129,9 @@ class MasterDatabase():
 
         "lab4": {
         1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x","-4y","-7z","-8=0","-8x","-8x","-6y","+9z","-7=0","34x","+6y","-2z","-5=0"],"reason":"","aText":"Now, fill in","points":3},
-        1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":"","reason":"","aText":"Now, run Solver","points":3},
-        1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":"","reason":"","aText":"Problem #2 (10","points":4},
-        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":"","reason":"","aText":["Now, fill in",1],"points":3},
+        1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":["12","-4","-7","-8","-8","-6","9","-7","34","6","-2","-5"],"reason":"","aText":"Now, run Solver","points":3},
+        1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":[".3904","-1.291",".2641"],"reason":"","aText":"Problem #2 (10","points":4},
+        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w","-5x","+3y","-2z","+13=0","3w","+2x","+4y","-9z","+28=0","4w","+3x","-2y","-4z","+13=0","5w","-4x","-3y","+3z"],"reason":"","aText":["Now, fill in",1],"points":3},
         2.2:{"question":"Copy this\ninto the boxes below, then fill in your spreadsheet:","answer":"","reason":"","aText":"Now, you will","points":3},
         2.3:{"question":"Finish this setup, then run solver to solve the system.\nWrite your solution here:","answer":"","reason":"","aText":-1,"points":4}
         }
@@ -372,6 +372,8 @@ class MasterDatabase():
         lab = re.sub(r'\n +\d\. ',"", lab)
         lab = lab.replace("**","")
         lab = lab.replace("~","-")
+        lab = lab.replace("\r","")
+        lab = lab.replace("\n\n","\n")
 
         studentAnswerDict = {}
         # Defines the keylist for use later if we need it.
