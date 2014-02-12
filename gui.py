@@ -399,7 +399,7 @@ class MainApp(wx.Frame):
 
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
-                self.student_answer_boxes[qNum].SetLabel(str(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
+                self.student_answer_boxes[qNum].SetLabel(unicode(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
                 if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum) == 1:
                     self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
                 else:
@@ -478,9 +478,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test3"
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test4"
         self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-        self.masterDatabase.setLab("lab3")
+        self.masterDatabase.setLab("lab4")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()

@@ -1,22 +1,14 @@
-#must run "pip install pydocx"
-#must run "pip install html2text"
-
 import os, glob, zipfile, lxml.etree
 from html2text import *
 from pydocx import *
 
 def getDocxStr(docxFile):
-    #remove unicode
-    newText = ""
-    for char in docx2html(docxFile): # .docx --> html
-        if ord(char) < 128: #unicode problems
-            newText += char
-        else:
-            newText += "~"
-
-    # get text from html file
+    """ Gets the document string from the file using a little bit of trickery with docx2html and html2text. """
+    # We can deal just fine with unicode and probably should, so that we get better formatted answers.
+    newText = docx2html(docxFile)
     fileStr = html2text(newText)
-
+    fileStr = fileStr.replace(u"\xE2","-")
+    fileStr = fileStr.replace(u"\u2013","-")
     return fileStr
 
 def getDocxsFromFolder(folderPath):
