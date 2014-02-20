@@ -110,18 +110,18 @@ class MasterDatabase():
         4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","reason":"","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
         5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","reason":"","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
         6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","reason":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","R^2=0.2053"],"reason":"","aText":"(5 points)","points":2},
+        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866|.1009x+.4866|.1009x+0.4866","R^2=0.2053|R2=0.2053|.2053|0.20528"],"reason":"","aText":"(5 points)","points":2},
         7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":3},
-        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x=ACT","y=GPA","X Is ACT","Y is GPA"],"reason":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
-        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"0.1009","reason":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
-        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"2.7064","reason":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
-        11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":"Inaccurate","reason":"","aText":-1,"points":2},
+        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x represents ACT | x represents the ACT | x=ACT | X Is ACT","y represents GPA | y represents the GPA | y=GPA | Y is GPA"],"reason":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
+        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":["0.1009"],"reason":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
+        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":["2.7064|2.71"],"reason":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
+        11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":["Inaccurate|not accurate"],"reason":"","aText":-1,"points":2},
         },
 
         "lab3": {
         1.1:{"question":"After how many months of payments will the borrower be paying off more in principal per month than interest?","answer":"152","reason":"The question asks \"after\" how many months will he be paying off more in principal than in interest.  For 152 months he's paying more in interest than principal, and then on the 153rd month he's now paying more in principal than interest. So the question is asking after which month, which would be 152.","aText":"(2) What is the total","points":2},
         1.2:{"question":"What is the total amount of interest the borrower will pay over the life of this 30-year loan?","answer":"71,869.51","reason":"","aText":"(2) What do you think","points":2},
-        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":"","reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2 (11","points":2},
+        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":["Pay off credit cards quickly.|bad|horrible|not good|awful"],"reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2 (11","points":2},
         2.1:{"question":"Print out this table and hand it in with your lab. (The file has been set up to print out as two pages.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet.","aText":"","points":6,"excel":"2.1"},
         2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":"32","reason":"He will have paid off half of his principal loan on the 32nd month because at the beginning of this month he still owes more than half on his loan and at the end of the month he owes less than half of his original loan.","aText":"(3) Suppose that,","points":2},
         2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":["52","75.27"],"reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
@@ -130,10 +130,10 @@ class MasterDatabase():
         },
 
         "lab4": {
-        1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x","-4y","-7z","-8=0","-8x","-6y","+9z","-7=0","34x","+6y","-2z","-5=0"],"reason":"The equations should be:\n12x - 4y -7z -8 = 0\n-8x - 6y + 9z - 7 = 0\n34x + 6y - 2z - 5 = 0","aText":"Now, fill in","points":3},
+        1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x-4y-7z-8=0","-8x-6y+9z-7=0","34x+6y-2z-5=0"],"reason":"The equations should be:\n12x - 4y -7z -8 = 0\n-8x - 6y + 9z - 7 = 0\n34x + 6y - 2z - 5 = 0","aText":"Now, fill in","points":3},
         1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":["12","-4","-7","-8","-8","-6","9","-7","34","6","-2","-5"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 12 -4 -7 -8\nEquation 2: -8 -6 9 -7\nEquation 3: 34 6 -2 -5","aText":"Now, run Solver","points":3},
         1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":[".3904","-1.291",".2641"],"reason":"The solutions should be:\nx = 0.39042, y = -1.291, z = 0.264151","aText":"Problem #2 (10","points":4},
-        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w","-5x","+3y","-2z","+13=0","3w","+2x","+4y","-9z","+28=0","4w","+3x","-2y","-4z","+13=0","5w","-4x","-3y","+3z"],"reason":"The equations should look like the following:\n2w - 5x + 3y - 2z + 13 = 0\n3w + 2x + 4y - 9z + 28 = 0\n4w + 3x - 2y - 4z + 13 = 0\n5w - 4x - 3y + 3z = 0","aText":["Now, fill in",1],"points":3},
+        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w-5x+3y-2z+13=0","3w+2x+4y-9z+28=0","4w+3x-2y-4z+13=0","5w-4x-3y+3z=0 | 5w-4x-3y+3z+0=0 | 5w-4x-3y+3z-0=0"],"reason":"The equations should look like the following:\n2w - 5x + 3y - 2z + 13 = 0\n3w + 2x + 4y - 9z + 28 = 0\n4w + 3x - 2y - 4z + 13 = 0\n5w - 4x - 3y + 3z = 0","aText":["Now, fill in",1],"points":3},
         2.2:{"question":"Copy this\ninto the boxes below, then fill in your spreadsheet:","answer":["2","-5","3","-2","13","3","2","4","-9","28","4","3","-2","-4","13","5","-4","-3","3","0"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 2 -5 3 -2 13\nEquation 2: 3 2 4 -9 28\nEquation 3: 4 3 -2 -4 13\nEquation 4: 5 -4-3 3 0\n","aText":"Now, you will","points":3},
         2.3:{"question":"Finish this setup, then run solver to solve the system.\nWrite your solution here:","answer":["-1","1","0","3"],"reason":"The solutions should be:\nw = -1, x = 1, y= 0, z=3","aText":-1,"points":4}
         },
@@ -517,6 +517,7 @@ class MasterDatabase():
         answer = answer.replace("$","")
         # Strip beginning zero's.
         answer = answer.lstrip("0")
+        answer = answer.strip()
         return answer
 
     def _autoGradeStudentsWord(self):
@@ -562,18 +563,9 @@ class MasterDatabase():
                     elif type(self.getAnswer(qNum)) == list:
                         grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ], qNum )
                     else:
-                        grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum).lower(), .05)
+                        grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum).lower(), .001)
                     self.setStudentQuestionWeight(student,qNum,grade)
 
 
 if __name__ == '__main__':
-    md = MasterDatabase("lab5")
-    md._getAssignments("Examples\\test5","03.csv")
-    # md._autoGradeStudentsWord()
-    md._autoGradeStudentsExcel()
-    # for student in md.getStudentKeys():
-    #     print md.getStudentAnswer(student,1)
-    # md.saveProgress()
-    # md.loadProgress()
-    # for student in md.getStudentKeys():
-    #     print md.getStudentQuestionWeight(student,1)
+    pass
