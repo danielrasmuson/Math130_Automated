@@ -58,6 +58,7 @@ class MasterDatabase():
             self.scoreDict[qNum]["weight"] = weight
 
         def _getQuestionWeight(self, qNum):
+            assert self.scoreDict[qNum]["weight"] <= 1
             return self.scoreDict[qNum]["weight"]
 
         def _getTotalScore(self):
@@ -69,6 +70,7 @@ class MasterDatabase():
         def _getTotalWeight(self):
             tempscore = 0
             for qNum in self.scoreDict:
+                assert self.scoreDict[qNum]["weight"] <= 1
                 tempscore += self.scoreDict[qNum]["weight"]
             return tempscore
 
@@ -108,8 +110,8 @@ class MasterDatabase():
         4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","reason":"","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
         5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","reason":"","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
         6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","reason":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","0.2053","0.4866","R^2=0.2053","R2=0.2053","R~ = 0.2053"],"reason":"","aText":"(5 points)","points":0},
-        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":5},
+        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866","R^2=0.2053"],"reason":"","aText":"(5 points)","points":2},
+        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":3},
         8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x=ACT","y=GPA","X Is ACT","Y is GPA"],"reason":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
         9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":"0.1009","reason":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
         10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":"2.7064","reason":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
@@ -128,12 +130,24 @@ class MasterDatabase():
         },
 
         "lab4": {
-        1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x","-4y","-7z","-8=0","-8x","-8x","-6y","+9z","-7=0","34x","+6y","-2z","-5=0"],"reason":"The equations should be:\n12x - 4y -7z -8 = 0\n-8x - 6y + 9z - 7 = 0\n34x + 6y - 2z - 5 = 0","aText":"Now, fill in","points":3},
+        1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x","-4y","-7z","-8=0","-8x","-6y","+9z","-7=0","34x","+6y","-2z","-5=0"],"reason":"The equations should be:\n12x - 4y -7z -8 = 0\n-8x - 6y + 9z - 7 = 0\n34x + 6y - 2z - 5 = 0","aText":"Now, fill in","points":3},
         1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":["12","-4","-7","-8","-8","-6","9","-7","34","6","-2","-5"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 12 -4 -7 -8\nEquation 2: -8 -6 9 -7\nEquation 3: 34 6 -2 -5","aText":"Now, run Solver","points":3},
         1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":[".3904","-1.291",".2641"],"reason":"The solutions should be:\nx = 0.39042, y = -1.291, z = 0.264151","aText":"Problem #2 (10","points":4},
         2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w","-5x","+3y","-2z","+13=0","3w","+2x","+4y","-9z","+28=0","4w","+3x","-2y","-4z","+13=0","5w","-4x","-3y","+3z"],"reason":"The equations should look like the following:\n2w - 5x + 3y - 2z + 13 = 0\n3w + 2x + 4y - 9z + 28 = 0\n4w + 3x - 2y - 4z + 13 = 0\n5w - 4x - 3y + 3z = 0","aText":["Now, fill in",1],"points":3},
         2.2:{"question":"Copy this\ninto the boxes below, then fill in your spreadsheet:","answer":["2","-5","3","-2","13","3","2","4","-9","28","4","3","-2","-4","13","5","-4","-3","3","0"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 2 -5 3 -2 13\nEquation 2: 3 2 4 -9 28\nEquation 3: 4 3 -2 -4 13\nEquation 4: 5 -4-3 3 0\n","aText":"Now, you will","points":3},
         2.3:{"question":"Finish this setup, then run solver to solve the system.\nWrite your solution here:","answer":["-1","1","0","3"],"reason":"The solutions should be:\nw = -1, x = 1, y= 0, z=3","aText":-1,"points":4}
+        },
+
+        "lab5": {
+        1.1:{"question":"Set things up similarly to the example in the directions, including the inequality symbols.","answer":"","reason":"","aText":"","points":6,"excel":"1.1"},
+        1.2:{"question":"What is the maximum value of the objective function?","answer":["(x,y,z)=(9,9,0)|(9, 9, 0)|X=9, Y=9, Z=0|X=9 Y=9 Z=0","35"],"reason":"","aText":"Problem #2","points":4},
+        2.1:{"question":"What company does each variable refer to?","answer":["x1=Acme Chemical | Acme Chemical = x1 | X1 is acme chemical","x2=DynaStar | DynaStar = x2 | X2 is dynastar","x3=Eagle Vision | Eagle Vision = x3 | X3 is eagle vision","x4=Micromodeling | Micromodeling = x4 | X4 is micromodeling","x5=OptiPro | OptiPro = x5 | X5 is OptiPro","x6=Sabre Systems | Sabre Systems = x6 | X6 is Sabre Systems"],"reason":"","aText":"(2) What is your","points":2},
+        2.2:{"question":"What is your objective function, and are you trying to maximize or minimize?","answer":["0.0865*x1 | x1*.0865 | .0865(x1) | .0865(x1) | .0865x1 | .0865x1 | 8.65%*x1","0.095*x2 | x2*.095 | .095(x2) | .095(x2) | .095x2 | .095x2 | 9.5%*x2","0.1*x3 | x3*.1 | .10(x3) | .1(x3) | .10x3 | .1x3 | 10%*x3","0.0875*x4 | x4*.0875 | .0875(x4) | .0875(x4) | .0875x4 | .0875x4 | 8.75%*x4","0.0925*x5 | x5*.0925 | .0925(x5) | .0925(x5) | .0925x5 | .0925x5 | 9.25%*x5","0.09*x6 | x6*.09 | .090(x6) | .09(x6) | .090x6 | .09x6 | 9%*x6","max"],"reason":"","aText":"(4) There are","points":2},
+        2.3:{"question":"Determine the nine constraints and write them below.","answer":[u"x1\u2264$187,500 | x1<=$187500",u"x2\u2264$187,500 | x2<=$187500",u"x3\u2264$187,500 | x3<=$187500",u"x4\u2264$187,500 | x4<=$187500",u"x5\u2264$187,500 | x5<=$187500",u"x6\u2264$187,500 | x6<=$187500",u"x1+x2+x4+x6\u2265$375,000 | x1+x2+x4+x6>=$375000",u"x2+x3+x5\u2264$262,500 | x2+x3+x5<=$262500","x1+x2+x3+x4+x5+x6=$750,000 | x1+x2+x3+x4+x5+x6=$750000"],"reason":"","aText":"(2)Why do","points":4},
+        2.4:{"question":"Why do you also have the six non-negativity constraints?","answer":["Can't invest negative | negative amount | invest negative | invest a negative"],"reason":"","aText":"(6) Now, create your Excel","points":2},
+        2.5:{"question":"Now, create your Excel spreadsheet to solve this problem.","answer":"","reason":"","aText":"","points":6,"excel":2.5},
+        2.6:{"question":"What is the optimal solution for the variables, and what is the maximum value of your objective function?","answer":"$68,887.5","reason":"","aText":"(2) So, what does","points":2},
+        2.7:{"question":u"So, what does this answer tell you? How should you invest the client\u2019s money, and how much interest should he/she expect to earn in the first year?","answer":["$187,500 in Acme Chemical | $187,500 into Acme Chemical | $187,500 for Acme Chemical | Acme Chemical for $187,500","$187,500 in DynaStar | $187,500 into DynaStar | $187,500 for DynaStar | DynaStar for $187,500","$75,000 in Eagle Vision | $75,000 into Eagle Vision | $75,000 for Eagle Vision | Eagle Vision for $75,000","$187,500 in Micromodeling | $187,500 into Micromodeling | $187,500 for Micromodeling | Micromodeling for $187,500","$0 in OptiPro | nothing in OptiPro | $0 into OptiPro | $0 for OptiPro | OptiPro for $0","$112,500 in Sabre Systems | $112,500 into Sabre Systems | $112,500 for Sabre Systems | Sabre Systems for $112,500","$68,887.5"],"reason":"","aText":-1,"points":2},
         }
 
         }
@@ -142,6 +156,11 @@ class MasterDatabase():
         "lab3":{
         2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
         3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
+        },
+
+        "lab5":{
+        1.1:{"sheet":"Use for problem 1","cells":[["B6",1],["C6",4],["D6",2],["E6",-10],["B10",4],["C10",1],["D10",1],["B11",-1],["C11",1],["D11",2],["H10","<="],["H11","<="]]},
+        2.5:{"sheet":"Use for problem 2","cells":[["B6",0.0865],["C6",0.095],["D6",0.1],["E6",0.0875],["F6",0.0925],["G6",0.09],["K9",187500],["K10",187500],["K11",187500],["K12",187500],["K13",187500],["K14",187500],["K15",375000],["K16",262500],["K17",750000]]}
         }
 
         }
@@ -178,9 +197,20 @@ class MasterDatabase():
         else:
             return self.wordQB[self.currentLab][qNum]["question"]
 
-    def getAnswer(self, qNum):
+    def getAnswer(self, qNum, pretty=False):
         """ Returns the correct answer for the specified question. """
-        return self.wordQB[self.currentLab][qNum]["answer"]
+        if not pretty:
+            return self.wordQB[self.currentLab][qNum]["answer"]
+        else:
+            # Builds up a nice looking list for our answers so it's hopefully not atrocious to look at.
+            if type(self.wordQB[self.currentLab][qNum]["answer"]) == list:
+                answer = u""
+                for item in self.wordQB[self.currentLab][qNum]["answer"]:
+                    answer += item.split("|")[0]
+                    answer += "\n"
+                return answer[:-1]
+            else:
+                return self.wordQB[self.currentLab][qNum]["answer"]
 
     def getReason(self, qNum):
         """ Returns the reason or explanation for the question. """
@@ -361,6 +391,7 @@ class MasterDatabase():
 
     def _getStudentAnswersFromLab(self, lab, name):
         """ Extracts the students answers from the lab using the after text set previously. """
+        # This is just some housekeeping answer formatting things we need to clear up.
         lab = lab.replace("  10.","")
         lab = lab.replace("  11.","")
         lab = lab.replace("  12.","")
@@ -378,29 +409,40 @@ class MasterDatabase():
         # Defines the keylist for use later if we need it.
         keyList = sorted(self.getQuestionKeys())
         for i, qNum in enumerate(keyList):
-            try:
-                start = lab.index(self.getQuestion(qNum))
-                start += len(self.getQuestion(qNum)) # to not include question
-            except ValueError:
-                print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers for " + name + "."
-                start = -1
+            missingInfo = False
+            if not self.isQuestionExcel(qNum):
+                try:
+                    start = lab.index(self.getQuestion(qNum))
+                    start += len(self.getQuestion(qNum)) # to not include question
+                except ValueError:
+                    print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers for " + name + "."
+                    missingInfo = True
+                    start = -1
 
-            try:
-                if self.getAText(qNum) == -1: # if its the last question it doesn't have aText
+                try:
+                    if self.getAText(qNum) == -1: # if its the last question it doesn't have aText
+                        end = -1
+                    # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
+                    elif self.getAText(qNum) == "":
+                        end = lab.index(self.getQuestion(keyList[i+1]))
+                    elif type(self.getAText(qNum)) == list:
+                        end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
+                    else:
+                        end = lab.index(self.getAText(qNum))
+                except ValueError:
+                    print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
+                    missingInfo = True
                     end = -1
-                # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
-                elif self.getAText(qNum) == "":
-                    end = lab.index(self.getQuestion(keyList[i+1]))
-                elif type(self.getAText(qNum)) == list:
-                    end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
-                else:
-                    end = lab.index(self.getAText(qNum))
-            except ValueError:
-                print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
-                end = -1
 
-            answer = lab[start:end]
-            studentAnswerDict[qNum] = answer.strip()
+
+                answer = lab[start:end]
+                if missingInfo:
+                    answer = "Warning, this information wasn't extracted properly:\n" + answer
+                studentAnswerDict[qNum] = answer.strip()
+            else:
+                # We just say the excel information is missing by default.  If we're grading excel stuff this will be erased
+                # later once we actually start grading.  Unless we can't find the file, for which case this text serves its purpose.
+                studentAnswerDict[qNum] = "Missing Excel Information"
         return studentAnswerDict
 
     def _niceWeight(self, points, totalPoints, totalQuestionWorth):
@@ -439,10 +481,15 @@ class MasterDatabase():
                                     trunc_loc = len(str(cell[1]).split(".")[1])
                                 # Try to find the value, if it's blank or not there we just move on.
                                 try:
-                                    if self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
+                                    # How we handle string cells for things like "<=" or others.
+                                    if ((type(cell[1]) == unicode) or (type(cell[1]) == str)) and (worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]) == cell[1]):
+                                        currentPoints += 1.
+                                    elif ((type(cell[1]) == unicode) or (type(cell[1]) == str)):
+                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
+                                    elif self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
                                         currentPoints += 1.
                                     else:
-                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " != " + str(cell[1]) + "\n"
+                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
                                 except:
                                     self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
                         except:
@@ -450,6 +497,27 @@ class MasterDatabase():
                         weight = self._niceWeight(points=currentPoints,totalPoints=totalExcelPoints, totalQuestionWorth=self.getQuestionPoints(qNum))
                         self.setStudentQuestionWeight(student,qNum,weight)
                         self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)[0:5] + ". Points earned: " +str(self.getStudentQuestionScore(student,qNum))
+
+    def _answerGradify(self, answer):
+        """
+        Helper function to remove a lot of common things when we need
+        to compare answers and are just generally looking for thing answer
+        in a sea of text.
+        """
+        answer = answer.lower()
+        answer = answer.replace(" 0.",".") # Should only be changing decimals that start as 0.01 for instance into .01 for grading. That's why there is an extra space.
+        answer = answer.replace("+0.","+.")
+        answer = answer.replace("-0.","-.")
+        answer = answer.replace("*0.","*.")
+        answer = answer.replace("/0.","/.")
+        answer = answer.replace(" ","")
+        answer = answer.replace("\n","")
+        answer = answer.replace("\r","")
+        answer = answer.replace(",","")
+        answer = answer.replace("$","")
+        # Strip beginning zero's.
+        answer = answer.lstrip("0")
+        return answer
 
     def _autoGradeStudentsWord(self):
         """A more robust system for grading labs
@@ -476,10 +544,13 @@ class MasterDatabase():
             and have answers such as 3.59*1.03^15-1"""
             currentPoints = 0
             for answer in answerList:
-                answer = answer.replace(" ","")
-                sAnswer = sAnswer.replace(" ","")
-                if answer in sAnswer:
-                    currentPoints += 1
+                sAnswer = self._answerGradify(sAnswer)
+                multiAnswerList = answer.split("|")
+                for answer in multiAnswerList:
+                    answer = self._answerGradify(answer)
+                    if answer in sAnswer:
+                        currentPoints += 1
+                        break
             weight = self._niceWeight(points=currentPoints,totalPoints=len(answerList), totalQuestionWorth=self.getQuestionPoints(qNum))
             return weight
 
@@ -496,8 +567,8 @@ class MasterDatabase():
 
 
 if __name__ == '__main__':
-    md = MasterDatabase("lab4")
-    md._getAssignments("Examples\\test4","07.csv")
+    md = MasterDatabase("lab5")
+    md._getAssignments("Examples\\test5","03.csv")
     # md._autoGradeStudentsWord()
     md._autoGradeStudentsExcel()
     # for student in md.getStudentKeys():

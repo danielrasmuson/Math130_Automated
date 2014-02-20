@@ -345,8 +345,8 @@ class MainApp(wx.Frame):
 
                 # Answer
                 # 3.34
-                answer = str(self.parent.masterDatabase.getAnswer(qNum))
-                answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer)
+                answer = unicode(self.parent.masterDatabase.getAnswer(qNum,pretty=True))
+                answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer, style=wx.ALIGN_RIGHT)
                 qNum_sizer.AddStretchSpacer(1) #to push button to end
                 qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=0)
 
@@ -358,7 +358,7 @@ class MainApp(wx.Frame):
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
                 sizeQArea = self.questions_area.GetVirtualSize()[0]
-                textInQandA = str(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
+                textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
                 c_sizer.Add(textInQandA)
 
@@ -394,7 +394,7 @@ class MainApp(wx.Frame):
                 self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
 
                 # The Last Question Cleanup
-                if qNum != self.parent.masterDatabase.getQuestionKeys()[-1]:
+                if qNum != sorted(self.parent.masterDatabase.getQuestionKeys())[-1]:
                     self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
         def updateStudentAnswers(self, name):
@@ -478,9 +478,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test4"
-        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 07_GradesExport_2014-01-25-16-06.csv"
-        self.masterDatabase.setLab("lab4")
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test5"
+        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 03_GradesExport_2014-01-25-16-06.csv"
+        self.masterDatabase.setLab("lab5")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()
