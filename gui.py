@@ -45,7 +45,7 @@ class MainApp(wx.Frame):
             tempwiz = ImportWizard(self.parent)
 
         def onSave(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="",defaultDir=os.getcwd(), style=wx.FD_SAVE)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-",defaultDir=os.getcwd(), style=wx.FD_SAVE)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.saveProgress(dlg.GetPath())
@@ -195,8 +195,14 @@ class MainApp(wx.Frame):
             for i,name1 in enumerate(names):
                 for j,name2 in enumerate(names):
                     if i < j:
-                        ratio = difflib.SequenceMatcher(None,self.parent.masterDatabase.getStudentLabString(name1),self.parent.masterDatabase.getStudentLabString(name2)).ratio()
-                        if ratio > .98:
+                        labcheck1 = u"".join(self.parent.masterDatabase.getStudentLabString(name1).split("\n")[4:])
+                        labcheck1 = labcheck1.replace("\n","")
+                        labcheck1 = labcheck1.replace("\r","")
+                        labcheck2 = u"".join(self.parent.masterDatabase.getStudentLabString(name2).split("\n")[4:])
+                        labcheck2 = labcheck2.replace("\n","")
+                        labcheck2 = labcheck2.replace("\r","")
+                        ratio = difflib.SequenceMatcher(None,labcheck1,labcheck2).ratio()
+                        if ratio > .96:
                             wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
             wx.MessageBox("Finished with the Ratio Checking.","Done", wx.OK | wx.ICON_INFORMATION)
             event.Skip() #Let's us have the button do two things at once.
@@ -207,7 +213,7 @@ class MainApp(wx.Frame):
             labs = {}
             for name in names:
                 labString = self.parent.masterDatabase.getStudentLabString(name)
-                labNoName = "\n".join(labString.split("\n")[4:])
+                labNoName = u"".join(labString.split("\n")[4:])
                 if labNoName in labs.values():
                     for name2, labString2 in labs.items():
                         if labString2 == labNoName:
@@ -312,7 +318,7 @@ class MainApp(wx.Frame):
                 if weight == 1:
                     color = "#FFFFFF"
                 else:
-                    if weight ==0:
+                    if weight == 0:
                         color = "#FFAAAA"
                     else:
                         color = "#FFAA00"
