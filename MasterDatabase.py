@@ -148,6 +148,21 @@ class MasterDatabase():
         2.5:{"question":"Now, create your Excel spreadsheet to solve this problem.","answer":"","reason":"There were some things that weren't set up quite correct.","aText":"","points":6,"excel":2.5},
         2.6:{"question":"What is the optimal solution for the variables, and what is the maximum value of your objective function?","answer":["x1=112500","x2=75000","x3=187500","x4=187500","x5=0","x6=187500","$68,887.5"],"reason":"This question is asking just about the mathematical solution to this system of inequalities.  The solution comes when x1=112500, x2=75000, x3=187500, x4=187500, x5=0, x6=187500.  This gives us our maximum value of our objective function as 68887.5.","aText":"(2) So, what does","points":2},
         2.7:{"question":u"So, what does this answer tell you? How should you invest the client\u2019s money, and how much interest should he/she expect to earn in the first year?","answer":["$112,500 in Acme Chemical | $112,500 into Acme Chemical | $112,500 for Acme Chemical | Acme Chemical for $112,500","$75,000 in DynaStar | $75,000 into DynaStar | $75,000 for DynaStar | DynaStar for $75,000","$187,500 in Eagle Vision | $187,500 into Eagle Vision | $187,500 for Eagle Vision | Eagle Vision for $187,500","$187,500 in Micromodeling | $187,500 into Micromodeling | $187,500 for Micromodeling | Micromodeling for $187,500","$0 in OptiPro | nothing in OptiPro | $0 into OptiPro | $0 for OptiPro | OptiPro for $0","$187,500 in Sabre Systems | $187,500 into Sabre Systems | $187,500 for Sabre Systems | Sabre Systems for $187,500","$68,887.5"],"reason":"This is a continuation of the previous problem where we wrote out mathematically speaking the solution to our system of equations and the maximum of our objective function.  Now we need to look at the variables and amounts from a business perspective.  We're investing $112,500 in Acme Chemical, $75,000 into DynaStar, $187,500 into Eagle Vision, $187,500 in Micromodeling, $0 into OptiPro, and $187,5000 into Sabre System.  When we do this we expect to earn $68,887.50 interest in the first year.","aText":-1,"points":2},
+        },
+
+        "lab6": {
+        1.1:{"question":"Write the formula for the quartic model for the EA data.","answer":["0.0121x4|0.0121x^4","-3.2160x3|-3.216x3|-3.2160x^3|-3.216x^3","47.5172x2|47.517x2|47.5172x^2|47.517x^2","105.9707x|105.97x","951.3592|951.36"],"reason":"","aText":"(4) Use the","points":1},
+        1.2:{"question":u"Use the model to predict EA\u2019s annual revenue in their 2013 and 2015 fiscal years.","answer":["2,990","1,695"],"reason":"","aText":"(2) What do","points":4},
+        1.3:{"question":"What do you think about these results? (For example, if you were a shareholder for EA, how would this influence your decisions?)","answer":["Sell|Stop"],"reason":"","aText":"Problem #2","points":2},
+        2.1:{"question":"Write the formulas and the R2 values that you would get for the quadratic, cubic, and quartic models.","answer":"","reason":"","aText":"(1) Which one seems","points":3},
+        2.2:{"question":"Which one seems to be the best at modeling this data?","answer":"","reason":"","aText":"(5) Print out a copy","points":1},
+        2.3:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","answer":"","reason":"","aText":"(2) Use the model to","points":5},
+        2.4:{"question":"Use the model to predict the mortgage rate in 1990. (Remember that this is called interpolation.)","answer":"","reason":"","aText":"(2) Use the model to predict the mortgage rate in 2000.","points":2},
+        2.5:{"question":"Use the model to predict the mortgage rate in 2000.","answer":"","reason":"","aText":"(2) What do you think about using this model for extrapolation?","points":2},
+        2.6:{"question":"What do you think about using this model for extrapolation?","answer":"","reason":"","aText":"Problem #3","points":2},
+        3.1:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","answer":"","reason":"","aText":"(1) Write the formula","points":5, "occurrence":2},
+        3.2:{"question":"Write the formula for your quartic model here.","answer":"","reason":"","aText":"(2) Use the model to predict natural gas usage in 2013.","points":1,},
+        3.3:{"question":"Use the model to predict natural gas usage in 2013.","answer":"","reason":"","aText":-1,"points":2},
         }
 
         }
@@ -181,7 +196,7 @@ class MasterDatabase():
 
     def isQuestionExcel(self, qNum):
         """ A way to check if a question requires excel checking or not. """
-        if "excel" in self.wordQB[self.currentLab][qNum].keys():
+        if "excel" in self.wordQB[self.currentLab][qNum].keys() and len(self.wordQB[self.currentLab][qNum]["excel"])>0:
             return True
         else:
             return False
@@ -389,6 +404,61 @@ class MasterDatabase():
                 print "Warning: " + name + " has more than one word file.  Autograding word may fail."
             self.studentList[name] = newStudent
 
+    def _getRecursiveAnswer(self,lab, qNum, name, i):
+        """
+        Trying to be able to recursively get the right anwer by pairing down slowly the lab document to what we need.
+        """
+        def find_nth(haystack, needle, n):
+            start = haystack.find(needle)
+            while start >= 0 and n > 1:
+                start = haystack.find(needle, start+len(needle))
+                n -= 1
+            return start
+        if len(lab) < 5:
+            return "Couldn't find string. Recursion failed."
+        missingInfo = False
+        if "occurrence" in self.wordQB[self.currentLab][qNum].keys():
+            try:
+                # Just a very dirty way of getting the next occurrence of the string so we can get the right thing.
+                start = find_nth(lab,self.getQuestion(qNum),self.wordQB[self.currentLab][qNum]["occurrence"])
+                start += len(self.getQuestion(qNum))
+            except ValueError:
+                print "Unable to find before text for question #" + str(qNum) + " and occurrence " + str(self.wordQB[self.currentLab][qNum]["occurrence"]) +". Returning partial document string for " + name + "."
+                missingInfo = True
+                start = 0
+        else:
+            try:
+                start = lab.index(self.getQuestion(qNum))
+                start += len(self.getQuestion(qNum)) # to not include question
+            except ValueError:
+                print "Unable to find before text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
+                missingInfo = True
+                start = 0
+        try:
+            if self.getAText(qNum) == -1: # if its the last question it doesn't have aText
+                end = -1
+            # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
+            elif self.getAText(qNum) == "":
+                end = lab.index(self.getQuestion(sorted(self.getQuestionKeys())[i+1]))
+            elif type(self.getAText(qNum)) == list:
+                end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
+            else:
+                end = lab.index(self.getAText(qNum))
+        except ValueError:
+            print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
+            missingInfo = True
+            end = -1
+
+        answer = lab[start:end]
+
+        if end <= start and end != -1:
+            # We recursively try to get the text by shrinking the lab size by cutting out what we know shouldn't be in the lab.
+            # Since we found the end before the start, we start looking AFTER the first occurrence of the end.
+            answer = self._getRecursiveAnswer(lab[end+len(self.getQuestion(qNum)):], qNum, name, i)
+        if missingInfo:
+            answer = "Warning, this information wasn't extracted properly:\n" + answer
+        return answer
+
     def _getStudentAnswersFromLab(self, lab, name):
         """ Extracts the students answers from the lab using the after text set previously. """
         # This is just some housekeeping answer formatting things we need to clear up.
@@ -407,37 +477,9 @@ class MasterDatabase():
 
         studentAnswerDict = {}
         # Defines the keylist for use later if we need it.
-        keyList = sorted(self.getQuestionKeys())
-        for i, qNum in enumerate(keyList):
-            missingInfo = False
+        for i, qNum in enumerate(sorted(self.getQuestionKeys())):
             if not self.isQuestionExcel(qNum):
-                try:
-                    start = lab.index(self.getQuestion(qNum))
-                    start += len(self.getQuestion(qNum)) # to not include question
-                except ValueError:
-                    print "Unable to find before text for question #" + str(qNum) + ". Returning blank answers for " + name + "."
-                    missingInfo = True
-                    start = -1
-
-                try:
-                    if self.getAText(qNum) == -1: # if its the last question it doesn't have aText
-                        end = -1
-                    # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
-                    elif self.getAText(qNum) == "":
-                        end = lab.index(self.getQuestion(keyList[i+1]))
-                    elif type(self.getAText(qNum)) == list:
-                        end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
-                    else:
-                        end = lab.index(self.getAText(qNum))
-                except ValueError:
-                    print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
-                    missingInfo = True
-                    end = -1
-
-
-                answer = lab[start:end]
-                if missingInfo:
-                    answer = "Warning, this information wasn't extracted properly:\n" + answer
+                answer = self._getRecursiveAnswer(lab, qNum, name, i)
                 studentAnswerDict[qNum] = answer.strip()
             else:
                 # We just say the excel information is missing by default.  If we're grading excel stuff this will be erased
