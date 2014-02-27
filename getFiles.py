@@ -7,7 +7,6 @@ def getDocxStr(docxFile):
     # We can deal just fine with unicode and probably should, so that we get better formatted answers.
     newText = docx2html(docxFile)
     fileStr = html2text(newText)
-    fileStr = fileStr.replace(u"\xE2","-")
     fileStr = fileStr.replace(u"\u2013","-")
     return fileStr
 

@@ -65,7 +65,7 @@ class ImportWizard:
         # string
         self.emailAddress = wx.TextCtrl(page4, value="") 
         self.emailStarID = wx.TextCtrl(page4, value="") 
-        self.emailPassword = wx.TextCtrl(page4, value="") 
+        self.emailPassword = wx.TextCtrl(page4, value="", style=wx.TE_PASSWORD) 
         self.emailStudents = wx.TextCtrl(page4, style=wx.TE_MULTILINE, value="") # TODO - make this strech across horizontal too 
 
         page4.sizer.Add(wx.StaticText(page4, label="MNSU Email:"))
