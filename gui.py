@@ -45,7 +45,7 @@ class MainApp(wx.Frame):
             tempwiz = ImportWizard(self.parent)
 
         def onSave(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-"+str(self.parent.tree_rootDict.keys()[0]).lstrip("0"),defaultDir=os.getcwd(), style=wx.FD_SAVE)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-"+str(self.parent.tree_rootDict.keys()[0]).lstrip("0"),defaultDir=os.getcwd(), style=wx.FD_SAVE|wx.OVERWRITE_PROMPT)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.saveProgress(dlg.GetPath())
@@ -191,7 +191,8 @@ class MainApp(wx.Frame):
 
         def ratioCheck(self, event):
             """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
-            names = self.parent.masterDatabase.getStudentKeys()
+            names = sorted(self.parent.masterDatabase.getStudentKeys())
+            ratioList = []
             for i,name1 in enumerate(names):
                 for j,name2 in enumerate(names):
                     if i < j:
@@ -202,9 +203,12 @@ class MainApp(wx.Frame):
                         labcheck2 = labcheck2.replace("\n","")
                         labcheck2 = labcheck2.replace("\r","")
                         ratio = difflib.SequenceMatcher(None,labcheck1,labcheck2).ratio()
+                        ratioList.append([name1,name2,ratio])
                         if ratio > .96:
                             wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
-            wx.MessageBox("Finished with the Ratio Checking.","Done", wx.OK | wx.ICON_INFORMATION)
+            ratioList = sorted(ratioList,key=lambda x:x[2], reverse=True)
+            ratioInfo = [ x[0] + " & " + x[1] + ": " + str(x[2])[0:6] for x in ratioList[0:5]]
+            wx.MessageBox("\n".join(ratioInfo),"Top 5 Ratios", wx.OK | wx.ICON_INFORMATION)
             event.Skip() #Let's us have the button do two things at once.
 
         def cheatCheck(self, event):
