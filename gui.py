@@ -313,6 +313,25 @@ class MainApp(wx.Frame):
             self.questions_area.Scroll((0,0))
 
         def drawQuestions(self):
+            def otherWeightDialog(qNum):
+                name = self.si_name.GetValue()
+                dlg = wx.TextEntryDialog(self.parent, "Enter new weight for question #"+str(qNum), "Question #"+str(qNum), str(self.parent.masterDatabase.getStudentQuestionWeight(name, qNum)))
+                result = dlg.ShowModal()
+                dlg.Destroy()
+                if result == wx.ID_OK:
+                    newWeight = dlg.GetValue()
+                    try:
+                        if "/" in newWeight:
+                            newWeight = newWeight.split("/")
+                            newWeight = float(newWeight[0])/float(newWeight[1])
+                        else:
+                            newWeight = float(newWeight)
+                        if 0 <= newWeight <= 1:
+                            setCorrect(qNum,newWeight)
+                        else:
+                            raise
+                    except:
+                        wx.MessageBox("Weight must be between 0 and 1 and be only a number.\nText entered: "+str(dlg.GetValue()), "Invalid Weight!", wx.OK | wx.ICON_INFORMATION)
             def setCorrect(qNum, weight):
                 name = self.si_name.GetValue()
                 if weight == 1:
@@ -342,9 +361,9 @@ class MainApp(wx.Frame):
 
 
                 # Question Num
-                # Question 1:
+                # Question 1
                 qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum) + ":") #,pos=(-1,-1),size=(100,-1)
+                qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
                 boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
                 qNumText.SetFont(boldFont) # applies bold font
                 qNum_sizer.Add(qNumText)
@@ -363,7 +382,7 @@ class MainApp(wx.Frame):
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
-                sizeQArea = self.questions_area.GetVirtualSize()[0]
+                sizeQArea = self.questions_area.GetVirtualSize()[0]-20
                 textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
                 textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
                 c_sizer.Add(textInQandA)
@@ -389,6 +408,12 @@ class MainApp(wx.Frame):
                 markWrong.SetToolTipString("Sets the question as wrong")
                 markWrong.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: setCorrect(qNum,0))
                 c_sizer.Add(markWrong, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
+
+                # Other Button
+                otherWeight = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label="?")
+                otherWeight.SetToolTipString("Sets a different weight for the question.")
+                otherWeight.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: otherWeightDialog(qNum))
+                c_sizer.Add(otherWeight, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
 
@@ -484,9 +509,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test5"
-        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Finite Math & Intro Calc 130 03_GradesExport_2014-01-25-16-06.csv"
-        self.masterDatabase.setLab("lab5")
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test6"
+        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 6.csv"
+        self.masterDatabase.setLab("lab6")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()
