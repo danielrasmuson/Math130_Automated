@@ -45,7 +45,7 @@ class MainApp(wx.Frame):
             tempwiz = ImportWizard(self.parent)
 
         def onSave(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-",defaultDir=os.getcwd(), style=wx.FD_SAVE)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-"+str(self.parent.tree_rootDict.keys()[0]).lstrip("0"),defaultDir=os.getcwd(), style=wx.FD_SAVE)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.saveProgress(dlg.GetPath())

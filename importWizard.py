@@ -42,7 +42,7 @@ class ImportWizard:
         page2.sizer.Add(
             wx.StaticText(page2, -1, str(wordwrap(page2text, 500, wx.ClientDC(page2)))))
         self.gradingSheet = filebrowse.FileBrowseButton(
-            page2, -1, size=(450, -1), labelText="Grading Sheet (.csv)", fileMask="*.csv", startDirectory=currentDirectory)
+            page2, -1, size=(450, -1), labelText="Grading Sheet:", fileMask="Grading Sheet|Finite*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=currentDirectory)
         page2.sizer.Add(self.gradingSheet, 1, flag=wx.ALIGN_CENTER)
 
         # page 3 - Optional Attendance
@@ -51,7 +51,7 @@ class ImportWizard:
         page3.sizer.Add(
             wx.StaticText(page3, -1, str(wordwrap(page3text, 500, wx.ClientDC(page3)))))
         self.attendanceSheet = filebrowse.FileBrowseButton(
-            page3, -1, size=(450, -1), labelText="Attendance File (.csv)", fileMask="*.csv", startDirectory=self.gradingSheet.GetValue())
+            page3, -1, size=(450, -1), labelText="Attendance File:", fileMask="Attendance File|Att*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=self.gradingSheet.GetValue())
         page3.sizer.Add(self.attendanceSheet, 1, flag=wx.ALIGN_CENTER)
 
         # page 4 - Optional Email
