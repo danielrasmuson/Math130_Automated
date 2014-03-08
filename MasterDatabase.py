@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 from getFiles import getDocxsFromFolder
 import re, cPickle as pickle, xlrd, csv, math
 
@@ -143,16 +144,16 @@ class MasterDatabase():
         1.2:{"question":"What is the maximum value of the objective function?","answer":["(x,y,z)=(9,9,0)|(9, 9, 0)|X=9, Y=9, Z=0|X=9 Y=9 Z=0","35"],"reason":"The maximum occurs when x=9, y=9, and z=0, which produces the value of 35 from our objective function.","aText":"Problem #2","points":4},
         2.1:{"question":"What company does each variable refer to?","answer":["x1=Acme Chemical | Acme Chemical = x1 | X1 is acme chemical","x2=DynaStar | DynaStar = x2 | X2 is dynastar","x3=Eagle Vision | Eagle Vision = x3 | X3 is eagle vision","x4=Micromodeling | Micromodeling = x4 | X4 is micromodeling","x5=OptiPro | OptiPro = x5 | X5 is OptiPro","x6=Sabre Systems | Sabre Systems = x6 | X6 is Sabre Systems"],"reason":"In our problem x1 represents the amount invested into Acme Chemical, x2 represents the amount invested into DynaStar, x3 represents the amount invested into Micromodeling, x4 represents the amount invested into Micromodeling, x5 represents the amount invested into OptiPro, and x6 represents the amount invested into Sabre Systems.","aText":"2. (2) What is","points":2},
         2.2:{"question":"What is your objective function, and are you trying to maximize or minimize?","answer":["0.0865*x1 | x1*.0865 | .0865(x1) | .0865(x1) | .0865x1 | .0865x1 | 8.65%*x1","0.095*x2 | x2*.095 | .095(x2) | .095(x2) | .095x2 | .095x2 | 9.5%*x2 | 9.50%*x2","0.1*x3 | x3*.1 | .10(x3) | .1(x3) | .10x3 | .1x3 | 10%*x3","0.0875*x4 | x4*.0875 | .0875(x4) | .0875(x4) | .0875x4 | .0875x4 | 8.75%*x4","0.0925*x5 | x5*.0925 | .0925(x5) | .0925(x5) | .0925x5 | .0925x5 | 9.25%*x5","0.09*x6 | x6*.09 | .090(x6) | .09(x6) | .090x6 | .09x6 | 9%*x6","max"],"reason":"The objective function comes from trying to maximize the amount of simple interest earned from these companies.  Therefore we're looking at maximize P = 8.65%*x1 + 9.5%*x2 + 10%*x3 + 8.75%*x4 + 9.25%*x5 + 9%*x6.","aText":"3. (4) There are","points":2},
-        2.3:{"question":"Determine the nine constraints and write them below.","answer":[u"x1\u2264$187,500 | x1<=$187500",u"x2\u2264$187,500 | x2<=$187500",u"x3\u2264$187,500 | x3<=$187500",u"x4\u2264$187,500 | x4<=$187500",u"x5\u2264$187,500 | x5<=$187500",u"x6\u2264$187,500 | x6<=$187500",u"x1+x2+x4+x6\u2265$375,000 | x1+x2+x4+x6>=$375000",u"x2+x3+x5\u2264$262,500 | x2+x3+x5<=$262500","x1+x2+x3+x4+x5+x6=$750,000 | x1+x2+x3+x4+x5+x6=$750000"],"reason":"Our 9 constraints come from the description of how we're investing our money.  The first 6 are from not being able to invest more than 25% into any one company.  So x1<=$187,500, x2<=$187,500, x3<=$187,500, x4<=$187,500, x5<=$187,500, x6<=$187,500.  The 7th constraint comes from investing half of our money into long term bonds x1+x2+x4+x6>=$375,000. The 8th constraint is the not investing more than 35% into DynaStar, Eagle Vision, and OptiPro x2+x3+x5<=$262,500. The 9th constraint comes from having to invest all of our money into these companies x1+x2+x3+x4+x5+x6=$750,000.","aText":"4. (2)","points":4},
+        2.3:{"question":"Determine the nine constraints and write them below.","answer":["x1≤$187,500 | x1<=$187500","x2≤$187,500 | x2<=$187500","x3≤$187,500 | x3<=$187500","x4≤$187,500 | x4<=$187500","x5≤$187,500 | x5<=$187500","x6≤$187,500 | x6<=$187500","x1+x2+x4+x6≥$375,000 | x1+x2+x4+x6>=$375000","x2+x3+x5≤$262,500 | x2+x3+x5<=$262500","x1+x2+x3+x4+x5+x6=$750,000 | x1+x2+x3+x4+x5+x6=$750000"],"reason":"Our 9 constraints come from the description of how we're investing our money.  The first 6 are from not being able to invest more than 25% into any one company.  So x1<=$187,500, x2<=$187,500, x3<=$187,500, x4<=$187,500, x5<=$187,500, x6<=$187,500.  The 7th constraint comes from investing half of our money into long term bonds x1+x2+x4+x6>=$375,000. The 8th constraint is the not investing more than 35% into DynaStar, Eagle Vision, and OptiPro x2+x3+x5<=$262,500. The 9th constraint comes from having to invest all of our money into these companies x1+x2+x3+x4+x5+x6=$750,000.","aText":"4. (2)","points":4},
         2.4:{"question":"Why do you also have the six non-negativity constraints?","answer":["Can't invest negative | negative amount | invest negative | invest a negative"],"reason":"We're investing money into company bonds.  It doesn't make any sense to invest a negative amount of money into a bond or company.","aText":"5. (6)","points":2},
         2.5:{"question":"Now, create your Excel spreadsheet to solve this problem.","answer":"","reason":"There were some things that weren't set up quite correct.","aText":"","points":6,"excel":"2.5"},
         2.6:{"question":"What is the optimal solution for the variables, and what is the maximum value of your objective function?","answer":["x1=112500","x2=75000","x3=187500","x4=187500","x5=0","x6=187500","$68,887.5"],"reason":"This question is asking just about the mathematical solution to this system of inequalities.  The solution comes when x1=112500, x2=75000, x3=187500, x4=187500, x5=0, x6=187500.  This gives us our maximum value of our objective function as 68887.5.","aText":"7. (2)","points":2},
-        2.7:{"question":u"So, what does this answer tell you? How should you invest the client\u2019s money, and how much interest should he/she expect to earn in the first year?","answer":["$112,500 in Acme Chemical | $112,500 into Acme Chemical | $112,500 for Acme Chemical | Acme Chemical for $112,500","$75,000 in DynaStar | $75,000 into DynaStar | $75,000 for DynaStar | DynaStar for $75,000","$187,500 in Eagle Vision | $187,500 into Eagle Vision | $187,500 for Eagle Vision | Eagle Vision for $187,500","$187,500 in Micromodeling | $187,500 into Micromodeling | $187,500 for Micromodeling | Micromodeling for $187,500","$0 in OptiPro | nothing in OptiPro | $0 into OptiPro | $0 for OptiPro | OptiPro for $0","$187,500 in Sabre Systems | $187,500 into Sabre Systems | $187,500 for Sabre Systems | Sabre Systems for $187,500","$68,887.5"],"reason":"This is a continuation of the previous problem where we wrote out mathematically speaking the solution to our system of equations and the maximum of our objective function.  Now we need to look at the variables and amounts from a business perspective.  We're investing $112,500 in Acme Chemical, $75,000 into DynaStar, $187,500 into Eagle Vision, $187,500 in Micromodeling, $0 into OptiPro, and $187,5000 into Sabre System.  When we do this we expect to earn $68,887.50 interest in the first year.","aText":-1,"points":2},
+        2.7:{"question":"So, what does this answer tell you? How should you invest the client’s money, and how much interest should he/she expect to earn in the first year?","answer":["$112,500 in Acme Chemical | $112,500 into Acme Chemical | $112,500 for Acme Chemical | Acme Chemical for $112,500","$75,000 in DynaStar | $75,000 into DynaStar | $75,000 for DynaStar | DynaStar for $75,000","$187,500 in Eagle Vision | $187,500 into Eagle Vision | $187,500 for Eagle Vision | Eagle Vision for $187,500","$187,500 in Micromodeling | $187,500 into Micromodeling | $187,500 for Micromodeling | Micromodeling for $187,500","$0 in OptiPro | nothing in OptiPro | $0 into OptiPro | $0 for OptiPro | OptiPro for $0","$187,500 in Sabre Systems | $187,500 into Sabre Systems | $187,500 for Sabre Systems | Sabre Systems for $187,500","$68,887.5"],"reason":"This is a continuation of the previous problem where we wrote out mathematically speaking the solution to our system of equations and the maximum of our objective function.  Now we need to look at the variables and amounts from a business perspective.  We're investing $112,500 in Acme Chemical, $75,000 into DynaStar, $187,500 into Eagle Vision, $187,500 in Micromodeling, $0 into OptiPro, and $187,5000 into Sabre System.  When we do this we expect to earn $68,887.50 interest in the first year.","aText":-1,"points":2},
         },
 
         "lab6": {
         1.1:{"question":"Write the formula for the quartic model for the EA data.","answer":["0.0121x4|0.0121x^4","-3.2160x3|-3.216x3|-3.2160x^3|-3.216x^3","47.5172x2|47.517x2|47.5172x^2|47.517x^2","105.9707x|105.97x","951.3592|951.36"],"reason":"The formula for the quartic model for the EA data is y = 0.0121x^4 - 3.2160x^3 + 47.5172x^2 + 105.9707x + 951.3592. We're using 4 decimal places because of the setup from the instructions and what we did in lab together.","aText":"2. (4)","points":1},
-        1.2:{"question":u"Use the model to predict EA\u2019s annual revenue in their 2013 and 2015 fiscal years.","answer":["2,990","1,695"],"reason":"We predict EA's annual revenue by using the formula we got from the previous question.  For 2013 we plug in the value of 15 for x, because it's 15 years after 1998, and get the predicted revenue of $2,990 when rounding to the nearest million.  Similar for 2015 we use x=17 to get the revenue as $1,695 to the nearest million.","aText":"3. (2)","points":4},
+        1.2:{"question":"Use the model to predict EA’s annual revenue in their 2013 and 2015 fiscal years.","answer":["2,990","1,695"],"reason":"We predict EA's annual revenue by using the formula we got from the previous question.  For 2013 we plug in the value of 15 for x, because it's 15 years after 1998, and get the predicted revenue of $2,990 when rounding to the nearest million.  Similar for 2015 we use x=17 to get the revenue as $1,695 to the nearest million.","aText":"3. (2)","points":4},
         1.3:{"question":"What do you think about these results? (For example, if you were a shareholder for EA, how would this influence your decisions?)","answer":["Sell|Stop"],"reason":"The model looks like it's predicting a sharp decrease in annual revenue and we would either want to sell all of our shares before they are worthless or stop investing new money in the company entirely.","aText":"Problem #2","points":2},
         2.1:{"question":"Write the formulas and the R2 values that you would get for the quadratic, cubic, and quartic models.","answer":["y = 0.0196x2 - 0.5867x + 11.5700|y = 0.0196x^2 - 0.5867x + 11.5700", "R^2=0.8048|0.8048","y = -0.0007x3 + 0.0304x2 - 0.6260x + 11.5872|y = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872", "R^2=0.8050|0.8050","y = 0.0112x4 - 0.2242x3 + 1.4030x2 - 3.1796x + 11.8937|y = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937", "R^2=0.9992|0.9992"],"reason":"For this problem we need to use 4 decimal places in all of our coefficients. For the models we need to get the formula and also the R^2 value.\nFor Quadratic (Order 2):\ny = 0.0196x^2 - 0.5867x + 11.5700\nR^2 = 0.8048\nFor Cubic (Order 3):\ny = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872\nR^2 = 0.8050\nFor Quartic (Order 4):\ny = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937\nR^2 = 0.9992","aText":"2. (1)","points":3},
         2.2:{"question":"Which one seems to be the best at modeling this data?","answer":["Quartic"],"reason":"The quartic model is the best for modeling this data because it has the highest R^2 value.","aText":"3. (5)","points":1},
@@ -166,17 +167,17 @@ class MasterDatabase():
         },
 
         "lab7": {
-        1.1:{"question":"Write the equation for the exponential model here.","answer":"","reason":"","aText":"2. (4)","points":1},
+        1.1:{"question":"Write the equation for the exponential model here.","answer":["y=161.4299e^(.1563x)|161.4299e^.1563x|161.4299e0.1563x|161.4299e^0.1563x|161.43e^0.1563x¦.5|161.43e0.1563x¦.5"],"reason":"The model for our equation needs to include 4 decimals places and should look like this:\ny = 161.4299*e^(.1563*x)","aText":"2. (4)","points":1},
         1.2:{"question":"Print out a copy of your completed graph and turn it in along with your lab.","answer":"","reason":"","aText":"3. (2) According","points":4},
-        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":"","reason":"","aText":"Problem #2","points":2},
-        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":"","reason":"","aText":"2. (4)","afOcc":2,"points":2},
+        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":["$3677.80 (in thousands)|3677.8036 in thousands|3677.80 in thousands|3677.80 (in thousands|3700¦.5"],"reason":"","aText":"Problem #2","points":2},
+        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":["616.4505e^.0644x|616.4505e.0644x|616.4505e0.0644x|616.4505e^0.0644x"],"reason":"","aText":"2. (4)","afOcc":2,"points":2},
         2.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","answer":"","reason":"","aText":"3. (2) Since","points":1},
-        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":"","reason":"","aText":"4. (2)","points":4},
-        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":"","reason":"","aText":"5. (2)","points":2},
-        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":"","reason":"","aText":"Problem #3","points":2},
-        3.1:{"question":"Write the formula for your logarithmic model here.","answer":"","reason":"","aText":"2. (4)","afOcc":3,"points":1},
+        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":["6.44%|.0644"],"reason":"","aText":"4. (2)","points":4},
+        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":["6.65%|.0665"],"reason":"","aText":"5. (2)","points":2},
+        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":["2005-2006|2004¦.5"],"reason":"","aText":"Problem #3","points":2},
+        3.1:{"question":"Write the formula for your logarithmic model here.","answer":["y=26.3454ln(x)+18.4306|26.3454ln(x)+18.4306|26.3454lnx+18.4306"],"reason":"","aText":"2. (4)","afOcc":3,"points":1},
         3.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","bfOcc":2,"answer":"","reason":"","aText":"3. (2) B","points":4},
-        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":"","reason":"","aText":"","points":2},
+        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":["No it won't.|Won't|Will not|Doesn't"],"reason":"","aText":"","points":2},
         }
 
         }
@@ -233,7 +234,7 @@ class MasterDatabase():
         else:
             # Builds up a nice looking list for our answers so it's hopefully not atrocious to look at.
             if type(self.wordQB[self.currentLab][qNum]["answer"]) == list:
-                answer = u""
+                answer = ""
                 for item in self.wordQB[self.currentLab][qNum]["answer"]:
                     answer += item.split("|")[0]
                     answer += "\n"
@@ -492,6 +493,8 @@ class MasterDatabase():
         """ Just a helper function to weight things nicely. """
         if points == totalPoints:
             return 1
+        elif totalPoints == 1:
+            return points
         else:
             return math.floor( (float(points)/float(totalPoints)) * float(totalQuestionWorth) ) / float(totalQuestionWorth)
 
@@ -565,6 +568,7 @@ class MasterDatabase():
         answer = answer.replace("yy","y")
         answer = answer.replace("zz","z")
         # Strip beginning zero's.
+        answer = answer.lstrip("0")
         answer = answer.strip()
         return answer
 
@@ -581,9 +585,14 @@ class MasterDatabase():
                 sAnswer = self._answerGradify(sAnswer)
                 multiAnswerList = answer.split("|")
                 for answer in multiAnswerList:
+                    if "¦" in answer:
+                        aWeight = float(answer.split("¦")[1])
+                        answer = answer.split("¦")[0]
+                    else:
+                        aWeight = 1.
                     answer = self._answerGradify(answer)
                     if answer in sAnswer:
-                        currentPoints += 1
+                        currentPoints += aWeight
                         break
             weight = self._niceWeight(points=currentPoints,totalPoints=len(answerList), totalQuestionWorth=self.getQuestionPoints(qNum))
             return weight
@@ -594,7 +603,7 @@ class MasterDatabase():
                     if self.getAnswer(qNum) == "":
                         grade = 0
                     elif type(self.getAnswer(qNum)) == list:
-                        grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ], qNum )
+                        grade = gradeList(self.getStudentAnswer(student,qNum), self.getAnswer(qNum), qNum)
                     else:
                         grade = 0
                     self.setStudentQuestionWeight(student,qNum,grade)

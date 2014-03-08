@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 from __future__ import division
 import wx, os, subprocess, difflib, glob
 from wx.lib.wordwrap import wordwrap
@@ -516,9 +517,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test6"
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test7"
         self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 6.csv"
-        self.masterDatabase.setLab("lab6")
+        self.masterDatabase.setLab("lab7")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
         self.questionsArea.drawQuestions()
