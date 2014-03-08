@@ -585,9 +585,9 @@ class MasterDatabase():
                 sAnswer = self._answerGradify(sAnswer)
                 multiAnswerList = answer.split("|")
                 for answer in multiAnswerList:
-                    if "¦" in answer:
-                        aWeight = float(answer.split("¦")[1])
-                        answer = answer.split("¦")[0]
+                    if u"¦" in answer:
+                        aWeight = float(answer.split(u"¦")[1])
+                        answer = answer.split(u"¦")[0]
                     else:
                         aWeight = 1.
                     answer = self._answerGradify(answer)
