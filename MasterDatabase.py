@@ -167,31 +167,31 @@ class MasterDatabase():
         },
 
         "lab7": {
-        1.1:{"question":"Write the equation for the exponential model here.","answer":["y=161.4299e^(.1563x)|161.4299e^.1563x|161.4299e0.1563x|161.4299e^0.1563x|161.43e^0.1563x¦.5|161.43e0.1563x¦.5"],"reason":"The model for our equation needs to include 4 decimals places and should look like this:\ny = 161.4299*e^(.1563*x)","aText":"2. (4)","points":1},
-        1.2:{"question":"Print out a copy of your completed graph and turn it in along with your lab.","answer":"","reason":"","aText":"3. (2) According","points":4},
-        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":["$3677.80 (in thousands)|3677.8036 in thousands|3677.80 in thousands|3677.80 (in thousands|3700¦.5"],"reason":"","aText":"Problem #2","points":2},
-        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":["616.4505e^.0644x|616.4505e.0644x|616.4505e0.0644x|616.4505e^0.0644x"],"reason":"","aText":"2. (4)","afOcc":2,"points":2},
-        2.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","answer":"","reason":"","aText":"3. (2) Since","points":1},
-        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":["6.44%|.0644"],"reason":"","aText":"4. (2)","points":4},
-        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":["6.65%|.0665"],"reason":"","aText":"5. (2)","points":2},
-        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":["2005-2006|2004¦.5"],"reason":"","aText":"Problem #3","points":2},
-        3.1:{"question":"Write the formula for your logarithmic model here.","answer":["y=26.3454ln(x)+18.4306|26.3454ln(x)+18.4306|26.3454lnx+18.4306"],"reason":"","aText":"2. (4)","afOcc":3,"points":1},
-        3.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","bfOcc":2,"answer":"","reason":"","aText":"3. (2) B","points":4},
-        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":["No it won't.|Won't|Will not|Doesn't"],"reason":"","aText":"","points":2},
+        1.1:{"question":"Write the equation for the exponential model here.","answer":[u"y=161.4299e^(.1563x)|161.4299e^.1563x|161.4299e0.1563x|161.4299e^0.1563x|161.43e^0.1563x¦.5|161.43e0.1563x¦.5"],"reason":"The model for our equation needs to include 4 decimals places and should look like this:\ny = 161.4299*e^(.1563*x)","aText":"2. (4)","points":1},
+        1.2:{"question":"Print out a copy of your completed graph and turn it in along with your lab.","answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the exponential model along with the associated R^2 value and equation with 4 decimal places.","aText":"3. (2) According","points":4},
+        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":[u"$3677.80 (in thousands)|3677.8036 in thousands|3677.80 in thousands|3677.80 (in thousands|3700¦.5"],"reason":"Using the exponential model we found previously, we plug in x=20 to find our NBA Salary as $3,677.80 in thousands or $3,677,800. We have to be careful to include \"in thousands\" or we need to put it in millions.","aText":"Problem #2","points":2},
+        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":["y=616.4505e^.0644x|616.4505e^.0644x|616.4505e.0644x|616.4505e0.0644x|616.4505e^0.0644x"],"reason":"The model for our equation needs to include 4 decimals places and should look like this:\ny = 616.4505e*^(.0644*x)","aText":"2. (4)","afOcc":2,"points":2},
+        2.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the exponential model along with the associated R^2 value and equation with 4 decimal places.","aText":"3. (2) Since","points":1},
+        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":["6.44%|.0644"],"reason":"We compare the model from our chart with the standard formula we know A=Pe^(rt) and compare the formulas to find our r=0.0644 which means we have a 6.44% continuously compounded interest rate.","aText":"4. (2)","points":4},
+        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":["6.65%|.0665"],"reason":"The formula to find the APY = (e^r) - 1, which gives us the APY = 0.0665 or 6.65%.","aText":"5. (2)","points":2},
+        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":[u"2005-2006|2004¦.5"],"reason":u"Using the graph method we would find 21 years.  Solving the inequality 2300\u2265616.4505*e^(.0644x) for x gives us x\u226520.45 approximately.  We need to round up to the next year (x=21) because our tuition doesn't change in the middle of a year. Then we have to translate this back into the context of our problem by taking 1984-1985 and adding 21 years to get the 2005-2006 academic year.","aText":"Problem #3","points":2},
+        3.1:{"question":"Write the formula for your logarithmic model here.","answer":["y=26.3454ln(x)+18.4306|26.3454ln(x)+18.4306|26.3454lnx+18.4306"],"reason":"The model for our equation needs to include 4 decimals places and should look like this:\ny = 26.3454*ln(x)+18.4306","aText":"2. (4)","afOcc":3,"points":1},
+        3.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","bfOcc":2,"answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the logarithmic model along with the associated R^2 value and equation with 4 decimal places.","aText":"3. (2) B","points":4},
+        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":["No it won't.|Won't|Will not|Doesn't"],"reason":"The model is looking at the percentage of households with VCR's in their home.  Since we know that most people started buying DVD players in 2000 that the percentage of households would be decreasing after about 2000.  Now, logarithmic functions can only ever increase and will never decrease.  Therefore if we tried to fit a logarithmic model to this it wouldn't fit well and would only ever predict an increase even if we know it should be decreasing.","aText":"","points":2},
         }
 
         }
 
         self.excelQB = {
-        "lab3":{
-        2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
-        3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
-        },
+            "lab3":{
+            2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
+            3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
+            },
 
-        "lab5":{
-        1.1:{"sheet":"Use for problem 1","cells":[["B6",1],["C6",4],["D6",2],["E6",-10],["B10",4],["C10",1],["D10",1],["B11",-1],["C11",1],["D11",2],["H10","<="],["H11","<="]]},
-        2.5:{"sheet":"Use for problem 2","cells":[["B6",0.0865],["C6",0.095],["D6",0.1],["E6",0.0875],["F6",0.0925],["G6",0.09],["K9",187500],["K10",187500],["K11",187500],["K12",187500],["K13",187500],["K14",187500],["K15",375000],["K16",262500],["K17",750000]]}
-        }
+            "lab5":{
+            1.1:{"sheet":"Use for problem 1","cells":[["B6",1],["C6",4],["D6",2],["E6",-10],["B10",4],["C10",1],["D10",1],["B11",-1],["C11",1],["D11",2],["H10","<="],["H11","<="]]},
+            2.5:{"sheet":"Use for problem 2","cells":[["B6",0.0865],["C6",0.095],["D6",0.1],["E6",0.0875],["F6",0.0925],["G6",0.09],["K9",187500],["K10",187500],["K11",187500],["K12",187500],["K13",187500],["K14",187500],["K15",375000],["K16",262500],["K17",750000]]}
+            }
 
         }
 
