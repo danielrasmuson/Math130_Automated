@@ -89,51 +89,51 @@ class MasterDatabase():
 
         self.wordQB = {
         "lab1": {
-        1:{"question":"What is the 25th term of this sequence?","answer":"41.62","reason":"","aText":"What is the 80th term of this sequence","points":2.5},
-        2:{"question":"What is the 80th term of this sequence?","answer":"131.27","reason":"", "aText":"What is the sum of the first through the 75th term of this sequence?","points":2.5},
-        3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":"4710.75","reason":"", "aText": "What is the sum of the 10th through the 90th term of this sequence?","points":2.5},
-        4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","reason":"","aText":"Recall the explicit formulas for the nth term of an arithmetic sequence","answer":"6671.97","points":2.5},
-        5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3. Show your\nwork.","reason":"","aText":"Now, use your Excel workbook","answer":["2.5+1.63(25-1)","2.5+1.63(80-1)","75/2(2.5+123.12)"],"points":2.5},
-        6:{"question":"What is the 15th term of this sequence?","answer":"5.43","reason":"","aText":"What is the sum of the first 30 terms of this sequence?","points":2.5},
-        7:{"question":"What is the sum of the first 30 terms of this sequence?","reason":"","aText":"Recall the explicit formulas for the nth term of a geometric sequence","answer":"170.80","points":2.5},
-        8:{"question":"Use these formulas to verify your answers for questions 6 and 7. Show your\nwork.","reason":"","aText":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","answer":["3.59*1.03^(15-1)","3.59((1.03 ^30)-1)/(1.03-1)"],"points":2.5},
-        9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","reason":"","aText":"An auditorium has","answer":"$10.40","points":2.5},
-        10:{"question":"How many seats will there be in the 16th row?","answer":"40","reason":"","aText":"How many total seats are there in the auditorium","points":2.5},
-        11:{"question":"How many total seats are there in the auditorium?","answer":"580","reason":"","aText":"In compound interest, time is divided into interest periods.","points":2.5},
-        12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":"$1,485.95","reason":"","aText":-1,"points":2.5}
+        1:{"question":"What is the 25th term of this sequence?","answer":["41.62"],"reason":"","aText":"2. What","points":2.5},
+        2:{"question":"What is the 80th term of this sequence?","answer":["131.27"],"reason":"", "aText":"3. What","points":2.5},
+        3:{"question":"What is the sum of the first through the 75th term of this sequence?","answer":["4710.75"],"reason":"", "aText": "4. What","points":2.5},
+        4:{"question":"What is the sum of the 10th through the 90th term of this sequence?","reason":"","aText":"5. Recall","answer":["6671.97"],"points":2.5},
+        5:{"question":"Use these formulas to verify your answers for questions 1, 2, and 3. Show your\nwork.","reason":"","aText":"Now, use","answer":["2.5+1.63(25-1)","2.5+1.63(80-1)","75/2(2.5+123.12)"],"points":2.5},
+        6:{"question":"What is the 15th term of this sequence?","answer":["5.43"],"reason":"","aText":"2. What","afOcc":2,"points":2.5},
+        7:{"question":"What is the sum of the first 30 terms of this sequence?","reason":"","aText":"3. Recall","answer":["170.80"],"points":2.5},
+        8:{"question":"Use these formulas to verify your answers for questions 6 and 7. Show your\nwork.","reason":"","aText":"4. If","answer":["3.59*1.03^(15-1)","3.59((1.03 ^30)-1)/(1.03-1)"],"points":2.5},
+        9:{"question":"If this sequence represents inflation on the price of a box of cereal at the beginning of a year, where one box cost $3.59 in 2011, how much will a box of cereal cost in the year 2047?","reason":"","aText":"An auditorium has","answer":["$10.40"],"points":2.5},
+        10:{"question":"How many seats will there be in the 16th row?","answer":["40"],"reason":"","aText":"6. How","points":2.5},
+        11:{"question":"How many total seats are there in the auditorium?","answer":["580"],"reason":"","aText":"In com","points":2.5},
+        12:{"question":"Assuming that no payments are made during the time period, how much money would you owe back after 5 years if you borrowed $1000 at an interest rate of 2% per quarter?","answer":["$1,485.95"],"reason":"","aText":-1,"points":2.5}
         },
 
         "lab2": {
-        1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":"$3,860.30","reason":"","aText":"How about the cost of tuition in 2020?","points":2},
-        2:{"question":"How about the cost of tuition in 2020?","answer":"$4,672.50","reason":"","aText":"Did you perform interpolation or extrapolation in questions 1 and 2?","points":2},
-        3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":"Extrapolation","reason":"","aText":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","points":2},
-        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":"Tuition","reason":"","aText":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","points":2},
-        5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":"Accurate","reason":"","aText":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","points":2},
-        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":"Yes","reason":"","aText":"You will now use the following data for remainder of this assignment.","points":2},
-        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866|.1009x+.4866|.1009x+0.4866","R^2=0.2053|R2=0.2053|.2053|0.20528"],"reason":"","aText":"(5 points)","points":2},
-        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"In the equation given for your graph, what does the x represent? What does the y represent?","points":3},
-        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x represents ACT | x represents the ACT | x=ACT | X Is ACT","y represents GPA | y represents the GPA | y=GPA | Y is GPA"],"reason":"","aText":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","points":2},
-        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":["0.1009"],"reason":"","aText":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","points":2},
-        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":["2.7064|2.71"],"reason":"","aText":"Is this likely to be an accurate model or an inaccurate model?","points":2},
+        1:{"question":"According to our model, what is predicted to be the cost of a semester of tuition in 2015?","answer":["$3,860.30"],"reason":"","aText":"2. How ","points":2},
+        2:{"question":"How about the cost of tuition in 2020?","answer":["$4,672.50"],"reason":"","aText":"3. Did ","points":2},
+        3:{"question":"Did you perform interpolation or extrapolation in questions 1 and 2?","answer":["Extrapolation"],"reason":"","aText":"4. What does","points":2},
+        4:{"question":"What does the value of the slope in our linear model, 162.44, represent? (Yes, it represents rate of change, but be more descriptive; what quantity is changing, and how is it changing?)","answer":["Tuition"],"reason":"","aText":"5. Based","points":2},
+        5:{"question":"Based on the value of the R2, would this seem to be an accurate model or an inaccurate model for the data?","answer":["Accurate"],"reason":"","aText":"6. Do you think ","points":2},
+        6:{"question":"Do you think a linear model, in general, is a good model to use for tuition rates? Why or why not? (Be somewhat descriptive with your answer.)","answer":["Yes"],"reason":"","aText":"You will","points":2},
+        7.0:{"question":"Write your equation and your R2 value here:","answer":["Y= 0.1009x + 0.4866|.1009x+.4866|.1009x+0.4866","R^2=0.2053|R2=0.2053|.2053|0.20528"],"reason":"","aText":" 7. ","points":2},
+        7.1:{"question":"Print out a copy of your completed graph under the above guidelines and turn it in along with this assignment.","answer":"","reason":"","aText":"8. In the","points":3},
+        8:{"question":"In the equation given for your graph, what does the x represent? What does the y represent?","answer":["x represents ACT | x represents the ACT | x=ACT | X Is ACT","y represents GPA | y represents the GPA | y=GPA | Y is GPA"],"reason":"","aText":"9. What is","points":2},
+        9:{"question":"What is the slope of your line? What does it represent? (As in problem 4, be descriptive.)","answer":["0.1009"],"reason":"","aText":"10. According","points":2},
+        10:{"question":"According to your model, if a mathematics or computer science major had mathematics ACT score of 22, what would be his or her predicted GPA?","answer":["2.7064|2.71"],"reason":"","aText":"11. Is","points":2},
         11:{"question":"Is this likely to be an accurate model or an inaccurate model? Why or why not?","answer":["Inaccurate|not accurate"],"reason":"","aText":-1,"points":2},
         },
 
         "lab3": {
-        1.1:{"question":"After how many months of payments will the borrower be paying off more in principal per month than interest?","answer":"152","reason":"The question asks \"after\" how many months will he be paying off more in principal than in interest.  For 152 months he's paying more in interest than principal, and then on the 153rd month he's now paying more in principal than interest. So the question is asking after which month, which would be 152.","aText":"(2) What is the total","points":2},
-        1.2:{"question":"What is the total amount of interest the borrower will pay over the life of this 30-year loan?","answer":"71,869.51","reason":"","aText":"(2) What do you think","points":2},
-        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":["Pay off credit cards quickly.|bad|horrible|not good|awful"],"reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2 (11","points":2},
+        1.1:{"question":"After how many months of payments will the borrower be paying off more in principal per month than interest?","answer":["152"],"reason":"The question asks \"after\" how many months will he be paying off more in principal than in interest.  For 152 months he's paying more in interest than principal, and then on the 153rd month he's now paying more in principal than interest. So the question is asking after which month, which would be 152.","aText":"2. (2) What","points":2},
+        1.2:{"question":"What is the total amount of interest the borrower will pay over the life of this 30-year loan?","answer":["71,869.51"],"reason":"","aText":"3. (2) What","points":2},
+        1.3:{"question":"What do you think about the answer to problem 2? How does this make you feel about the notion of, say, only paying minimum payments on a credit card balance?","answer":["Pay off credit cards quickly.|bad|horrible|not good|awful"],"reason":"If you're only paying minimum interest on your credit card or other loans then generally the bank is getting quite a significant amount of interest from the payments.  If possible it would be best to pay off extra or more than the minimum and ensure it gets put towards the principal loan so it's paid off faster.","aText":"Problem #2","points":2},
         2.1:{"question":"Print out this table and hand it in with your lab. (The file has been set up to print out as two pages.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet.","aText":"","points":6,"excel":"2.1"},
-        2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":"32","reason":"He will have paid off half of his principal loan on the 32nd month because at the beginning of this month he still owes more than half on his loan and at the end of the month he owes less than half of his original loan.","aText":"(3) Suppose that,","points":2},
+        2.2:{"question":"After how many months of payments will Michael have paid off half of his principal? Circle this payment row on your printed table.","answer":["32"],"reason":"He will have paid off half of his principal loan on the 32nd month because at the beginning of this month he still owes more than half on his loan and at the end of the month he owes less than half of his original loan.","aText":"3. (3) Suppose that,","points":2},
         2.3:{"question":"At what month will Michael finish paying off the car, and what should be his final payment (it should be less than $425!)?","answer":["52","75.27"],"reason":"His final payment should be on month 52 and his final payment should be $75.27 because you have to include the interest that accumulates in that final month.","aText":"Problem #3 (8","points":3},
         3.1:{"question":"Print out these tables and hand them in with your lab. (The sheet is set up to print out as four pages total.)","answer":"","reason":"There were some missing cells or incomplete parts of the worksheet. ","aText":"","points":6,"excel":"3.1"},
-        3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":"$4,521.15","reason":"Since we're looking at total interst for both loans we have to add both together to get the total amount of interest being $4,521.15.","aText":-1,"points":2},
+        3.2:{"question":"How much total interest will Michael pay over 10 years if he only makes minimum payments?","answer":["$4,521.15"],"reason":"Since we're looking at total interst for both loans we have to add both together to get the total amount of interest being $4,521.15.","aText":-1,"points":2},
         },
 
         "lab4": {
         1.1:{"question":"First, rewrite the equations so that they have zero on one side. Write these\nbelow:","answer":["12x-4y-7z-8=0","-8x-6y+9z-7=0","34x+6y-2z-5=0"],"reason":"The equations should be:\n12x - 4y -7z -8 = 0\n-8x - 6y + 9z - 7 = 0\n34x + 6y - 2z - 5 = 0","aText":"Now, fill in","points":3},
         1.2:{"question":"Copy this\ndown into the boxes below, then fill in the cells in your spreadsheet:","answer":["12","-4","-7","-8","-8","-6","9","-7","34","6","-2","-5"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 12 -4 -7 -8\nEquation 2: -8 -6 9 -7\nEquation 3: 34 6 -2 -5","aText":"Now, run Solver","points":3},
         1.3:{"question":"Now, run Solver to solve the system. Write your solution below:","answer":[".3904","-1.291",".2641"],"reason":"The solutions should be:\nx = 0.39042, y = -1.291, z = 0.264151","aText":"Problem #2 (10","points":4},
-        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w-5x+3y-2z+13=0","3w+2x+4y-9z+28=0","4w+3x-2y-4z+13=0","5w-4x-3y+3z=0 | 5w-4x-3y+3z+0=0 | 5w-4x-3y+3z-0=0"],"reason":"The equations should look like the following:\n2w - 5x + 3y - 2z + 13 = 0\n3w + 2x + 4y - 9z + 28 = 0\n4w + 3x - 2y - 4z + 13 = 0\n5w - 4x - 3y + 3z = 0","aText":["Now, fill in",1],"points":3},
+        2.1:{"question":"First, rewrite the equations so they have zero on one side. Write these here:","answer":["2w-5x+3y-2z+13=0","3w+2x+4y-9z+28=0","4w+3x-2y-4z+13=0","5w-4x-3y+3z=0 | 5w-4x-3y+3z+0=0 | 5w-4x-3y+3z-0=0"],"reason":"The equations should look like the following:\n2w - 5x + 3y - 2z + 13 = 0\n3w + 2x + 4y - 9z + 28 = 0\n4w + 3x - 2y - 4z + 13 = 0\n5w - 4x - 3y + 3z = 0","aText":"Now, fill in","afOcc":2,"points":3},
         2.2:{"question":"Copy this\ninto the boxes below, then fill in your spreadsheet:","answer":["2","-5","3","-2","13","3","2","4","-9","28","4","3","-2","-4","13","5","-4","-3","3","0"],"reason":"There were a few numbers that didn't match up.  They should look like the following:\nEquation 1: 2 -5 3 -2 13\nEquation 2: 3 2 4 -9 28\nEquation 3: 4 3 -2 -4 13\nEquation 4: 5 -4-3 3 0\n","aText":"Now, you will","points":3},
         2.3:{"question":"Finish this setup, then run solver to solve the system.\nWrite your solution here:","answer":["-1","1","0","3"],"reason":"The solutions should be:\nw = -1, x = 1, y= 0, z=3","aText":-1,"points":4}
         },
@@ -141,28 +141,42 @@ class MasterDatabase():
         "lab5": {
         1.1:{"question":"Set things up similarly to the example in the directions, including the inequality symbols.","answer":"","reason":"There were some things that weren't set up quite correct.","aText":"","points":6,"excel":"1.1"},
         1.2:{"question":"What is the maximum value of the objective function?","answer":["(x,y,z)=(9,9,0)|(9, 9, 0)|X=9, Y=9, Z=0|X=9 Y=9 Z=0","35"],"reason":"The maximum occurs when x=9, y=9, and z=0, which produces the value of 35 from our objective function.","aText":"Problem #2","points":4},
-        2.1:{"question":"What company does each variable refer to?","answer":["x1=Acme Chemical | Acme Chemical = x1 | X1 is acme chemical","x2=DynaStar | DynaStar = x2 | X2 is dynastar","x3=Eagle Vision | Eagle Vision = x3 | X3 is eagle vision","x4=Micromodeling | Micromodeling = x4 | X4 is micromodeling","x5=OptiPro | OptiPro = x5 | X5 is OptiPro","x6=Sabre Systems | Sabre Systems = x6 | X6 is Sabre Systems"],"reason":"In our problem x1 represents the amount invested into Acme Chemical, x2 represents the amount invested into DynaStar, x3 represents the amount invested into Micromodeling, x4 represents the amount invested into Micromodeling, x5 represents the amount invested into OptiPro, and x6 represents the amount invested into Sabre Systems.","aText":"(2) What is your","points":2},
-        2.2:{"question":"What is your objective function, and are you trying to maximize or minimize?","answer":["0.0865*x1 | x1*.0865 | .0865(x1) | .0865(x1) | .0865x1 | .0865x1 | 8.65%*x1","0.095*x2 | x2*.095 | .095(x2) | .095(x2) | .095x2 | .095x2 | 9.5%*x2 | 9.50%*x2","0.1*x3 | x3*.1 | .10(x3) | .1(x3) | .10x3 | .1x3 | 10%*x3","0.0875*x4 | x4*.0875 | .0875(x4) | .0875(x4) | .0875x4 | .0875x4 | 8.75%*x4","0.0925*x5 | x5*.0925 | .0925(x5) | .0925(x5) | .0925x5 | .0925x5 | 9.25%*x5","0.09*x6 | x6*.09 | .090(x6) | .09(x6) | .090x6 | .09x6 | 9%*x6","max"],"reason":"The objective function comes from trying to maximize the amount of simple interest earned from these companies.  Therefore we're looking at maximize P = 8.65%*x1 + 9.5%*x2 + 10%*x3 + 8.75%*x4 + 9.25%*x5 + 9%*x6.","aText":"(4) There are","points":2},
-        2.3:{"question":"Determine the nine constraints and write them below.","answer":[u"x1\u2264$187,500 | x1<=$187500",u"x2\u2264$187,500 | x2<=$187500",u"x3\u2264$187,500 | x3<=$187500",u"x4\u2264$187,500 | x4<=$187500",u"x5\u2264$187,500 | x5<=$187500",u"x6\u2264$187,500 | x6<=$187500",u"x1+x2+x4+x6\u2265$375,000 | x1+x2+x4+x6>=$375000",u"x2+x3+x5\u2264$262,500 | x2+x3+x5<=$262500","x1+x2+x3+x4+x5+x6=$750,000 | x1+x2+x3+x4+x5+x6=$750000"],"reason":"Our 9 constraints come from the description of how we're investing our money.  The first 6 are from not being able to invest more than 25% into any one company.  So x1<=$187,500, x2<=$187,500, x3<=$187,500, x4<=$187,500, x5<=$187,500, x6<=$187,500.  The 7th constraint comes from investing half of our money into long term bonds x1+x2+x4+x6>=$375,000. The 8th constraint is the not investing more than 35% into DynaStar, Eagle Vision, and OptiPro x2+x3+x5<=$262,500. The 9th constraint comes from having to invest all of our money into these companies x1+x2+x3+x4+x5+x6=$750,000.","aText":"(2)Why do","points":4},
-        2.4:{"question":"Why do you also have the six non-negativity constraints?","answer":["Can't invest negative | negative amount | invest negative | invest a negative"],"reason":"We're investing money into company bonds.  It doesn't make any sense to invest a negative amount of money into a bond or company.","aText":"(6) Now, create your Excel","points":2},
+        2.1:{"question":"What company does each variable refer to?","answer":["x1=Acme Chemical | Acme Chemical = x1 | X1 is acme chemical","x2=DynaStar | DynaStar = x2 | X2 is dynastar","x3=Eagle Vision | Eagle Vision = x3 | X3 is eagle vision","x4=Micromodeling | Micromodeling = x4 | X4 is micromodeling","x5=OptiPro | OptiPro = x5 | X5 is OptiPro","x6=Sabre Systems | Sabre Systems = x6 | X6 is Sabre Systems"],"reason":"In our problem x1 represents the amount invested into Acme Chemical, x2 represents the amount invested into DynaStar, x3 represents the amount invested into Micromodeling, x4 represents the amount invested into Micromodeling, x5 represents the amount invested into OptiPro, and x6 represents the amount invested into Sabre Systems.","aText":"2. (2) What is","points":2},
+        2.2:{"question":"What is your objective function, and are you trying to maximize or minimize?","answer":["0.0865*x1 | x1*.0865 | .0865(x1) | .0865(x1) | .0865x1 | .0865x1 | 8.65%*x1","0.095*x2 | x2*.095 | .095(x2) | .095(x2) | .095x2 | .095x2 | 9.5%*x2 | 9.50%*x2","0.1*x3 | x3*.1 | .10(x3) | .1(x3) | .10x3 | .1x3 | 10%*x3","0.0875*x4 | x4*.0875 | .0875(x4) | .0875(x4) | .0875x4 | .0875x4 | 8.75%*x4","0.0925*x5 | x5*.0925 | .0925(x5) | .0925(x5) | .0925x5 | .0925x5 | 9.25%*x5","0.09*x6 | x6*.09 | .090(x6) | .09(x6) | .090x6 | .09x6 | 9%*x6","max"],"reason":"The objective function comes from trying to maximize the amount of simple interest earned from these companies.  Therefore we're looking at maximize P = 8.65%*x1 + 9.5%*x2 + 10%*x3 + 8.75%*x4 + 9.25%*x5 + 9%*x6.","aText":"3. (4) There are","points":2},
+        2.3:{"question":"Determine the nine constraints and write them below.","answer":[u"x1\u2264$187,500 | x1<=$187500",u"x2\u2264$187,500 | x2<=$187500",u"x3\u2264$187,500 | x3<=$187500",u"x4\u2264$187,500 | x4<=$187500",u"x5\u2264$187,500 | x5<=$187500",u"x6\u2264$187,500 | x6<=$187500",u"x1+x2+x4+x6\u2265$375,000 | x1+x2+x4+x6>=$375000",u"x2+x3+x5\u2264$262,500 | x2+x3+x5<=$262500","x1+x2+x3+x4+x5+x6=$750,000 | x1+x2+x3+x4+x5+x6=$750000"],"reason":"Our 9 constraints come from the description of how we're investing our money.  The first 6 are from not being able to invest more than 25% into any one company.  So x1<=$187,500, x2<=$187,500, x3<=$187,500, x4<=$187,500, x5<=$187,500, x6<=$187,500.  The 7th constraint comes from investing half of our money into long term bonds x1+x2+x4+x6>=$375,000. The 8th constraint is the not investing more than 35% into DynaStar, Eagle Vision, and OptiPro x2+x3+x5<=$262,500. The 9th constraint comes from having to invest all of our money into these companies x1+x2+x3+x4+x5+x6=$750,000.","aText":"4. (2)","points":4},
+        2.4:{"question":"Why do you also have the six non-negativity constraints?","answer":["Can't invest negative | negative amount | invest negative | invest a negative"],"reason":"We're investing money into company bonds.  It doesn't make any sense to invest a negative amount of money into a bond or company.","aText":"5. (6)","points":2},
         2.5:{"question":"Now, create your Excel spreadsheet to solve this problem.","answer":"","reason":"There were some things that weren't set up quite correct.","aText":"","points":6,"excel":"2.5"},
-        2.6:{"question":"What is the optimal solution for the variables, and what is the maximum value of your objective function?","answer":["x1=112500","x2=75000","x3=187500","x4=187500","x5=0","x6=187500","$68,887.5"],"reason":"This question is asking just about the mathematical solution to this system of inequalities.  The solution comes when x1=112500, x2=75000, x3=187500, x4=187500, x5=0, x6=187500.  This gives us our maximum value of our objective function as 68887.5.","aText":"(2) So, what does","points":2},
+        2.6:{"question":"What is the optimal solution for the variables, and what is the maximum value of your objective function?","answer":["x1=112500","x2=75000","x3=187500","x4=187500","x5=0","x6=187500","$68,887.5"],"reason":"This question is asking just about the mathematical solution to this system of inequalities.  The solution comes when x1=112500, x2=75000, x3=187500, x4=187500, x5=0, x6=187500.  This gives us our maximum value of our objective function as 68887.5.","aText":"7. (2)","points":2},
         2.7:{"question":u"So, what does this answer tell you? How should you invest the client\u2019s money, and how much interest should he/she expect to earn in the first year?","answer":["$112,500 in Acme Chemical | $112,500 into Acme Chemical | $112,500 for Acme Chemical | Acme Chemical for $112,500","$75,000 in DynaStar | $75,000 into DynaStar | $75,000 for DynaStar | DynaStar for $75,000","$187,500 in Eagle Vision | $187,500 into Eagle Vision | $187,500 for Eagle Vision | Eagle Vision for $187,500","$187,500 in Micromodeling | $187,500 into Micromodeling | $187,500 for Micromodeling | Micromodeling for $187,500","$0 in OptiPro | nothing in OptiPro | $0 into OptiPro | $0 for OptiPro | OptiPro for $0","$187,500 in Sabre Systems | $187,500 into Sabre Systems | $187,500 for Sabre Systems | Sabre Systems for $187,500","$68,887.5"],"reason":"This is a continuation of the previous problem where we wrote out mathematically speaking the solution to our system of equations and the maximum of our objective function.  Now we need to look at the variables and amounts from a business perspective.  We're investing $112,500 in Acme Chemical, $75,000 into DynaStar, $187,500 into Eagle Vision, $187,500 in Micromodeling, $0 into OptiPro, and $187,5000 into Sabre System.  When we do this we expect to earn $68,887.50 interest in the first year.","aText":-1,"points":2},
         },
 
         "lab6": {
-        1.1:{"question":"Write the formula for the quartic model for the EA data.","answer":["0.0121x4|0.0121x^4","-3.2160x3|-3.216x3|-3.2160x^3|-3.216x^3","47.5172x2|47.517x2|47.5172x^2|47.517x^2","105.9707x|105.97x","951.3592|951.36"],"reason":"The formula for the quartic model for the EA data is y = 0.0121x^4 - 3.2160x^3 + 47.5172x^2 + 105.9707x + 951.3592. We're using 4 decimal places because of the setup from the instructions and what we did in lab together.","aText":"(4) Use the","points":1},
-        1.2:{"question":u"Use the model to predict EA\u2019s annual revenue in their 2013 and 2015 fiscal years.","answer":["2,990","1,695"],"reason":"We predict EA's annual revenue by using the formula we got from the previous question.  For 2013 we plug in the value of 15 for x, because it's 15 years after 1998, and get the predicted revenue of $2,990 when rounding to the nearest million.  Similar for 2015 we use x=17 to get the revenue as $1,695 to the nearest million.","aText":"(2) What do","points":4},
+        1.1:{"question":"Write the formula for the quartic model for the EA data.","answer":["0.0121x4|0.0121x^4","-3.2160x3|-3.216x3|-3.2160x^3|-3.216x^3","47.5172x2|47.517x2|47.5172x^2|47.517x^2","105.9707x|105.97x","951.3592|951.36"],"reason":"The formula for the quartic model for the EA data is y = 0.0121x^4 - 3.2160x^3 + 47.5172x^2 + 105.9707x + 951.3592. We're using 4 decimal places because of the setup from the instructions and what we did in lab together.","aText":"2. (4)","points":1},
+        1.2:{"question":u"Use the model to predict EA\u2019s annual revenue in their 2013 and 2015 fiscal years.","answer":["2,990","1,695"],"reason":"We predict EA's annual revenue by using the formula we got from the previous question.  For 2013 we plug in the value of 15 for x, because it's 15 years after 1998, and get the predicted revenue of $2,990 when rounding to the nearest million.  Similar for 2015 we use x=17 to get the revenue as $1,695 to the nearest million.","aText":"3. (2)","points":4},
         1.3:{"question":"What do you think about these results? (For example, if you were a shareholder for EA, how would this influence your decisions?)","answer":["Sell|Stop"],"reason":"The model looks like it's predicting a sharp decrease in annual revenue and we would either want to sell all of our shares before they are worthless or stop investing new money in the company entirely.","aText":"Problem #2","points":2},
-        2.1:{"question":"Write the formulas and the R2 values that you would get for the quadratic, cubic, and quartic models.","answer":["y = 0.0196x2 - 0.5867x + 11.5700|y = 0.0196x^2 - 0.5867x + 11.5700", "R^2=0.8048|0.8048","y = -0.0007x3 + 0.0304x2 - 0.6260x + 11.5872|y = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872", "R^2=0.8050|0.8050","y = 0.0112x4 - 0.2242x3 + 1.4030x2 - 3.1796x + 11.8937|y = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937", "R^2=0.9992|0.9992"],"reason":"For this problem we need to use 4 decimal places in all of our coefficients. For the models we need to get the formula and also the R^2 value.\nFor Quadratic (Order 2):\ny = 0.0196x^2 - 0.5867x + 11.5700\nR^2 = 0.8048\nFor Cubic (Order 3):\ny = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872\nR^2 = 0.8050\nFor Quartic (Order 4):\ny = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937\nR^2 = 0.9992","aText":"(1) Which one seems","points":3},
-        2.2:{"question":"Which one seems to be the best at modeling this data?","answer":"Quartic","reason":"The quartic model is the best for modeling this data because it has the highest R^2 value.","aText":"(5) Print out a copy","points":1},
-        2.3:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the quartic model along with the associated R^2 value and equation with 4 decimal places.","aText":"(2) Use the model to","points":5},
-        2.4:{"question":"Use the model to predict the mortgage rate in 1990. (Remember that this is called interpolation.)","answer":["10.0457|10.05|10.046"],"reason":"We need to use the equation provided by the best fitting model.  In this case we're using the quartic model and plugging in the value that corresponds with 1990 in for x which happens to be 5.  When we do this we get our predicted mortgage rate as being about 10.05%.","aText":"(2) Use the model to predict the mortgage rate in 2000.","points":2},
-        2.5:{"question":"Use the model to predict the mortgage rate in 2000.","answer":["90.1997|90.19|90.20|90.2"],"reason":"Just like in the previous part we need to plug in x=15 for the year 2000 to get our predicted mortgage rate of 90.20%.","aText":"(2) What do you think about using this model for extrapolation?","points":2},
+        2.1:{"question":"Write the formulas and the R2 values that you would get for the quadratic, cubic, and quartic models.","answer":["y = 0.0196x2 - 0.5867x + 11.5700|y = 0.0196x^2 - 0.5867x + 11.5700", "R^2=0.8048|0.8048","y = -0.0007x3 + 0.0304x2 - 0.6260x + 11.5872|y = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872", "R^2=0.8050|0.8050","y = 0.0112x4 - 0.2242x3 + 1.4030x2 - 3.1796x + 11.8937|y = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937", "R^2=0.9992|0.9992"],"reason":"For this problem we need to use 4 decimal places in all of our coefficients. For the models we need to get the formula and also the R^2 value.\nFor Quadratic (Order 2):\ny = 0.0196x^2 - 0.5867x + 11.5700\nR^2 = 0.8048\nFor Cubic (Order 3):\ny = -0.0007x^3 + 0.0304x^2 - 0.6260x + 11.5872\nR^2 = 0.8050\nFor Quartic (Order 4):\ny = 0.0112x^4 - 0.2242x^3 + 1.4030x^2 - 3.1796x + 11.8937\nR^2 = 0.9992","aText":"2. (1)","points":3},
+        2.2:{"question":"Which one seems to be the best at modeling this data?","answer":["Quartic"],"reason":"The quartic model is the best for modeling this data because it has the highest R^2 value.","aText":"3. (5)","points":1},
+        2.3:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the quartic model along with the associated R^2 value and equation with 4 decimal places.","aText":"4. (2)","points":5},
+        2.4:{"question":"Use the model to predict the mortgage rate in 1990. (Remember that this is called interpolation.)","answer":["10.0457|10.05|10.046"],"reason":"We need to use the equation provided by the best fitting model.  In this case we're using the quartic model and plugging in the value that corresponds with 1990 in for x which happens to be 5.  When we do this we get our predicted mortgage rate as being about 10.05%.","aText":"5. (2)","points":2},
+        2.5:{"question":"Use the model to predict the mortgage rate in 2000.","answer":["90.1997|90.19|90.20|90.2"],"reason":"Just like in the previous part we need to plug in x=15 for the year 2000 to get our predicted mortgage rate of 90.20%.","aText":"6. (2)","points":2},
         2.6:{"question":"What do you think about using this model for extrapolation?","answer":["Bad for extrapolation|Not good|Bad|inaccurate"],"reason":"This is a very bad model to use for extrapolation.  For the year 2000, which is extrapolation, the predicted interest rate is 90.20% which is very unlikely for an interest rate.  It fits really well for interpolation but is awful for extrapolation.","aText":"Problem #3","points":2},
-        3.1:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the quartic model along with the associated R^2 value and equation with 6 decimal places.","aText":"(1) Write the formula","points":5, "occurrence":2},
-        3.2:{"question":"Write the formula for your quartic model here.","answer":["y = 0.000188x4 - 0.012459x3 + 0.265328x2 - 1.712416x + 20.353850|y = 0.000188x^4 - 0.012459x^3 + 0.265328x^2 - 1.712416x + 20.353850|0.000188x^4-0.012459x^3+0.265328x^2-1.712416x+20.353850"],"reason":"For this problem we're fitting a quartic model with 6 coefficients to this data.  So our equation should look like:\ny = 0.000188x^4 - 0.012459x^3 + 0.265328x^2 - 1.712416x + 20.353850","aText":"(2) Use the model to predict natural gas usage in 2013.","points":1,},
+        3.1:{"question":"Print out a copy of your graph along with the quartic model. Make sure the formula and R2 values are displayed on the graph. Make sure you give the graph and the axes appropriate titles.","bfOcc":2,"answer":"","reason":"Double check that your graphs have chart titles, axis titles, and that it includes the quartic model along with the associated R^2 value and equation with 6 decimal places.","aText":"2. (1)","afOcc":2,"points":5},
+        3.2:{"question":"Write the formula for your quartic model here.","answer":["y = 0.000188x4 - 0.012459x3 + 0.265328x2 - 1.712416x + 20.353850|y = 0.000188x^4 - 0.012459x^3 + 0.265328x^2 - 1.712416x + 20.353850|0.000188x^4-0.012459x^3+0.265328x^2-1.712416x+20.353850"],"reason":"For this problem we're fitting a quartic model with 6 coefficients to this data.  So our equation should look like:\ny = 0.000188x^4 - 0.012459x^3 + 0.265328x^2 - 1.712416x + 20.353850","aText":"3. (2)","afOcc":2,"points":1,},
         3.3:{"question":"Use the model to predict natural gas usage in 2013.","answer":["28.000379"],"reason":"We need to be sure we're using the quartic model with 6 decimal places or else our answer isn't going to be very accurate.  When we plug in the year 2013 into our model (x=33) we get the predicted natural gas usage of 28.000379 in trillions of cubic ft.","aText":-1,"points":2},
+        },
+
+        "lab7": {
+        1.1:{"question":"Write the equation for the exponential model here.","answer":"","reason":"","aText":"2. (4)","points":1},
+        1.2:{"question":"Print out a copy of your completed graph and turn it in along with your lab.","answer":"","reason":"","aText":"3. (2) According","points":4},
+        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":"","reason":"","aText":"Problem #2","points":2},
+        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":"","reason":"","aText":"2. (4)","afOcc":2,"points":2},
+        2.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","answer":"","reason":"","aText":"3. (2) Since","points":1},
+        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":"","reason":"","aText":"4. (2)","points":4},
+        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":"","reason":"","aText":"5. (2)","points":2},
+        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":"","reason":"","aText":"Problem #3","points":2},
+        3.1:{"question":"Write the formula for your logarithmic model here.","answer":"","reason":"","aText":"2. (4)","afOcc":3,"points":1},
+        3.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","bfOcc":2,"answer":"","reason":"","aText":"3. (2) B","points":4},
+        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":"","reason":"","aText":"","points":2},
         }
 
         }
@@ -404,7 +418,7 @@ class MasterDatabase():
                 print "Warning: " + name + " has more than one word file.  Autograding word may fail."
             self.studentList[name] = newStudent
 
-    def _getRecursiveAnswer(self,lab, qNum, name, i):
+    def _getAnswer(self,lab, qNum, name):
         """
         Trying to be able to recursively get the right anwer by pairing down slowly the lab document to what we need.
         """
@@ -414,47 +428,43 @@ class MasterDatabase():
                 start = haystack.find(needle, start+len(needle))
                 n -= 1
             return start
-        if len(lab) < 5:
-            return "Couldn't find string. Recursion failed."
+
         missingInfo = False
-        if "occurrence" in self.wordQB[self.currentLab][qNum].keys():
-            try:
-                # Just a very dirty way of getting the next occurrence of the string so we can get the right thing.
-                start = find_nth(lab,self.getQuestion(qNum),self.wordQB[self.currentLab][qNum]["occurrence"])
-                start += len(self.getQuestion(qNum))
-            except ValueError:
-                print "Unable to find before text for question #" + str(qNum) + " and occurrence " + str(self.wordQB[self.currentLab][qNum]["occurrence"]) +". Returning partial document string for " + name + "."
-                missingInfo = True
-                start = 0
+        if "bfOcc" not in self.wordQB[self.currentLab][qNum].keys():
+            bfOcc = 1
+        else:
+            bfOcc = self.wordQB[self.currentLab][qNum]["bfOcc"]
+        if "afOcc" not in self.wordQB[self.currentLab][qNum].keys():
+            afOcc = 1
+        else:
+            afOcc = self.wordQB[self.currentLab][qNum]["afOcc"]
+
+        # Here's how we get the start.
+        try:
+            start = find_nth(lab,self.getQuestion(qNum),bfOcc)
+            start += len(self.getQuestion(qNum))
+        except ValueError:
+            print "Unable to find before text for question #" + str(qNum) + " and bfOcc " + str(bfOcc) +". Returning partial document string for " + name + "."
+            missingInfo = True
+            start = 0
+
+        # And now the end.
+        if (self.getAText(qNum) == -1) or (len(self.getAText(qNum)) == 0):
+            end = -1
         else:
             try:
-                start = lab.index(self.getQuestion(qNum))
-                start += len(self.getQuestion(qNum)) # to not include question
+                end = find_nth(lab,self.getAText(qNum),afOcc)
             except ValueError:
-                print "Unable to find before text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
+                print "Unable to find after text for question #" + str(qNum) + " and afOcc " + str(afOcc) +". Returning partial document string for " + name + "."
                 missingInfo = True
-                start = 0
-        try:
-            if self.getAText(qNum) == -1: # if its the last question it doesn't have aText
                 end = -1
-            # This is a way for us to just use the next question if there isn't aText.  So that way things are faster.
-            elif self.getAText(qNum) == "":
-                end = lab.index(self.getQuestion(sorted(self.getQuestionKeys())[i+1]))
-            elif type(self.getAText(qNum)) == list:
-                end = lab.index(self.getAText(qNum)[0],lab.index(self.getAText(qNum)[0])+len(self.getAText(qNum)[0]))
-            else:
-                end = lab.index(self.getAText(qNum))
-        except ValueError:
-            print "Unable to find after text for question #" + str(qNum) + ". Returning partial document string for " + name + "."
-            missingInfo = True
-            end = -1
-
-        answer = lab[start:end]
 
         if end <= start and end != -1:
-            # We recursively try to get the text by shrinking the lab size by cutting out what we know shouldn't be in the lab.
-            # Since we found the end before the start, we start looking AFTER the first occurrence of the end.
-            answer = self._getRecursiveAnswer(lab[end+len(self.getQuestion(qNum)):], qNum, name, i)
+            print "End text occurred before start text for " + str(qNum) + ". Returning partial document string for " + name + "."
+            missingInfo = True
+            end = -1
+        answer = lab[start:end]
+
         if missingInfo:
             answer = "Warning, this information wasn't extracted properly:\n" + answer
         return answer
@@ -462,24 +472,15 @@ class MasterDatabase():
     def _getStudentAnswersFromLab(self, lab, name):
         """ Extracts the students answers from the lab using the after text set previously. """
         # This is just some housekeeping answer formatting things we need to clear up.
-        lab = lab.replace("  10.","")
-        lab = lab.replace("  11.","")
-        lab = lab.replace("  12.","")
-        lab = lab.replace("  13.","")
-        lab = lab.replace("\n10.","")
-        lab = lab.replace("\n11.","")
-        lab = lab.replace("\n12.","")
-        lab = lab.replace("\n13.","")
-        lab = re.sub(r'\n +\d\. ',"", lab)
         lab = lab.replace("**","")
         lab = lab.replace("\r","")
         lab = lab.replace("\n\n","\n")
 
         studentAnswerDict = {}
         # Defines the keylist for use later if we need it.
-        for i, qNum in enumerate(sorted(self.getQuestionKeys())):
+        for qNum in sorted(self.getQuestionKeys()):
             if not self.isQuestionExcel(qNum):
-                answer = self._getRecursiveAnswer(lab, qNum, name, i)
+                answer = self._getAnswer(lab, qNum, name)
                 studentAnswerDict[qNum] = answer.strip()
             else:
                 # We just say the excel information is missing by default.  If we're grading excel stuff this will be erased
@@ -489,7 +490,10 @@ class MasterDatabase():
 
     def _niceWeight(self, points, totalPoints, totalQuestionWorth):
         """ Just a helper function to weight things nicely. """
-        return math.floor( (float(points)/float(totalPoints)) * totalQuestionWorth ) / totalQuestionWorth
+        if points == totalPoints:
+            return 1
+        else:
+            return math.floor( (float(points)/float(totalPoints)) * float(totalQuestionWorth) ) / float(totalQuestionWorth)
 
     def _autoGradeStudentsExcel(self):
         """ Will parse through all of the students and check if there
@@ -561,7 +565,6 @@ class MasterDatabase():
         answer = answer.replace("yy","y")
         answer = answer.replace("zz","z")
         # Strip beginning zero's.
-        answer = answer.lstrip("0")
         answer = answer.strip()
         return answer
 
@@ -569,21 +572,6 @@ class MasterDatabase():
         """A more robust system for grading labs
         grade could be either a 1 or 0
         can add a lot more to function but I just started it"""
-        def roundingError(sAnswer, answer, rE):
-            answerC = answer.replace("$","").replace(",","").strip().lower() #clean question bank value
-            studentC = sAnswer.replace("$","").replace(",","").strip().lower()
-
-            try: #isdigit() doesnt work on floats i guess
-                if (float(answerC)*(1-rE)) < float(studentC) < (float(answerC)*(1+rE)):
-                    return 1
-                else:
-                    return 0
-            except ValueError:
-                if answerC in studentC:
-                    return 1
-                else:
-                    return 0
-
         def gradeList(sAnswer, answerList, qNum):
             """This will hopefully grade answers
             that are show your work involving multiple steps
@@ -608,7 +596,7 @@ class MasterDatabase():
                     elif type(self.getAnswer(qNum)) == list:
                         grade = gradeList(self.getStudentAnswer(student,qNum), [ s.lower() for s in self.getAnswer(qNum) ], qNum )
                     else:
-                        grade = roundingError(self.getStudentAnswer(student,qNum), self.getAnswer(qNum).lower(), .001)
+                        grade = 0
                     self.setStudentQuestionWeight(student,qNum,grade)
 
 

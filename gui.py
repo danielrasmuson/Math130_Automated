@@ -93,6 +93,8 @@ class MainApp(wx.Frame):
             self.panel = panel
             self.sizer = sizer
 
+            sizer.AddSpacer(8)
+
             b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
             b_prev.SetToolTipString("Selects the previous student of the current section.")
             b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
@@ -432,6 +434,8 @@ class MainApp(wx.Frame):
                 if qNum != sorted(self.parent.masterDatabase.getQuestionKeys())[-1]:
                     self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
+            self.parent.mainpanel.Layout()
+
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
                 self.student_answer_boxes[qNum].SetLabel(unicode(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
@@ -465,7 +469,6 @@ class MainApp(wx.Frame):
             except:
                 pass
 
-
     def __init__(self):
         self.masterDatabase = MasterDatabase()
         wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
@@ -473,7 +476,7 @@ class MainApp(wx.Frame):
 
         # We need a panel in order to put stuff on
         # and then we are adding the things we want to see on this panel.
-        mainpanel = wx.Panel(self, wx.ID_ANY)
+        self.mainpanel = wx.Panel(self, wx.ID_ANY)
 
         # Define most of our main sizers here
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -485,14 +488,14 @@ class MainApp(wx.Frame):
         # Set up the first layer of sizers for the top and
         # bottom panels separated by a line.
         main_sizer.Add(main_sizer_a, 1, wx.EXPAND)
-        main_sizer.Add(wx.StaticLine(mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
+        main_sizer.Add(wx.StaticLine(self.mainpanel), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
         main_sizer.Add(main_sizer_b, 0, wx.EXPAND)
 
         # Our top sizer contains the left hand tree list and
         # the right hand side list for the student information
         main_sizer_a.Add(tree_sizer,0,wx.ALL|wx.EXPAND,5)
         main_sizer_a.Add(right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.EXPAND,5)
-        mainpanel.SetSizer(main_sizer)
+        self.mainpanel.SetSizer(main_sizer)
 
         # Create our Comment Browser so that we can use it later,
         # it's hidden by default.
@@ -504,11 +507,11 @@ class MainApp(wx.Frame):
         self.menuNavigation = self.MenuNav(self)
 
         # Now we call the routines to build the main content
-        self.studentTree = self.TreeNav(self, mainpanel, tree_sizer)
-        self.questionsArea = self.QuestionsArea(self, mainpanel, right_sizer)
-        self.buttonArea = self.BottomNav(self, mainpanel, main_sizer_b)
+        self.studentTree = self.TreeNav(self, self.mainpanel, tree_sizer)
+        self.questionsArea = self.QuestionsArea(self, self.mainpanel, right_sizer)
+        self.buttonArea = self.BottomNav(self, self.mainpanel, main_sizer_b)
 
-        mainpanel.Layout()
+        self.mainpanel.Layout()
 
         self.Show()
 
