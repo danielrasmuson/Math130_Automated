@@ -166,31 +166,31 @@ class MasterDatabase():
         },
 
         "lab7": {
-        1.1:{"question":"Write the equation for the exponential model here.","answer":"","reason":"","aText":"2. (4)","points":1},
+        1.1:{"question":"Write the equation for the exponential model here.","answer":["161.4299e^0.1563x|161.4299e0.1563x|161.4299*e0.1563x",".9959"],"reason":"The formula for the equation is y = 161.4299e^0.1563x and R^2 = .9959. We're using 4 decimal places because of the setup from the instructions and what we did in lab together.","aText":"2. (4)","points":1},
         1.2:{"question":"Print out a copy of your completed graph and turn it in along with your lab.","answer":"","reason":"","aText":"3. (2) According","points":4},
-        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":"","reason":"","aText":"Problem #2","points":2},
-        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":"","reason":"","aText":"2. (4)","afOcc":2,"points":2},
+        1.3:{"question":"According to your model, what would have been the expected average annual salary of an NBA player in 2000?","answer":["3677.80","millon|000"],"reason":"We find that the number of years 2000 is 20 years after 1980. We put this into our x value and solve the equation.","aText":"Problem #2","points":2},
+        2.1:{"question":"Write the equation for the exponential model here.","bfOcc":2,"answer":["616.4505e^.0644x|616.4505e.0644x|616.4505e^0.0644x",".9815"],"reason":"The formula for the equation is y = 616.4505e^.0644xx and R^2 = .9815. We're using 4 decimal places because of the setup from the instructions and what we did in lab together.","aText":"2. (4)","afOcc":2,"points":2},
         2.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","answer":"","reason":"","aText":"3. (2) Since","points":1},
-        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":"","reason":"","aText":"4. (2)","points":4},
-        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":"","reason":"","aText":"5. (2)","points":2},
-        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":"","reason":"","aText":"Problem #3","points":2},
-        3.1:{"question":"Write the formula for your logarithmic model here.","answer":"","reason":"","aText":"2. (4)","afOcc":3,"points":1},
+        2.3:{"question":"According to your model, what is the continuously compounded interest rate?","answer":"6.44|.0644","reason":"You can find this number in the previous equation raised to the power of e","aText":"4. (2)","points":4},
+        2.4:{"question":"What is the Annual Percentage Yield for this expected tuition rate growth?","answer":[".0665|6.65"],"reason":"Using the equation (e^r)-1 we are able to find the APY of 6.6518921%","aText":"5. (2)","points":2},
+        2.5:{"question":"In what academic year would you expect annual tuition and fees to first cost over 2300?","answer":"2004-2005","reason":"Solving the equation for x we get 20.45 we add that to 1984-1985 and we get our answer.","aText":"Problem #3","points":2},
+        3.1:{"question":"Write the formula for your logarithmic model here.","answer":["26.3454ln(x)+18.4306",".9677"],"reason":"Creating a logarithmic model you should get the equation y = 26.3454ln(x)+18.4306 and an R^2 of.9677.", "aText":"2. (4)","afOcc":3,"points":1},
         3.2:{"question":"Print out a copy of your completed graph and turn it in with your lab.","bfOcc":2,"answer":"","reason":"","aText":"3. (2) B","points":4},
-        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":"","reason":"","aText":"","points":2},
+        3.3:{"question":"Would the logarithmic model support your thoughts?","answer":"no","reason":"The reason logarithmic model would not oru data in the future is because logarithmic functions dont support negative or decreasing data. As we know VCR sales dropped after 2010.","aText":"","points":2},
         }
 
         }
 
         self.excelQB = {
-        "lab3":{
-        2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
-        3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
-        },
+            "lab3":{
+            2.1:{"sheet":"Car loan problem","cells":[["B5",17399.44],["B8",0.0039583],["B10",326.3597],["F37",10930.109]]},
+            3.1:{"sheet":"Student loans problem","cells":[["B4",13200],["B5",.026],["B6",12],["B7",0.00216666],["B8",120],["B9",125.0374252],["B132",124.767],["C132",.2703],["H4",7131],["H5",.068],["H6",12],["H7",0.0056666],["H8",120],["H9",82.06378],["H132",81.60],["I132",.46],["K3",24852.145],["K4",4521.145]]}
+            },
 
-        "lab5":{
-        1.1:{"sheet":"Use for problem 1","cells":[["B6",1],["C6",4],["D6",2],["E6",-10],["B10",4],["C10",1],["D10",1],["B11",-1],["C11",1],["D11",2],["H10","<="],["H11","<="]]},
-        2.5:{"sheet":"Use for problem 2","cells":[["B6",0.0865],["C6",0.095],["D6",0.1],["E6",0.0875],["F6",0.0925],["G6",0.09],["K9",187500],["K10",187500],["K11",187500],["K12",187500],["K13",187500],["K14",187500],["K15",375000],["K16",262500],["K17",750000]]}
-        }
+            "lab5":{
+            1.1:{"sheet":"Use for problem 1","cells":[["B6",1],["C6",4],["D6",2],["E6",-10],["B10",4],["C10",1],["D10",1],["B11",-1],["C11",1],["D11",2],["H10","<="],["H11","<="]]},
+            2.5:{"sheet":"Use for problem 2","cells":[["B6",0.0865],["C6",0.095],["D6",0.1],["E6",0.0875],["F6",0.0925],["G6",0.09],["K9",187500],["K10",187500],["K11",187500],["K12",187500],["K13",187500],["K14",187500],["K15",375000],["K16",262500],["K17",750000]]}
+            }
 
         }
 
