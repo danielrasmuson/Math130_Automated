@@ -134,7 +134,7 @@ class MainApp(wx.Frame):
 
             self.b_regrade = wx.Button(panel, wx.ID_ANY, "Regrade", style=wx.BU_EXACTFIT)
             self.b_regrade.SetToolTipString("Regrades the current student.")
-            self.b_regrade.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.regrade.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
+            self.b_regrade.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.regrade.GetBitmap()).Scale(19,20, wx.IMAGE_QUALITY_HIGH)))
             self.b_regrade.Bind(wx.EVT_BUTTON, _combinedGrade)
             sizer.Add(self.b_regrade, 0,wx.ALL,4)
 
@@ -249,14 +249,16 @@ class MainApp(wx.Frame):
             sizer.Add(self.parent.lab_tree_list, 1,wx.EXPAND)
 
             sButtonSizer = wx.BoxSizer(wx.HORIZONTAL)
-            sizer.Add(sButtonSizer)
+            sizer.Add(sButtonSizer, 0, wx.ALIGN_CENTER)
 
-            b_prev = wx.Button(panel, wx.ID_ANY, u"« Previous", size=wx.Size(-1,20))
+            b_prev = wx.Button(panel, wx.ID_ANY, "Previous", size=wx.Size(80,20), style=wx.BU_EXACTFIT)
+            b_prev.SetBitmap(embeddedImages.arrowLeft.GetBitmap())
             b_prev.SetToolTipString("Selects the previous student of the current section.")
             b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
             sButtonSizer.Add(b_prev, 0,wx.ALIGN_CENTER|wx.ALL,5)
 
-            b_next = wx.Button(panel, wx.ID_ANY, u"Next »", size=wx.Size(-1,20))
+            b_next = wx.Button(panel, wx.ID_ANY, "Next", size=wx.Size(80,20), style=wx.BU_EXACTFIT)
+            b_next.SetBitmap(embeddedImages.arrowRight.GetBitmap(), wx.RIGHT)
             b_next.SetToolTipString("Selects the next student of the current section")
             b_next.Bind(wx.EVT_BUTTON, self.nextButton)
             sButtonSizer.Add(b_next, 0,wx.ALIGN_CENTER|wx.ALL,5)
