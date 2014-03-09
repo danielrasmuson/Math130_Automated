@@ -113,9 +113,7 @@ class MainApp(wx.Frame):
             starting at one if you want to fast grade the last question"""
             # todo - add stop fast grading
             self.parent.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
-            self.qNumFastGrading = 0 # todo: if i could get the event label this would work but until then
-            scrollAmount = self.parent.questionsArea.getStaticLineDepth(1)
-            self.parent.questionsArea.scrollCustom(scrollAmount)
+            self.currentFastGradingQuestion = 0 # todo: if i could get the event label this would work but until then
 
         def fastGrading(self, event):
             """ 
@@ -139,28 +137,24 @@ class MainApp(wx.Frame):
 
                 # changes answer
                 questionNums = sorted(self.parent.masterDatabase.getQuestionKeys())
-                self.parent.questionsArea.setCorrect(questionNums[self.qNumFastGrading], weight) # todo 1 should be qNum
+                self.parent.questionsArea.setCorrect(questionNums[self.currentFastGradingQuestion], weight) # todo 1 should be qNum
 
                 # increments students and questions
                 currentStudent = self.parent.studentTree.getSelected()
                 studentsSorted = sorted(self.parent.masterDatabase.getStudentKeys())
                 lastStudent = studentsSorted[-1]
                 if currentStudent == lastStudent:
-                    self.qNumFastGrading += 1
+                    self.currentFastGradingQuestion += 1
                     # TODO right now it just uses preivous wich is week
                     for i in range(len(self.parent.masterDatabase.getStudentKeys())-1):
                         self.parent.buttonArea.previousButton(event)
                 else: # if its not the last one in the list just move to the next student
                     self.parent.buttonArea.nextButton(event)
 
-                # Question past halfway start scrolling
-                # scroll to the next static line                
-
-                # if self.qNumFastGrading > len(questionNums)/2:
-                #     print(self.qNumFastGrading, "is bigger then", len(questionNums)/2)
-                #     self.parent.questionsArea.scrollBottom()
-
-
+                # scroll questions --  next static line
+                if self.currentFastGradingQuestion >= 1: # 0 is the end of the first question
+                    jumpAfter = self.currentFastGradingQuestion - 1
+                    self.parent.questionsArea.scrollToStaticLineN(jumpAfter)
             else:
                 event.Skip()
 
@@ -398,8 +392,9 @@ class MainApp(wx.Frame):
         def scrollBottom(self):
             self.questions_area.Scroll((0,1000))
 
-        def scrollCustom(self, amount):
-            self.questions_area.Scroll((0, amount))
+        def scrollToStaticLineN(self, n):
+            self.questions_area.Scroll((0,0))
+            self.questions_area.Scroll(self.staticLines[n].GetPosition())
 
         def setCorrect(self, qNum, weight):
             name = self.si_name.GetValue()
@@ -439,7 +434,7 @@ class MainApp(wx.Frame):
                         wx.MessageBox("Weight must be between 0 and 1 and be only a number.\nText entered: "+str(dlg.GetValue()), "Invalid Weight!", wx.OK | wx.ICON_INFORMATION)
 
             self.questions_area = wx.ScrolledWindow(self.panel)
-            self.questions_area.SetScrollbars(1, 5, 500, 1000)
+            self.questions_area.SetScrollbars(1, 1, 500, 1000)
             self.questions_area.EnableScrolling(True,True)
             self.sizer.Add(self.questions_area, 1, wx.EXPAND)
 
@@ -544,6 +539,7 @@ class MainApp(wx.Frame):
             self.si_excelauthor.ChangeValue(excelauthor)
             self.si_right.ChangeValue("")
             self.si_score.ChangeValue("")
+            
             if self.parent.masterDatabase.getStudentAttendance(name) != False:
                 self.si_attendance.ChangeValue(self.parent.masterDatabase.getStudentAttendance(name))
                 self.si_attendance.SetBackgroundColour(wx.NullColour)
@@ -558,8 +554,6 @@ class MainApp(wx.Frame):
             except:
                 pass
 
-        def getStaticLineDepth(self, staticLineNum):
-            return self.staticLines[staticLineNum].GetPosition()[1]
 
     def __init__(self):
         self.masterDatabase = MasterDatabase()
