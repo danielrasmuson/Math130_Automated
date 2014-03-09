@@ -114,6 +114,8 @@ class MainApp(wx.Frame):
             # todo - add stop fast grading
             self.parent.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
             self.currentFastGradingQuestion = 0 # todo: if i could get the event label this would work but until then
+            self.parent.questionsArea.setQuestionTitleColor(0,"Green")
+            self.parent.mainpanel.Refresh()
 
         def fastGrading(self, event):
             """ 
@@ -154,6 +156,8 @@ class MainApp(wx.Frame):
                 # scroll questions --  next static line
                 if self.currentFastGradingQuestion >= 1: # 0 is the end of the first question
                     jumpAfter = self.currentFastGradingQuestion - 1
+                    self.parent.questionsArea.setQuestionTitleColor(jumpAfter, wx.NullColour)
+                    self.parent.questionsArea.setQuestionTitleColor(jumpAfter+1,"Green")
                     self.parent.questionsArea.scrollToStaticLineN(jumpAfter)
             else:
                 event.Skip()
@@ -390,11 +394,14 @@ class MainApp(wx.Frame):
             self.questions_area.Scroll((0,0))
 
         def scrollBottom(self):
-            self.questions_area.Scroll((0,1000))
+            self.questions_area.Scroll((0,10000))
 
         def scrollToStaticLineN(self, n):
             self.questions_area.Scroll((0,0))
             self.questions_area.Scroll(self.staticLines[n].GetPosition())
+
+        def setQuestionTitleColor(self, n, color):
+            self.questionTitles[n].SetBackgroundColour(color)
 
         def setCorrect(self, qNum, weight):
             name = self.si_name.GetValue()
@@ -442,7 +449,9 @@ class MainApp(wx.Frame):
             self.questions_area.SetSizer(self.questions_area_sizer)
 
             # todo - maybe I can get these from just looping the the sizer.. but i couldnt figure out how.
-            self.staticLines = [] # I need these for the fast grading
+            # I need these for the fast grading
+            self.staticLines = []
+            self.questionTitles = []
 
             self.student_answer_boxes = {}
             for qNum in sorted(self.parent.masterDatabase.getQuestionKeys()):
@@ -452,6 +461,7 @@ class MainApp(wx.Frame):
                 # Question 1
                 qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
+                self.questionTitles.append(qNumText) # for fast grading
                 boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
                 qNumText.SetFont(boldFont) # applies bold font
                 qNum_sizer.Add(qNumText)
