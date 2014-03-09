@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 from __future__ import division
 import wx, os, subprocess, difflib, glob
 from wx.lib.wordwrap import wordwrap
@@ -17,6 +16,7 @@ class MainApp(wx.Frame):
             menuBar = wx.MenuBar()
 
             fileMenu = wx.Menu()
+            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
             m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
             m_save = fileMenu.Append(wx.ID_SAVE, "&Save Grading Session\tCtrl-S", "Saves the current grading progress to disk.")
             m_open = fileMenu.Append(wx.ID_OPEN, "&Open Grading Session\tCtrl-O", "Opens a previous grading session from disk.")
@@ -40,7 +40,7 @@ class MainApp(wx.Frame):
 
             self.parent.SetMenuBar(menuBar)
 
-            # self.parent.statusbar = self.parent.CreateStatusBar()
+            self.parent.statusbar = self.parent.CreateStatusBar()
 
         def wizardEvent(self, event):
             tempwiz = ImportWizard(self.parent)
@@ -94,60 +94,84 @@ class MainApp(wx.Frame):
             self.panel = panel
             self.sizer = sizer
 
-            # sizer.AddSpacer(8)
+            sizer.AddSpacer(8)
+
+            b_prev = wx.Button(panel, wx.ID_ANY, "Previous")
+            b_prev.SetToolTipString("Selects the previous student of the current section.")
+            b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
+            sizer.Add(b_prev, 0,wx.ALL,5)
+
+            b_next = wx.Button(panel, wx.ID_ANY, "Next")
+            b_next.SetToolTipString("Selects the next student of the current section")
+            b_next.Bind(wx.EVT_BUTTON, self.nextButton)
+            sizer.Add(b_next, 0,wx.ALL,5)
+
+            sizer.AddStretchSpacer(1)
 
             self.b_cheat = wx.Button(panel, wx.ID_ANY, "Cheat Check")
             self.b_cheat.SetToolTipString("Runs some basic cheat detection on the currently loaded students.")
             self.b_cheat.Bind(wx.EVT_BUTTON, self.ratioCheck)
             self.b_cheat.Bind(wx.EVT_BUTTON, self.cheatCheck)
-            sizer.Add(self.b_cheat, 0,wx.ALL,4)
+            sizer.Add(self.b_cheat, 0,wx.ALL,5)
 
             sizer.AddStretchSpacer(1)
-
-            def _combinedGrade(event):
-                name = self.parent.questionsArea.si_name.GetValue()
-                if name in self.parent.masterDatabase.studentList.keys():
-                    self.parent.masterDatabase._gradeStudentExcel(name)
-                    self.parent.masterDatabase._gradeStudentWord(name)
-                    self.parent.questionsArea.updateStudentAnswers(name)
-
-            self.b_regrade = wx.Button(panel, wx.ID_ANY, "Regrade")
-            self.b_regrade.SetToolTipString("Regrades the current student.")
-            self.b_regrade.Bind(wx.EVT_BUTTON, _combinedGrade)
-            sizer.Add(self.b_regrade, 0,wx.ALL,4)
 
             self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
             self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
             self.b_comments.Bind(wx.EVT_BUTTON, self.parent.commentWindow.display)
-            sizer.Add(self.b_comments, 0,wx.ALL,4)
+            sizer.Add(self.b_comments, 0,wx.ALL,5)
 
-            b_open = wx.Button(panel, wx.ID_ANY, "Word Doc")
+            b_open = wx.Button(panel, wx.ID_ANY, "Open Document")
             b_open.SetToolTipString("Opens the document in word.")
             b_open.Bind(wx.EVT_BUTTON, self.openDocument)
-            sizer.Add(b_open, 0,wx.ALL,4)
+            sizer.Add(b_open, 0,wx.ALL,5)
 
-            self.b_open_excel = wx.Button(panel, wx.ID_ANY, "Excel Doc")
+            self.b_open_excel = wx.Button(panel, wx.ID_ANY, "Excel Document")
             self.b_open_excel.SetToolTipString("Opens the excel document if available.")
             self.b_open_excel.Disable()
             self.b_open_excel.Bind(wx.EVT_BUTTON, self.openExcel)
-            sizer.Add(self.b_open_excel, 0,wx.ALL,4)
+            sizer.Add(self.b_open_excel, 0,wx.ALL,5)
 
             # A button for sending the grade to the excel file
             b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
             b_grade.SetToolTipString("Sends the grade to excel file")
             b_grade.Bind(wx.EVT_BUTTON, self.submitGrade)
-            sizer.Add(b_grade, 0,wx.ALL,4)
+            sizer.Add(b_grade, 0,wx.ALL,5)
 
         def openDocument(self, event):
-            try:
-                current_item = self.parent.studentTree.getSelected()
-                if "Section" not in current_item:
-                    subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentWordFilepath(current_item)], shell=False)
-            except:
-                pass
+            current_item = self.parent.studentTree.getSelected()
+            if "Section" not in current_item:
+                subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentWordFilepath(current_item)], shell=False)
 
         def openExcel(self, event):
             subprocess.Popen(["explorer",self.parent.xlsx_path], shell=False)
+
+        def previousButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            prev = self.parent.lab_tree_list.GetPrevSibling(current)
+            if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(prev)
+                self.parent.questionsArea.scrollTop()
+            elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
+                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
+            else:
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if parent != self.parent.lab_tree_list.GetRootItem():
+                    self.parent.lab_tree_list.SelectItem(parent)
+
+        def nextButton(self, event):
+            current = self.parent.lab_tree_list.GetSelection()
+            if self.parent.lab_tree_list.ItemHasChildren(current):
+                next = self.parent.lab_tree_list.GetFirstChild(current)[0]
+            else:
+                next = self.parent.lab_tree_list.GetNextSibling(current)
+            if next.IsOk():
+                self.parent.lab_tree_list.SelectItem(next)
+                self.parent.questionsArea.scrollTop()
+            else:
+                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
+                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
 
         def submitGrade(self, event):
             # @TODO: right answers should be divided by the total score (30 points)
@@ -216,51 +240,10 @@ class MainApp(wx.Frame):
             self.parent.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
             self.parent.lab_tree_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelChanged, id=1)
             lab_tree_label = wx.StaticText(panel, wx.ID_ANY, 'Student List')
-            self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
-            self.parent.tree_rootDict = {}
-
             sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
             sizer.Add(self.parent.lab_tree_list, 1,wx.EXPAND)
-
-            sButtonSizer = wx.BoxSizer(wx.HORIZONTAL)
-            sizer.Add(sButtonSizer)
-
-            b_prev = wx.Button(panel, wx.ID_ANY, u"« Previous", size=wx.Size(-1,20))
-            b_prev.SetToolTipString("Selects the previous student of the current section.")
-            b_prev.Bind(wx.EVT_BUTTON, self.previousButton)
-            sButtonSizer.Add(b_prev, 0,wx.ALIGN_CENTER|wx.ALL,5)
-
-            b_next = wx.Button(panel, wx.ID_ANY, u"Next »", size=wx.Size(-1,20))
-            b_next.SetToolTipString("Selects the next student of the current section")
-            b_next.Bind(wx.EVT_BUTTON, self.nextButton)
-            sButtonSizer.Add(b_next, 0,wx.ALIGN_CENTER|wx.ALL,5)
-
-        def previousButton(self, event):
-            current = self.parent.lab_tree_list.GetSelection()
-            prev = self.parent.lab_tree_list.GetPrevSibling(current)
-            if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
-                self.parent.lab_tree_list.SelectItem(prev)
-                self.parent.questionsArea.scrollTop()
-            elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
-                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
-            else:
-                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                if parent != self.parent.lab_tree_list.GetRootItem():
-                    self.parent.lab_tree_list.SelectItem(parent)
-
-        def nextButton(self, event):
-            current = self.parent.lab_tree_list.GetSelection()
-            if self.parent.lab_tree_list.ItemHasChildren(current):
-                next = self.parent.lab_tree_list.GetFirstChild(current)[0]
-            else:
-                next = self.parent.lab_tree_list.GetNextSibling(current)
-            if next.IsOk():
-                self.parent.lab_tree_list.SelectItem(next)
-                self.parent.questionsArea.scrollTop()
-            else:
-                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
-                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
+            self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
+            self.parent.tree_rootDict = {}
 
         def getSelected(self):
             return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
@@ -335,6 +318,25 @@ class MainApp(wx.Frame):
         def scrollTop(self):
             self.questions_area.Scroll((0,0))
 
+        def setCorrect(self, qNum, weight):
+            print qNum, weight #todo remove
+
+            name = self.si_name.GetValue()
+            if weight == 1:
+                color = "#FFFFFF"
+            else:
+                if weight == 0:
+                    color = "#FFAAAA"
+                else:
+                    color = "#FFAA00"
+            self.student_answer_boxes[qNum].SetBackgroundColour(color)
+            self.student_answer_boxes[qNum].Refresh() #fix for delay
+
+            self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
+            self.parent.commentWindow.defaultCommentButton("")
+            self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
+
+
         def drawQuestions(self):
             def otherWeightDialog(qNum):
                 name = self.si_name.GetValue()
@@ -350,26 +352,11 @@ class MainApp(wx.Frame):
                         else:
                             newWeight = float(newWeight)
                         if 0 <= newWeight <= 1:
-                            setCorrect(qNum,newWeight)
+                            self.setCorrect(qNum,newWeight)
                         else:
                             raise
                     except:
                         wx.MessageBox("Weight must be between 0 and 1 and be only a number.\nText entered: "+str(dlg.GetValue()), "Invalid Weight!", wx.OK | wx.ICON_INFORMATION)
-            def setCorrect(qNum, weight):
-                name = self.si_name.GetValue()
-                if weight == 1:
-                    color = "#FFFFFF"
-                else:
-                    if weight == 0:
-                        color = "#FFAAAA"
-                    else:
-                        color = "#FFAA00"
-                self.student_answer_boxes[qNum].SetBackgroundColour(color)
-                self.student_answer_boxes[qNum].Refresh() #fix for delay
-
-                self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
-                self.parent.commentWindow.defaultCommentButton("")
-                self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.questions_area = wx.ScrolledWindow(self.panel)
             self.questions_area.SetScrollbars(1, 5, 500, 1000)
@@ -415,21 +402,21 @@ class MainApp(wx.Frame):
                 fullCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u2714")
                 fullCorrect.SetForegroundColour((0,150,0))
                 fullCorrect.SetToolTipString("Sets the question as correct")
-                fullCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1))
+                fullCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: self.setCorrect(qNum,1))
                 c_sizer.Add(fullCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Half Correct Buttons \u00BD
                 halfCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u00BD")
                 halfCorrect.SetForegroundColour("#FFAA00")
                 halfCorrect.SetToolTipString("Sets the question as half correct")
-                halfCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1.0/2))
+                halfCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: self.setCorrect(qNum,1.0/2))
                 c_sizer.Add(halfCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Wrong Buttons \u2717
                 markWrong = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u2717")
                 markWrong.SetForegroundColour("#FF0000")
                 markWrong.SetToolTipString("Sets the question as wrong")
-                markWrong.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: setCorrect(qNum,0))
+                markWrong.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: self.setCorrect(qNum,0))
                 c_sizer.Add(markWrong, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Other Button
@@ -502,6 +489,7 @@ class MainApp(wx.Frame):
         tree_sizer = wx.BoxSizer(wx.VERTICAL)
         right_sizer = wx.BoxSizer(wx.VERTICAL)
 
+
         # Set up the first layer of sizers for the top and
         # bottom panels separated by a line.
         main_sizer.Add(main_sizer_a, 1, wx.EXPAND)
@@ -510,7 +498,7 @@ class MainApp(wx.Frame):
 
         # Our top sizer contains the left hand tree list and
         # the right hand side list for the student information
-        main_sizer_a.Add(tree_sizer,0,wx.TOP|wx.RIGHT|wx.LEFT|wx.EXPAND,5)
+        main_sizer_a.Add(tree_sizer,0,wx.ALL|wx.EXPAND,5)
         main_sizer_a.Add(right_sizer,1,wx.TOP|wx.BOTTOM|wx.RIGHT|wx.EXPAND,5)
         self.mainpanel.SetSizer(main_sizer)
 
@@ -532,9 +520,38 @@ class MainApp(wx.Frame):
 
         self.Show()
 
+        # TEST TODO
+        self.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
+
+    def fastGrading(self, event):
+        """ 
+            You grade every question one then every question two etc.
+            It is a lot faster because it uses hotkeys and you are totally 
+            focused on one question
+        """
+        #TODO why does nextButton take an event, i understand
+        # that its being called by an event but it doesnt need an event
+        # we should just have the event call call it if thats the case
+        keys = self.masterDatabase.getQuestionKeys()
+        if event.GetKeyCode() == 89: # 89 is Y
+            print "you are pressing y"
+            self.buttonArea.nextButton(event)
+            self.questionsArea.setCorrect(keys[0], 1)
+
+        elif event.GetKeyCode() == 72: # 72 is H
+            print "you are pressing h"
+            self.buttonArea.nextButton(event)
+
+        elif event.GetKeyCode() == 78: # 78 is N
+            print "you are pressing n"
+            self.buttonArea.nextButton(event)
+
+        else:
+            event.Skip()
+
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test7"
-        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 6.csv"
+        self.masterDatabase.labFolder = "C:\\Users\\Daniel\\Desktop\\spring2014_lab7\\section7\\labs"
+        self.masterDatabase.gradeFile = "C:\\Users\\Daniel\\Desktop\\spring2014_lab7\\section7\\labs\\Finite Math & Intro Calc 130 07_GradesExport_2014-03-08-09-53.csv"
         self.masterDatabase.setLab("lab7")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.studentTree.updateTreeList()
