@@ -318,7 +318,6 @@ class MainApp(wx.Frame):
                     self.parent.buttonArea.b_open_excel.Enable()
                 else:
                     self.parent.buttonArea.b_open_excel.Disable()
-                self.parent.questionsArea.scrollTop()
 
         def updateTreeList(self):
             """Tree List on Left Side - Dynamic to Files"""
