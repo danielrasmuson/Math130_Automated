@@ -503,52 +503,58 @@ class MasterDatabase():
         """ Will parse through all of the students and check if there
         is any grading of excel that needs to be done and if it can even open an excel file. 
         This gives fractional weights based on how many of the cells right they got. """
-        # Lot's of loops and fors, sorry about that.
-        co_index = {"A":0,"B":1,"C":2,"D":3,"E":4,"F":5,"G":6,"H":7,"I":8,"J":9,"K":10,"L":11,"M":12}
-        # Make sure we check each student.
         for student in self.getStudentKeys():
-            filename = self.getStudentExcelFilepath(student)
-            # If they have excel files we proceed.
-            if len(filename) > 1:
-                print "Warning: " + student + " has more than one excel file.  Autograding excel may fail."
-            if len(filename) > 0:
-                workbook = xlrd.open_workbook(filename[0])
-                self.studentList[student].lastExcelModified = workbook.user_name
-                # Check each question.
-                for qNum in self.getQuestionKeys():
-                    currentPoints = 0
-                    if self.isQuestionExcel(qNum):
-                        # Clear the student answer box for excel grading report.
-                        self.studentList[student].sAnswers[qNum] = ""
-                        totalExcelPoints = len(self.excelQB[self.currentLab][qNum]["cells"])
-                        try:
-                            worksheet = workbook.sheet_by_name(self.excelQB[self.currentLab][qNum]["sheet"])
-                            for cell in self.excelQB[self.currentLab][qNum]["cells"]:
-                                # Gets the location to truncate the answers for checking precision.
-                                if str(cell[1]).find(".")==-1:
-                                    trunc_loc = 0
-                                else:
-                                    trunc_loc = len(str(cell[1]).split(".")[1])
-                                # Try to find the value, if it's blank or not there we just move on.
-                                try:
-                                    # How we handle string cells for things like "<=" or others.
-                                    if ((type(cell[1]) == unicode) or (type(cell[1]) == str)) and (worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]) == cell[1]):
-                                        currentPoints += 1.
-                                    elif ((type(cell[1]) == unicode) or (type(cell[1]) == str)):
-                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
-                                    elif self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
-                                        currentPoints += 1.
-                                    else:
-                                        self.studentList[student].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
-                                except:
-                                    self.studentList[student].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
-                        except:
-                            print "Student " + student + " missing worksheet " + self.excelQB[self.currentLab][qNum]["sheet"] + " in file " + filename[0] +"."
-                        weight = self._niceWeight(points=currentPoints,totalPoints=totalExcelPoints, totalQuestionWorth=self.getQuestionPoints(qNum))
-                        self.setStudentQuestionWeight(student,qNum,weight)
-                        self.studentList[student].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)[0:5] + ". Points earned: " +str(self.getStudentQuestionScore(student,qNum))
+            self._gradeStudentExcel(student)
 
-    def _answerGradify(self, answer):
+    def _gradeStudentExcel(self, name):
+        """
+        A function that will grade an individual student instead of doing everyone all over again.
+        This way you can undo any accidental grade changes and see what the autograde did.  Also, this
+        will be hopefully paving the way for being able to change right answers on the fly and regrade things.
+        """
+        co_index = {"A":0,"B":1,"C":2,"D":3,"E":4,"F":5,"G":6,"H":7,"I":8,"J":9,"K":10,"L":11,"M":12}
+        filename = self.getStudentExcelFilepath(name)
+        # If they have excel files we proceed.
+        if len(filename) > 1:
+            print "Warning: " + name + " has more than one excel file.  Autograding excel may fail."
+        if len(filename) > 0:
+            workbook = xlrd.open_workbook(filename[0])
+            self.studentList[name].lastExcelModified = workbook.user_name
+            # Check each question.
+            for qNum in self.getQuestionKeys():
+                currentPoints = 0
+                if self.isQuestionExcel(qNum):
+                    # Clear the student answer box for excel grading report.
+                    self.studentList[name].sAnswers[qNum] = ""
+                    totalExcelPoints = len(self.excelQB[self.currentLab][qNum]["cells"])
+                    try:
+                        worksheet = workbook.sheet_by_name(self.excelQB[self.currentLab][qNum]["sheet"])
+                        for cell in self.excelQB[self.currentLab][qNum]["cells"]:
+                            # Gets the location to truncate the answers for checking precision.
+                            if str(cell[1]).find(".")==-1:
+                                trunc_loc = 0
+                            else:
+                                trunc_loc = len(str(cell[1]).split(".")[1])
+                            # Try to find the value, if it's blank or not there we just move on.
+                            try:
+                                # How we handle string cells for things like "<=" or others.
+                                if ((type(cell[1]) == unicode) or (type(cell[1]) == str)) and (worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]) == cell[1]):
+                                    currentPoints += 1.
+                                elif ((type(cell[1]) == unicode) or (type(cell[1]) == str)):
+                                    self.studentList[name].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
+                                elif self._trunc(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]]),trunc_loc) == cell[1]:
+                                    currentPoints += 1.
+                                else:
+                                    self.studentList[name].sAnswers[qNum] += "Cell " + cell[0] +" wrong. Student answer: "+ str(worksheet.cell_value(int(cell[0][1:])-1,co_index[cell[0][0]])) + " but should be: " + str(cell[1]) + "\n"
+                            except:
+                                self.studentList[name].sAnswers[qNum] += "Cell "+cell[0]+" missing in " +worksheet.name+ ".\n"
+                    except:
+                        print "Student " + name + " missing worksheet " + self.excelQB[self.currentLab][qNum]["sheet"] + " in file " + filename[0] +"."
+                    weight = self._niceWeight(points=currentPoints,totalPoints=totalExcelPoints, totalQuestionWorth=self.getQuestionPoints(qNum))
+                    self.setStudentQuestionWeight(name,qNum,weight)
+                    self.studentList[name].sAnswers[qNum] += "Finished autograding. Auto weight assigned: "+ str(weight)[0:5] + ". Points earned: " +str(self.getStudentQuestionScore(name,qNum))
+
+    def _answerFormat(self, answer):
         """
         Helper function to remove a lot of common things when we need
         to compare answers and are just generally looking for thing answer
@@ -568,6 +574,8 @@ class MasterDatabase():
         answer = answer.replace("xx","x")
         answer = answer.replace("yy","y")
         answer = answer.replace("zz","z")
+        answer = answer.replace(u"≤","<=")
+        answer = answer.replace(u"≥",">=")
         # Strip beginning zero's.
         answer = answer.lstrip("0")
         answer = answer.strip()
@@ -577,37 +585,45 @@ class MasterDatabase():
         """A more robust system for grading labs
         grade could be either a 1 or 0
         can add a lot more to function but I just started it"""
-        def gradeList(sAnswer, answerList, qNum):
-            """This will hopefully grade answers
-            that are show your work involving multiple steps
-            and have answers such as 3.59*1.03^15-1"""
-            currentPoints = 0
-            for answer in answerList:
-                sAnswer = self._answerGradify(sAnswer)
-                multiAnswerList = answer.split("|")
-                for answer in multiAnswerList:
-                    if u"¦" in answer:
-                        aWeight = float(answer.split(u"¦")[1])
-                        answer = answer.split(u"¦")[0]
-                    else:
-                        aWeight = 1.
-                    answer = self._answerGradify(answer)
-                    if answer in sAnswer:
-                        currentPoints += aWeight
-                        break
-            weight = self._niceWeight(points=currentPoints,totalPoints=len(answerList), totalQuestionWorth=self.getQuestionPoints(qNum))
-            return weight
-
         for student in self.getStudentKeys():
-            for qNum in self.getQuestionKeys():
-                if not self.isQuestionExcel(qNum):
-                    if self.getAnswer(qNum) == "":
-                        grade = 0
-                    elif type(self.getAnswer(qNum)) == list:
-                        grade = gradeList(self.getStudentAnswer(student,qNum), self.getAnswer(qNum), qNum)
-                    else:
-                        grade = 0
-                    self.setStudentQuestionWeight(student,qNum,grade)
+            self._gradeStudentWord(student)
+
+    def _gradeStudentWord(self, name):
+        """
+        A function that will grade an individual student instead of doing everyone all over again.
+        This way you can undo any accidental grade changes and see what the autograde did.  Also, this
+        will be hopefully paving the way for being able to change right answers on the fly and regrade things.
+        """
+        for qNum in self.getQuestionKeys():
+            if not self.isQuestionExcel(qNum):
+                if self.getAnswer(qNum) == "":
+                    grade = 0
+                elif type(self.getAnswer(qNum)) == list:
+                    grade = self._gradeList(self.getStudentAnswer(name,qNum), self.getAnswer(qNum), qNum)
+                else:
+                    grade = 0
+                self.setStudentQuestionWeight(name,qNum,grade)
+
+    def _gradeList(self, sAnswer, answerList, qNum):
+        """This will hopefully grade answers
+        that are show your work involving multiple steps
+        and have answers such as 3.59*1.03^15-1"""
+        currentPoints = 0
+        for answer in answerList:
+            sAnswer = self._answerFormat(sAnswer)
+            multiAnswerList = answer.split("|")
+            for answer in multiAnswerList:
+                if u"¦" in answer:
+                    aWeight = float(answer.split(u"¦")[1])
+                    answer = answer.split(u"¦")[0]
+                else:
+                    aWeight = 1.
+                answer = self._answerFormat(answer)
+                if answer in sAnswer:
+                    currentPoints += aWeight
+                    break
+        weight = self._niceWeight(points=currentPoints,totalPoints=len(answerList), totalQuestionWorth=self.getQuestionPoints(qNum))
+        return weight
 
 
 if __name__ == '__main__':
