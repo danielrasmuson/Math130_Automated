@@ -129,9 +129,6 @@ class CommentBrowser(wx.Frame):
             self.addComment("\nEverything looked great, but if you've got questions feel free to email me.\n")
 
     def loadEmailList(self):
-        dummyString = '"Matthew Priem" <'+self.username+'>;"Andrew Chase" <'+self.username+'>;"Tikhon Esaulenko" <'+self.username+'>;"Samuel Drummer" <'+self.username+'>;"James Lucas" <'+self.username+'>;"Jordan Pierce" <'+self.username+'>;"Tiana Johnson" <'+self.username+'>;"Emily Kasparek" <'+self.username+'>;"Trent Walters" <'+self.username+'>;"Ryan Neubauer" <'+self.username+'>;"Wesley Otto" <'+self.username+'>;"Genesis Garcia" <'+self.username+'>;"Amy Holscher" <'+self.username+'>;"Kaila Tomczik" <'+self.username+'>;"Philip Bowman" <'+self.username+'>;"Rahziya Akeem" <'+self.username+'>;"Joel Randall" <'+self.username+'>;"Daniel Rasmuson" <'+self.username+'>;"Joshua Musabyimana" <'+self.username+'>;"Samantha Sharp-Madson" <samantha.'+self.username+'>;"Richard Litchfield" <'+self.username+'>;"Raelin Setrum" <'+self.username+'>;"Zachary Cave" <'+self.username+'>;"Matthew Vandermark" <'+self.username+'>;"Isaac Noah" <'+self.username+'>;"Joshua Mikiska" <'+self.username+'>;"Edwig Vyncke" <'+self.username+'>'
-
-
         # pareses
         # ex "Matthew Priem" <'+self.username+'>;
         self.emailDict = {}
@@ -170,7 +167,14 @@ class CommentBrowser(wx.Frame):
             score = self.parent.questionsArea.si_score.GetValue()
             subject = lab + " - Score " + str(score) +" - Math 130" #make this the lab name
 
-            message = 'Subject: %s\n\n%s' % (subject, self.currentComment.GetValue())
+            messageTemp = 'Subject: %s\n\n%s' % (subject, self.currentComment.GetValue())
+            # getting ascii errors
+            message = ""
+            for char in messageTemp:
+                if ord(char) < 129:
+                    message += char
+
+
             fromaddr = self.username
             toaddrs = self.emailDict[self.selectedStudent] #this would come from the list
 
