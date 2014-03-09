@@ -180,57 +180,60 @@ class MainApp(wx.Frame):
             name = self.parent.questionsArea.si_name.GetValue()
             name = name.split()
             score = self.parent.questionsArea.si_score.GetValue()
-            if self.parent.questionsArea.si_attendance.GetValue() == "No Quiz":
-                dlg = wx.MessageDialog(self.parent,name[0] + "did not take the attendance quiz. Submit 0 instead of "+str(score)+"?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
-                result = dlg.ShowModal()
-                dlg.Destroy()
-                if result == wx.ID_YES:
-                    score = "0"
-            result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
-            if result:
-                self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
-                self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
-                self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
-            else:
-                wx.MessageBox("Unable to find "+name[0]+" in the file "+self.parent.masterDatabase.gradeFile,"Grade Not Submitted!", wx.OK | wx.ICON_ERROR)
+            if len(name) > 0:
+                if self.parent.questionsArea.si_attendance.GetValue() == "No Quiz":
+                    dlg = wx.MessageDialog(self.parent,name[0] + "did not take the attendance quiz. Submit 0 instead of "+str(score)+"?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
+                    result = dlg.ShowModal()
+                    dlg.Destroy()
+                    if result == wx.ID_YES:
+                        score = "0"
+                result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
+                if result:
+                    self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
+                    self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
+                    self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
+                else:
+                    wx.MessageBox("Unable to find "+name[0]+" in the file "+self.parent.masterDatabase.gradeFile,"Grade Not Submitted!", wx.OK | wx.ICON_ERROR)
 
         def ratioCheck(self, event):
             """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
             names = sorted(self.parent.masterDatabase.getStudentKeys())
-            ratioList = []
-            for i,name1 in enumerate(names):
-                for j,name2 in enumerate(names):
-                    if i < j:
-                        labcheck1 = u"".join(self.parent.masterDatabase.getStudentLabString(name1).split("\n")[4:])
-                        labcheck1 = labcheck1.replace("\n","")
-                        labcheck1 = labcheck1.replace("\r","")
-                        labcheck2 = u"".join(self.parent.masterDatabase.getStudentLabString(name2).split("\n")[4:])
-                        labcheck2 = labcheck2.replace("\n","")
-                        labcheck2 = labcheck2.replace("\r","")
-                        ratio = difflib.SequenceMatcher(None,labcheck1,labcheck2).ratio()
-                        ratioList.append([name1,name2,ratio])
-                        if ratio > .96:
-                            wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
-            ratioList = sorted(ratioList,key=lambda x:x[2], reverse=True)
-            ratioInfo = [ x[0] + " & " + x[1] + ": " + str(x[2])[0:6] for x in ratioList[0:5]]
-            wx.MessageBox("\n".join(ratioInfo),"Top 5 Ratios", wx.OK | wx.ICON_INFORMATION)
-            event.Skip() #Let's us have the button do two things at once.
+            if len(names) > 0:
+                ratioList = []
+                for i,name1 in enumerate(names):
+                    for j,name2 in enumerate(names):
+                        if i < j:
+                            labcheck1 = u"".join(self.parent.masterDatabase.getStudentLabString(name1).split("\n")[4:])
+                            labcheck1 = labcheck1.replace("\n","")
+                            labcheck1 = labcheck1.replace("\r","")
+                            labcheck2 = u"".join(self.parent.masterDatabase.getStudentLabString(name2).split("\n")[4:])
+                            labcheck2 = labcheck2.replace("\n","")
+                            labcheck2 = labcheck2.replace("\r","")
+                            ratio = difflib.SequenceMatcher(None,labcheck1,labcheck2).ratio()
+                            ratioList.append([name1,name2,ratio])
+                            if ratio > .96:
+                                wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
+                ratioList = sorted(ratioList,key=lambda x:x[2], reverse=True)
+                ratioInfo = [ x[0] + " & " + x[1] + ": " + str(x[2])[0:6] for x in ratioList[0:5]]
+                wx.MessageBox("\n".join(ratioInfo),"Top 5 Ratios", wx.OK | wx.ICON_INFORMATION)
+                event.Skip() #Let's us have the button do two things at once.
 
         def cheatCheck(self, event):
             """Checks for identical labs past the grade, takes likes .001 of a second to run so cant hurt"""
             names = self.parent.masterDatabase.getStudentKeys()
-            labs = {}
-            for name in names:
-                labString = self.parent.masterDatabase.getStudentLabString(name)
-                labNoName = u"".join(labString.split("\n")[4:])
-                if labNoName in labs.values():
-                    for name2, labString2 in labs.items():
-                        if labString2 == labNoName:
-                            wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
-                else:
-                    labs[name] = labNoName
-            wx.MessageBox("Finished with the Cheat Checking.","Done", wx.OK | wx.ICON_INFORMATION)
-            event.Skip() #Let's us have the button do two things at once.
+            if len(names) > 0:
+                labs = {}
+                for name in names:
+                    labString = self.parent.masterDatabase.getStudentLabString(name)
+                    labNoName = u"".join(labString.split("\n")[4:])
+                    if labNoName in labs.values():
+                        for name2, labString2 in labs.items():
+                            if labString2 == labNoName:
+                                wx.MessageBox("Cheated " + name + " and " + name2 + " identical lab", 'Cheating Detected!', wx.OK | wx.ICON_INFORMATION)
+                    else:
+                        labs[name] = labNoName
+                wx.MessageBox("Finished with the Cheat Checking.","Done", wx.OK | wx.ICON_INFORMATION)
+                event.Skip() #Let's us have the button do two things at once.
 
     class TreeNav:
         """ Builds our tree list of students """
@@ -264,31 +267,37 @@ class MainApp(wx.Frame):
             sButtonSizer.Add(b_next, 0,wx.ALIGN_CENTER|wx.ALL,5)
 
         def previousButton(self, event):
-            current = self.parent.lab_tree_list.GetSelection()
-            prev = self.parent.lab_tree_list.GetPrevSibling(current)
-            if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
-                self.parent.lab_tree_list.SelectItem(prev)
-                self.parent.questionsArea.scrollTop()
-            elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
-                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
-            else:
-                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                if parent != self.parent.lab_tree_list.GetRootItem():
-                    self.parent.lab_tree_list.SelectItem(parent)
+            try:
+                current = self.parent.lab_tree_list.GetSelection()
+                prev = self.parent.lab_tree_list.GetPrevSibling(current)
+                if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
+                    self.parent.lab_tree_list.SelectItem(prev)
+                    self.parent.questionsArea.scrollTop()
+                elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
+                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
+                else:
+                    parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                    if parent != self.parent.lab_tree_list.GetRootItem():
+                        self.parent.lab_tree_list.SelectItem(parent)
+            except:
+                pass
 
         def nextButton(self, event):
-            current = self.parent.lab_tree_list.GetSelection()
-            if self.parent.lab_tree_list.ItemHasChildren(current):
-                next = self.parent.lab_tree_list.GetFirstChild(current)[0]
-            else:
-                next = self.parent.lab_tree_list.GetNextSibling(current)
-            if next.IsOk():
-                self.parent.lab_tree_list.SelectItem(next)
-                self.parent.questionsArea.scrollTop()
-            else:
-                parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
-                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
+            try:
+                current = self.parent.lab_tree_list.GetSelection()
+                if self.parent.lab_tree_list.ItemHasChildren(current):
+                    next = self.parent.lab_tree_list.GetFirstChild(current)[0]
+                else:
+                    next = self.parent.lab_tree_list.GetNextSibling(current)
+                if next.IsOk():
+                    self.parent.lab_tree_list.SelectItem(next)
+                    self.parent.questionsArea.scrollTop()
+                else:
+                    parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
+                    if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
+                        self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
+            except:
+                pass
 
         def getSelected(self):
             return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
