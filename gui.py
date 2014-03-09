@@ -114,6 +114,8 @@ class MainApp(wx.Frame):
             # todo - add stop fast grading
             self.parent.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
             self.qNumFastGrading = 0 # todo: if i could get the event label this would work but until then
+            scrollAmount = self.parent.questionsArea.getStaticLineDepth(1)
+            self.parent.questionsArea.scrollCustom(scrollAmount)
 
         def fastGrading(self, event):
             """ 
@@ -145,18 +147,18 @@ class MainApp(wx.Frame):
                 lastStudent = studentsSorted[-1]
                 if currentStudent == lastStudent:
                     self.qNumFastGrading += 1
-                    # TODO moves back to the top
-                    # I just loop the previous button through the dictioanry
+                    # TODO right now it just uses preivous wich is week
                     for i in range(len(self.parent.masterDatabase.getStudentKeys())-1):
                         self.parent.buttonArea.previousButton(event)
                 else: # if its not the last one in the list just move to the next student
                     self.parent.buttonArea.nextButton(event)
 
                 # Question past halfway start scrolling
-                # TODO would be best if it scrolled the amount of the question
-                if self.qNumFastGrading > len(questionNums)/2:
-                    print(self.qNumFastGrading, "is bigger then", len(questionNums)/2)
-                    self.parent.questionsArea.scrollBottom()
+                # scroll to the next static line                
+
+                # if self.qNumFastGrading > len(questionNums)/2:
+                #     print(self.qNumFastGrading, "is bigger then", len(questionNums)/2)
+                #     self.parent.questionsArea.scrollBottom()
 
 
             else:
@@ -396,6 +398,9 @@ class MainApp(wx.Frame):
         def scrollBottom(self):
             self.questions_area.Scroll((0,1000))
 
+        def scrollCustom(self, amount):
+            self.questions_area.Scroll((0, amount))
+
         def setCorrect(self, qNum, weight):
             name = self.si_name.GetValue()
             if weight == 1:
@@ -440,6 +445,9 @@ class MainApp(wx.Frame):
 
             self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
             self.questions_area.SetSizer(self.questions_area_sizer)
+
+            # todo - maybe I can get these from just looping the the sizer.. but i couldnt figure out how.
+            self.staticLines = [] # I need these for the fast grading
 
             self.student_answer_boxes = {}
             for qNum in sorted(self.parent.masterDatabase.getQuestionKeys()):
@@ -511,7 +519,9 @@ class MainApp(wx.Frame):
 
                 # The Last Question Cleanup
                 if qNum != sorted(self.parent.masterDatabase.getQuestionKeys())[-1]:
-                    self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
+                    staticLine = wx.StaticLine(self.questions_area, wx.ID_ANY)
+                    self.questions_area_sizer.Add(staticLine, 0, wx.ALL|wx.EXPAND, 5)
+                    self.staticLines.append(staticLine)
 
             self.parent.mainpanel.Layout()
 
@@ -547,6 +557,9 @@ class MainApp(wx.Frame):
                 self.si_score.ChangeValue( str(self.parent.masterDatabase.getStudentTotalScore(name)) + " / " + str(self.parent.masterDatabase.getTotalPoints()) )
             except:
                 pass
+
+        def getStaticLineDepth(self, staticLineNum):
+            return self.staticLines[staticLineNum].GetPosition()[1]
 
     def __init__(self):
         self.masterDatabase = MasterDatabase()
