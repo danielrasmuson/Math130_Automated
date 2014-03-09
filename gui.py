@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from __future__ import division
-import wx, os, subprocess, difflib, glob
+import wx, os, subprocess, difflib, glob, embeddedImages
 from wx.lib.wordwrap import wordwrap
 from toImportDocument import sendToImport
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
@@ -17,14 +17,32 @@ class MainApp(wx.Frame):
             menuBar = wx.MenuBar()
 
             fileMenu = wx.Menu()
-            m_new = fileMenu.Append(wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
-            m_save = fileMenu.Append(wx.ID_SAVE, "&Save Grading Session\tCtrl-S", "Saves the current grading progress to disk.")
-            m_open = fileMenu.Append(wx.ID_OPEN, "&Open Grading Session\tCtrl-O", "Opens a previous grading session from disk.")
-            m_wizard = fileMenu.Append(wx.ID_ANY, "Import &Wizard\tCtrl-W", "Opens the guided wizard for the setup process.")
+
+            m_new = wx.MenuItem(fileMenu, wx.ID_NEW, "&New Grading Session\tCtrl-N", "Removes all of the students and the currently loaded dictionary.")
+            m_new.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_MENU))
+            fileMenu.AppendItem(m_new)
+
+            m_save = wx.MenuItem(fileMenu, wx.ID_SAVE, "&Save Grading Session\tCtrl-S", "Saves the current grading progress to disk.")
+            m_save.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_MENU))
+            fileMenu.AppendItem(m_save)
+
+            m_open = wx.MenuItem(fileMenu, wx.ID_OPEN, "&Open Grading Session\tCtrl-O", "Opens a previous grading session from disk.")
+            m_open.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_MENU))
+            fileMenu.AppendItem(m_open)
+
+            m_wizard = wx.MenuItem(fileMenu,wx.ID_ANY, "Import &Wizard\tCtrl-W", "Opens the guided wizard for the setup process.")
+            m_wizard.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.wizard.GetBitmap()).Scale(16,16, wx.IMAGE_QUALITY_HIGH)))
+            fileMenu.AppendItem(m_wizard)
             fileMenu.AppendSeparator()
+
+
             m_default = fileMenu.Append(wx.ID_ANY, "&Default Load Stuffs (Delete Me Later)\tCtrl-D", "Loads all of the above stuff in one click.  Will get deleted later.")
             fileMenu.AppendSeparator()
-            m_exit = fileMenu.Append(wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
+
+            m_exit = wx.MenuItem(fileMenu, wx.ID_EXIT, "E&xit\tAlt-X", "Close window and exit program.")
+            m_exit.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_QUIT, wx.ART_MENU))
+            fileMenu.AppendItem(m_exit)
+
             self.parent.Bind(wx.EVT_MENU, self.onNew, m_new)
             self.parent.Bind(wx.EVT_MENU, self.onSave, m_save)
             self.parent.Bind(wx.EVT_MENU, self.onOpen, m_open)
@@ -34,7 +52,9 @@ class MainApp(wx.Frame):
             menuBar.Append(fileMenu, "&File")
 
             helpMenu = wx.Menu()
-            m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
+            m_about = wx.MenuItem(helpMenu, wx.ID_ABOUT, "&About", "Information about this program")
+            m_about.SetBitmap(wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_MENU))
+            helpMenu.AppendItem(m_about)
             self.parent.Bind(wx.EVT_MENU, self.onAbout, m_about)
             menuBar.Append(helpMenu, "&Help")
 
@@ -96,8 +116,9 @@ class MainApp(wx.Frame):
 
             # sizer.AddSpacer(8)
 
-            self.b_cheat = wx.Button(panel, wx.ID_ANY, "Cheat Check")
+            self.b_cheat = wx.Button(panel, wx.ID_ANY, "Cheat Check", style=wx.BU_EXACTFIT)
             self.b_cheat.SetToolTipString("Runs some basic cheat detection on the currently loaded students.")
+            self.b_cheat.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.cheat.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
             self.b_cheat.Bind(wx.EVT_BUTTON, self.ratioCheck)
             self.b_cheat.Bind(wx.EVT_BUTTON, self.cheatCheck)
             sizer.Add(self.b_cheat, 0,wx.ALL,4)
@@ -111,30 +132,35 @@ class MainApp(wx.Frame):
                     self.parent.masterDatabase._gradeStudentWord(name)
                     self.parent.questionsArea.updateStudentAnswers(name)
 
-            self.b_regrade = wx.Button(panel, wx.ID_ANY, "Regrade")
+            self.b_regrade = wx.Button(panel, wx.ID_ANY, "Regrade", style=wx.BU_EXACTFIT)
             self.b_regrade.SetToolTipString("Regrades the current student.")
+            self.b_regrade.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.regrade.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
             self.b_regrade.Bind(wx.EVT_BUTTON, _combinedGrade)
             sizer.Add(self.b_regrade, 0,wx.ALL,4)
 
-            self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments")
+            self.b_comments = wx.Button(panel, wx.ID_ANY, "Comments", style=wx.BU_EXACTFIT)
             self.b_comments.SetToolTipString("Opens a new dialog box with extra comments (if available) for the current student.")
+            self.b_comments.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.comments.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
             self.b_comments.Bind(wx.EVT_BUTTON, self.parent.commentWindow.display)
             sizer.Add(self.b_comments, 0,wx.ALL,4)
 
-            b_open = wx.Button(panel, wx.ID_ANY, "Word Doc")
+            b_open = wx.Button(panel, wx.ID_ANY, "Word Doc", style=wx.BU_EXACTFIT)
             b_open.SetToolTipString("Opens the document in word.")
+            b_open.SetBitmap(embeddedImages.word.GetBitmap())
             b_open.Bind(wx.EVT_BUTTON, self.openDocument)
             sizer.Add(b_open, 0,wx.ALL,4)
 
-            self.b_open_excel = wx.Button(panel, wx.ID_ANY, "Excel Doc")
+            self.b_open_excel = wx.Button(panel, wx.ID_ANY, "Excel Doc", style=wx.BU_EXACTFIT)
             self.b_open_excel.SetToolTipString("Opens the excel document if available.")
+            self.b_open_excel.SetBitmap(embeddedImages.excel.GetBitmap())
             self.b_open_excel.Disable()
             self.b_open_excel.Bind(wx.EVT_BUTTON, self.openExcel)
             sizer.Add(self.b_open_excel, 0,wx.ALL,4)
 
             # A button for sending the grade to the excel file
-            b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade")
+            b_grade = wx.Button(panel, wx.ID_ANY, "Submit Grade", style=wx.BU_EXACTFIT)
             b_grade.SetToolTipString("Sends the grade to excel file")
+            b_grade.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.submit.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
             b_grade.Bind(wx.EVT_BUTTON, self.submitGrade)
             sizer.Add(b_grade, 0,wx.ALL,4)
 
