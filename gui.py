@@ -33,6 +33,27 @@ class MainApp(wx.Frame):
             self.parent.Bind(wx.EVT_MENU, self.onClose, m_exit)
             menuBar.Append(fileMenu, "&File")
 
+            #TOOLS
+            toolsMenu = wx.Menu()
+            m_fastGrading = toolsMenu.Append(wx.ID_NEW, "&Start Fast Grading", "Using hotkeys to blaze through your grading. Y - correct, H - partial, N - wrong")
+            self.parent.Bind(wx.EVT_MENU, self.onFastGrading, m_fastGrading)
+
+
+            # TODO You could start on any question if I could get this working
+            # m_fastGrading = wx.Menu()
+            # keys = sorted(self.parent.masterDatabase.getQuestionKeys())
+            # for key in keys:
+            #     m_gradeQuestion = m_fastGrading.Append(wx.ID_NEW, str(key),"Grade this question with the hotkeys Y - correct, H - partial, N - wrong")
+            #     m_gradeQuestion.key = key
+            #     print(m_gradeQuestion)
+            #     self.parent.Bind(wx.EVT_MENU, self.onFastGrading, m_gradeQuestion)
+            # toolsMenu.AppendMenu(wx.ID_NEW, "Fast Grade Question", m_fastGrading)
+
+            menuBar.Append(toolsMenu, "&Tools")
+
+
+
+            #HELP MENU
             helpMenu = wx.Menu()
             m_about = helpMenu.Append(wx.ID_ABOUT, "&About", "Information about this program")
             self.parent.Bind(wx.EVT_MENU, self.onAbout, m_about)
@@ -86,6 +107,60 @@ class MainApp(wx.Frame):
                 self.parent.Show(False)
                 newSession()
                 self.parent.Destroy()
+
+        def onFastGrading(self, event):
+            """Currently you will have to go all the way through the questions
+            starting at one if you want to fast grade the last question"""
+            # todo - add stop fast grading
+            self.parent.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
+            self.qNumFastGrading = 0 # todo: if i could get the event label this would work but until then
+
+        def fastGrading(self, event):
+            """ 
+                You grade every question one then every question two etc.
+                It is a lot faster because it uses hotkeys and you are totally 
+                focused on one question
+            """
+            #TODO why does nextButton take an event, i understand
+            # that its being called by an event but it doesnt need an event
+            # we should just have the event call call it if thats the case
+
+            if event.GetKeyCode() in [89,72,78]:
+                if event.GetKeyCode() == 89: # 89 is Y
+                    weight = 1
+
+                elif event.GetKeyCode() == 72: # 72 is H
+                    weight = .5
+
+                elif event.GetKeyCode() == 78: # 78 is N
+                    weight = 0
+
+                # changes answer
+                questionNums = sorted(self.parent.masterDatabase.getQuestionKeys())
+                self.parent.questionsArea.setCorrect(questionNums[self.qNumFastGrading], weight) # todo 1 should be qNum
+
+                # increments students and questions
+                currentStudent = self.parent.studentTree.getSelected()
+                studentsSorted = sorted(self.parent.masterDatabase.getStudentKeys())
+                lastStudent = studentsSorted[-1]
+                if currentStudent == lastStudent:
+                    self.qNumFastGrading += 1
+                    # TODO moves back to the top
+                    # I just loop the previous button through the dictioanry
+                    for i in range(len(self.parent.masterDatabase.getStudentKeys())-1):
+                        self.parent.buttonArea.previousButton(event)
+                else: # if its not the last one in the list just move to the next student
+                    self.parent.buttonArea.nextButton(event)
+
+                # Question past halfway start scrolling
+                # TODO would be best if it scrolled the amount of the question
+                if self.qNumFastGrading > len(questionNums)/2:
+                    print(self.qNumFastGrading, "is bigger then", len(questionNums)/2)
+                    self.parent.questionsArea.scrollBottom()
+
+
+            else:
+                event.Skip()
 
     class BottomNav:
         """ Builds a predefined set of buttons on a specific panel and utilizing the sizer provided """
@@ -318,9 +393,10 @@ class MainApp(wx.Frame):
         def scrollTop(self):
             self.questions_area.Scroll((0,0))
 
-        def setCorrect(self, qNum, weight):
-            print qNum, weight #todo remove
+        def scrollBottom(self):
+            self.questions_area.Scroll((0,1000))
 
+        def setCorrect(self, qNum, weight):
             name = self.si_name.GetValue()
             if weight == 1:
                 color = "#FFFFFF"
@@ -329,13 +405,12 @@ class MainApp(wx.Frame):
                     color = "#FFAAAA"
                 else:
                     color = "#FFAA00"
-            self.student_answer_boxes[qNum].SetBackgroundColour(color)
+            self.student_answer_boxes[qNum].SetBackgroundColour(color) # finds new color
             self.student_answer_boxes[qNum].Refresh() #fix for delay
 
             self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
-            self.parent.commentWindow.defaultCommentButton("")
+            self.parent.commentWindow.defaultCommentButton("") #clear comment window
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
-
 
         def drawQuestions(self):
             def otherWeightDialog(qNum):
@@ -519,35 +594,6 @@ class MainApp(wx.Frame):
         self.mainpanel.Layout()
 
         self.Show()
-
-        # TEST TODO
-        self.Bind(wx.EVT_CHAR_HOOK, self.fastGrading)
-
-    def fastGrading(self, event):
-        """ 
-            You grade every question one then every question two etc.
-            It is a lot faster because it uses hotkeys and you are totally 
-            focused on one question
-        """
-        #TODO why does nextButton take an event, i understand
-        # that its being called by an event but it doesnt need an event
-        # we should just have the event call call it if thats the case
-        keys = self.masterDatabase.getQuestionKeys()
-        if event.GetKeyCode() == 89: # 89 is Y
-            print "you are pressing y"
-            self.buttonArea.nextButton(event)
-            self.questionsArea.setCorrect(keys[0], 1)
-
-        elif event.GetKeyCode() == 72: # 72 is H
-            print "you are pressing h"
-            self.buttonArea.nextButton(event)
-
-        elif event.GetKeyCode() == 78: # 78 is N
-            print "you are pressing n"
-            self.buttonArea.nextButton(event)
-
-        else:
-            event.Skip()
 
     def deleteMeLater(self, event):
         self.masterDatabase.labFolder = "C:\\Users\\Daniel\\Desktop\\spring2014_lab7\\section7\\labs"
