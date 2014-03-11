@@ -121,10 +121,10 @@ class ImportWizard:
             self.parent.masterDatabase.setLab(self.labName)
             self.parent.masterDatabase.loadLabs(
                 self.parent.masterDatabase.labFolder, self.parent.masterDatabase.gradeFile)
-            self.parent.studentTree.updateTreeList()
+            self.parent.treeArea.updateTreeList()
             self.parent.questionsArea.drawQuestions()
-            self.parent.lab_tree_list.SelectItem(
-                self.parent.lab_tree_list.GetFirstVisibleItem())
+            self.parent.labTree.SelectItem(
+                self.parent.labTree.GetFirstVisibleItem())
 
         if len(self.attendanceSheet.GetValue()):
             self.parent.masterDatabase.checkAttendance(

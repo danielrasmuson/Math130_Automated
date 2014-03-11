@@ -77,9 +77,9 @@ class MainApp(wx.Frame):
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.loadProgress(dlg.GetPath())
-                self.parent.studentTree.updateTreeList()
+                self.parent.treeArea.updateTreeList()
                 self.parent.questionsArea.drawQuestions()
-                self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetFirstVisibleItem())
+                self.parent.labTree.SelectItem(self.parent.labTree.GetFirstVisibleItem())
             dlg.Destroy()
 
         def onAbout(self, event):
@@ -166,7 +166,7 @@ class MainApp(wx.Frame):
 
         def openDocument(self, event):
             try:
-                current_item = self.parent.studentTree.getSelected()
+                current_item = self.parent.treeArea.getSelected()
                 if "Section" not in current_item:
                     subprocess.Popen(["explorer",self.parent.masterDatabase.getStudentWordFilepath(current_item)], shell=False)
             except:
@@ -190,10 +190,11 @@ class MainApp(wx.Frame):
                 result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
                 if result:
                     self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
-                    self.parent.lab_tree_list.SetItemText(self.parent.lab_tree_list.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
-                    self.parent.lab_tree_list.SetItemTextColour(self.parent.lab_tree_list.GetSelection(), (0,150,0))
+                    self.parent.labTree.SetItemText(self.parent.labTree.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
+                    self.parent.labTree.SetItemTextColour(self.parent.labTree.GetSelection(), (0,150,0))
                 else:
                     wx.MessageBox("Unable to find "+name[0]+" in the file "+self.parent.masterDatabase.gradeFile,"Grade Not Submitted!", wx.OK | wx.ICON_ERROR)
+            self.parent.treeArea.nextButton("")
 
         def ratioCheck(self, event):
             """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
@@ -242,14 +243,14 @@ class MainApp(wx.Frame):
             self.panel = panel
             self.sizer = sizer
 
-            self.parent.lab_tree_list = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
-            self.parent.lab_tree_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelChanged, id=1)
+            self.parent.labTree = wx.TreeCtrl(panel, 1, size=wx.Size(200,-1),style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_LINES_AT_ROOT)
+            self.parent.labTree.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelChanged, id=1)
             lab_tree_label = wx.StaticText(panel, wx.ID_ANY, 'Student List')
-            self.parent.tree_root = self.parent.lab_tree_list.AddRoot("Lab Sections")
+            self.parent.tree_root = self.parent.labTree.AddRoot("Lab Sections")
             self.parent.tree_rootDict = {}
 
             sizer.Add(lab_tree_label,0,wx.ALIGN_CENTER)
-            sizer.Add(self.parent.lab_tree_list, 1,wx.EXPAND)
+            sizer.Add(self.parent.labTree, 1,wx.EXPAND)
 
             sButtonSizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer.Add(sButtonSizer, 0, wx.ALIGN_CENTER)
@@ -268,39 +269,39 @@ class MainApp(wx.Frame):
 
         def previousButton(self, event):
             try:
-                current = self.parent.lab_tree_list.GetSelection()
-                prev = self.parent.lab_tree_list.GetPrevSibling(current)
-                if prev.IsOk() and not self.parent.lab_tree_list.ItemHasChildren(prev):
-                    self.parent.lab_tree_list.SelectItem(prev)
+                current = self.parent.labTree.GetSelection()
+                prev = self.parent.labTree.GetPrevSibling(current)
+                if prev.IsOk() and not self.parent.labTree.ItemHasChildren(prev):
+                    self.parent.labTree.SelectItem(prev)
                     self.parent.questionsArea.scrollTop()
-                elif prev.IsOk() and  self.parent.lab_tree_list.ItemHasChildren(prev):
-                    self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetLastChild(prev))
+                elif prev.IsOk() and  self.parent.labTree.ItemHasChildren(prev):
+                    self.parent.labTree.SelectItem(self.parent.labTree.GetLastChild(prev))
                 else:
-                    parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                    if parent != self.parent.lab_tree_list.GetRootItem():
-                        self.parent.lab_tree_list.SelectItem(parent)
+                    parent = self.parent.labTree.GetItemParent(self.parent.labTree.GetSelection())
+                    if parent != self.parent.labTree.GetRootItem():
+                        self.parent.labTree.SelectItem(parent)
             except:
                 pass
 
         def nextButton(self, event):
             try:
-                current = self.parent.lab_tree_list.GetSelection()
-                if self.parent.lab_tree_list.ItemHasChildren(current):
-                    next = self.parent.lab_tree_list.GetFirstChild(current)[0]
+                current = self.parent.labTree.GetSelection()
+                if self.parent.labTree.ItemHasChildren(current):
+                    next = self.parent.labTree.GetFirstChild(current)[0]
                 else:
-                    next = self.parent.lab_tree_list.GetNextSibling(current)
+                    next = self.parent.labTree.GetNextSibling(current)
                 if next.IsOk():
-                    self.parent.lab_tree_list.SelectItem(next)
+                    self.parent.labTree.SelectItem(next)
                     self.parent.questionsArea.scrollTop()
                 else:
-                    parent = self.parent.lab_tree_list.GetItemParent(self.parent.lab_tree_list.GetSelection())
-                    if self.parent.lab_tree_list.GetNextSibling(parent).IsOk():
-                        self.parent.lab_tree_list.SelectItem(self.parent.lab_tree_list.GetNextSibling(parent))
+                    parent = self.parent.labTree.GetItemParent(self.parent.labTree.GetSelection())
+                    if self.parent.labTree.GetNextSibling(parent).IsOk():
+                        self.parent.labTree.SelectItem(self.parent.labTree.GetNextSibling(parent))
             except:
                 pass
 
         def getSelected(self):
-            return str(self.parent.lab_tree_list.GetItemText(self.parent.lab_tree_list.GetSelection()).strip(u"\u2714"))
+            return str(self.parent.labTree.GetItemText(self.parent.labTree.GetSelection()).strip(u"\u2714"))
 
         def onSelChanged(self, event):
             # Get our item that updated
@@ -324,16 +325,16 @@ class MainApp(wx.Frame):
             for name in sorted(self.parent.masterDatabase.getStudentKeys()):
                 sec = self.parent.masterDatabase.getStudentSection(name)
                 if sec == "MissingInformation":
-                    self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Missing Lab Section")
-                    self.parent.lab_tree_list.SetItemBackgroundColour(self.parent.tree_rootDict[sec],"#FFAAAA")
+                    self.parent.tree_rootDict[sec] = self.parent.labTree.AppendItem(self.parent.tree_root, "Missing Lab Section")
+                    self.parent.labTree.SetItemBackgroundColour(self.parent.tree_rootDict[sec],"#FFAAAA")
                 elif sec not in self.parent.tree_rootDict.keys(): #creates root section if there isn't one
-                    self.parent.tree_rootDict[sec] = self.parent.lab_tree_list.AppendItem(self.parent.tree_root, "Section "+sec)
+                    self.parent.tree_rootDict[sec] = self.parent.labTree.AppendItem(self.parent.tree_root, "Section "+sec)
                 # During update check if submitted or not and then append on to tree.
                 if self.parent.masterDatabase.getStudentSubmittedGrade(name):
-                    temp = self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], u"\u2714" + name)
-                    self.parent.lab_tree_list.SetItemTextColour(temp, (0,150,0))
+                    temp = self.parent.labTree.AppendItem(self.parent.tree_rootDict[sec], u"\u2714" + name)
+                    self.parent.labTree.SetItemTextColour(temp, (0,150,0))
                 else:
-                    self.parent.lab_tree_list.AppendItem(self.parent.tree_rootDict[sec], name)
+                    self.parent.labTree.AppendItem(self.parent.tree_rootDict[sec], name)
 
     class QuestionsArea:
         def __init__(self, parent, panel, sizer):
@@ -369,7 +370,7 @@ class MainApp(wx.Frame):
             sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
         def scrollTop(self):
-            self.questions_area.Scroll((0,0))
+            self.stagingArea.Scroll((0,0))
 
         def drawQuestions(self):
             def otherWeightDialog(qNum):
@@ -407,13 +408,13 @@ class MainApp(wx.Frame):
                 self.parent.commentWindow.defaultCommentButton("")
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
-            self.questions_area = wx.ScrolledWindow(self.panel)
-            self.questions_area.SetScrollbars(1, 5, 500, 1000)
-            self.questions_area.EnableScrolling(True,True)
-            self.sizer.Add(self.questions_area, 1, wx.EXPAND)
+            self.stagingArea = wx.ScrolledWindow(self.panel)
+            self.stagingArea.SetScrollbars(1, 15, 500, 1000)
+            self.stagingArea.EnableScrolling(True,True)
+            self.sizer.Add(self.stagingArea, 1, wx.EXPAND)
 
-            self.questions_area_sizer = wx.BoxSizer(wx.VERTICAL)
-            self.questions_area.SetSizer(self.questions_area_sizer)
+            self.stagingArea_sizer = wx.BoxSizer(wx.VERTICAL)
+            self.stagingArea.SetSizer(self.stagingArea_sizer)
 
             self.student_answer_boxes = {}
             for qNum in sorted(self.parent.masterDatabase.getQuestionKeys()):
@@ -422,7 +423,7 @@ class MainApp(wx.Frame):
                 # Question Num
                 # Question 1
                 qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                qNumText = wx.StaticText(self.questions_area, wx.ID_ANY, "Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
+                qNumText = wx.StaticText(self.stagingArea, wx.ID_ANY, "Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
                 boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
                 qNumText.SetFont(boldFont) # applies bold font
                 qNum_sizer.Add(qNumText)
@@ -430,62 +431,62 @@ class MainApp(wx.Frame):
                 # Answer
                 # 3.34
                 answer = unicode(self.parent.masterDatabase.getAnswer(qNum,pretty=True))
-                answerTextBox = wx.StaticText(self.questions_area, wx.ID_ANY, answer, style=wx.ALIGN_RIGHT)
+                answerTextBox = wx.StaticText(self.stagingArea, wx.ID_ANY, answer, style=wx.ALIGN_RIGHT)
                 qNum_sizer.AddStretchSpacer(1) #to push button to end
                 qNum_sizer.Add(answerTextBox, flag=wx.ALIGN_RIGHT|wx.ALIGN_TOP, border=0)
 
                 #adds qNum_sizer to the panel
-                self.questions_area_sizer.Add(qNum_sizer, 0, wx.EXPAND)
+                self.stagingArea_sizer.Add(qNum_sizer, 0, wx.EXPAND)
 
                 # Question and Answer
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
-                sizeQArea = self.questions_area.GetVirtualSize()[0]-20
-                textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.questions_area)))
-                textInQandA = wx.StaticText(self.questions_area, wx.ID_ANY, textInQandA)
+                sizeQArea = self.stagingArea.GetVirtualSize()[0]-20
+                textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.stagingArea)))
+                textInQandA = wx.StaticText(self.stagingArea, wx.ID_ANY, textInQandA)
                 c_sizer.Add(textInQandA)
 
                 # Correct Buttons \u2714
                 c_sizer.AddStretchSpacer(1) #to push buttons to end
-                fullCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u2714")
+                fullCorrect = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label=u"\u2714")
                 fullCorrect.SetForegroundColour((0,150,0))
                 fullCorrect.SetToolTipString("Sets the question as correct")
                 fullCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1))
                 c_sizer.Add(fullCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Half Correct Buttons \u00BD
-                halfCorrect = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u00BD")
+                halfCorrect = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label=u"\u00BD")
                 halfCorrect.SetForegroundColour("#FFAA00")
                 halfCorrect.SetToolTipString("Sets the question as half correct")
                 halfCorrect.Bind(wx.EVT_BUTTON,  lambda evt , qNum=qNum: setCorrect(qNum,1.0/2))
                 c_sizer.Add(halfCorrect, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Wrong Buttons \u2717
-                markWrong = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label=u"\u2717")
+                markWrong = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label=u"\u2717")
                 markWrong.SetForegroundColour("#FF0000")
                 markWrong.SetToolTipString("Sets the question as wrong")
                 markWrong.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: setCorrect(qNum,0))
                 c_sizer.Add(markWrong, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
                 # Other Button
-                otherWeight = wx.Button(self.questions_area, size=(20,20), id=wx.ID_ANY, label="?")
+                otherWeight = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label="?")
                 otherWeight.SetToolTipString("Sets a different weight for the question.")
                 otherWeight.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: otherWeightDialog(qNum))
                 c_sizer.Add(otherWeight, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
-                self.questions_area_sizer.Add(c_sizer, 0, wx.EXPAND)
+                self.stagingArea_sizer.Add(c_sizer, 0, wx.EXPAND)
 
                 # Student Answer Section
                 q_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                student_answer = wx.TextCtrl(self.questions_area, wx.ID_ANY, style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH, value="")
+                student_answer = wx.TextCtrl(self.stagingArea, wx.ID_ANY, style=wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_RICH, value="")
                 self.student_answer_boxes[qNum] = student_answer
                 q_sizer.Add(student_answer, 1) #1, wx.EXPAND|wx.TOP|wx.RIGHT, 5
-                self.questions_area_sizer.Add(q_sizer, 0, wx.EXPAND)
+                self.stagingArea_sizer.Add(q_sizer, 0, wx.EXPAND)
 
                 # The Last Question Cleanup
                 if qNum != sorted(self.parent.masterDatabase.getQuestionKeys())[-1]:
-                    self.questions_area_sizer.Add(wx.StaticLine(self.questions_area, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
+                    self.stagingArea_sizer.Add(wx.StaticLine(self.stagingArea, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
             self.parent.mainpanel.Layout()
 
@@ -560,7 +561,7 @@ class MainApp(wx.Frame):
         self.menuNavigation = self.MenuNav(self)
 
         # Now we call the routines to build the main content
-        self.studentTree = self.TreeNav(self, self.mainpanel, tree_sizer)
+        self.treeArea = self.TreeNav(self, self.mainpanel, tree_sizer)
         self.questionsArea = self.QuestionsArea(self, self.mainpanel, right_sizer)
         self.buttonArea = self.BottomNav(self, self.mainpanel, main_sizer_b)
 
@@ -573,9 +574,9 @@ class MainApp(wx.Frame):
         self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 6.csv"
         self.masterDatabase.setLab("lab7")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
-        self.studentTree.updateTreeList()
+        self.treeArea.updateTreeList()
         self.questionsArea.drawQuestions()
-        self.lab_tree_list.SelectItem(self.lab_tree_list.GetFirstVisibleItem())
+        self.labTree.SelectItem(self.labTree.GetFirstVisibleItem())
         print "Done With Sample Load"
 
 def newSession():

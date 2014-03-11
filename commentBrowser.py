@@ -101,7 +101,7 @@ class CommentBrowser(wx.Frame):
         self.Layout()
 
     def resetComment(self, event):
-        self.currentComment.SetValue("")
+        self.currentComment.SetValue(u"")
 
     def display(self, event):
         w,h = self.parent.GetSizeTuple()
@@ -113,7 +113,7 @@ class CommentBrowser(wx.Frame):
     def copyComment(self, event):
         win32clipboard.OpenClipboard()
         win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardText(self.currentComment.GetValue())
+        win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT,self.currentComment.GetValue())
         win32clipboard.CloseClipboard()
 
     def defaultCommentButton(self, event):
