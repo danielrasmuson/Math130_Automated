@@ -1,13 +1,17 @@
 import re
-def sendToImport(path, fName, lName, score):
+def exportGrade(path, fName, lName, score):
     """In order for this to work the user
     must include the names in the export"""
     # Note: everytime you run this program it
     # opens and closes the files
     # this is not the most effiecent use of resources
-    textFile = open(path,"r")
-    startText = textFile.read()
-    textFile.close()
+    try:
+        textFile = open(path,"r")
+        startText = textFile.read()
+        textFile.close()
+    except:
+        print "Error, file does not exist or is locked:",path
+        return False
 
 
     # Maybe we've got a 3 part name?

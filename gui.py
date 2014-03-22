@@ -2,7 +2,7 @@
 from __future__ import division
 import wx, os, subprocess, difflib, glob, embeddedImages
 from wx.lib.wordwrap import wordwrap
-from toImportDocument import sendToImport
+from exportGrade import exportGrade
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
 from importWizard import *
 from MasterDatabase import *
@@ -187,7 +187,7 @@ class MainApp(wx.Frame):
                     dlg.Destroy()
                     if result == wx.ID_YES:
                         score = "0"
-                result = sendToImport(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
+                result = exportGrade(self.parent.masterDatabase.gradeFile, name[0], " ".join(name[1:]), score)
                 if result:
                     self.parent.masterDatabase.setStudentSubmittedGrade(str(self.parent.questionsArea.si_name.GetValue()),True)
                     self.parent.labTree.SetItemText(self.parent.labTree.GetSelection(), u"\u2714"+self.parent.questionsArea.si_name.GetValue())
@@ -369,6 +369,19 @@ class MainApp(wx.Frame):
             sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
             sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
+        def getColor(self,weight):
+            # Just an easy way to color specific weight ranges to be consistent.
+            if weight == 1:
+                return "#FFFFFF"
+            elif weight == 0:
+                return "#FF2200"
+            elif weight == .5:
+                return "#FFAA00"
+            elif weight > .5:
+                return "#FFD47F"
+            elif weight < .5:
+                return "#FF6600"
+
         def scrollTop(self):
             self.stagingArea.Scroll((0,0))
 
@@ -394,14 +407,7 @@ class MainApp(wx.Frame):
                         wx.MessageBox("Weight must be between 0 and 1 and be only a number.\nText entered: "+str(dlg.GetValue()), "Invalid Weight!", wx.OK | wx.ICON_INFORMATION)
             def setCorrect(qNum, weight):
                 name = self.si_name.GetValue()
-                if weight == 1:
-                    color = "#FFFFFF"
-                else:
-                    if weight == 0:
-                        color = "#FFAAAA"
-                    else:
-                        color = "#FFAA00"
-                self.student_answer_boxes[qNum].SetBackgroundColour(color)
+                self.student_answer_boxes[qNum].SetBackgroundColour(self.getColor(weight))
                 self.student_answer_boxes[qNum].Refresh() #fix for delay
 
                 self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
@@ -442,7 +448,7 @@ class MainApp(wx.Frame):
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
-                sizeQArea = self.stagingArea.GetVirtualSize()[0]-20
+                sizeQArea = self.stagingArea.GetVirtualSize()[0]-25
                 textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.stagingArea)))
                 textInQandA = wx.StaticText(self.stagingArea, wx.ID_ANY, textInQandA)
                 c_sizer.Add(textInQandA)
@@ -493,13 +499,7 @@ class MainApp(wx.Frame):
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
                 self.student_answer_boxes[qNum].SetLabel(unicode(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
-                if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum) == 1:
-                    self.student_answer_boxes[qNum].SetBackgroundColour("#FFFFFF")
-                else:
-                    if self.parent.masterDatabase.getStudentQuestionWeight(name, qNum) > 0:
-                        self.student_answer_boxes[qNum].SetBackgroundColour("#FFAA00")
-                    else:
-                        self.student_answer_boxes[qNum].SetBackgroundColour("#FFAAAA")
+                self.student_answer_boxes[qNum].SetBackgroundColour(self.parent.questionsArea.getColor(self.parent.masterDatabase.getStudentQuestionWeight(name, qNum)))
             self.panel.Layout()
             self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
@@ -570,9 +570,9 @@ class MainApp(wx.Frame):
         self.Show()
 
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test7"
-        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 6.csv"
-        self.masterDatabase.setLab("lab7")
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test8"
+        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 8.csv"
+        self.masterDatabase.setLab("lab8")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.treeArea.updateTreeList()
         self.questionsArea.drawQuestions()
