@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from __future__ import division
-import wx, os, subprocess, difflib, glob, embeddedImages
+import wx, os, subprocess, difflib, glob, embeddedImages, ConfigParser, codecs
 from wx.lib.wordwrap import wordwrap
 from exportGrade import exportGrade
 from commentBrowser import CommentBrowser # split this to a new file because this one is so big
@@ -66,20 +66,27 @@ class MainApp(wx.Frame):
             tempwiz = ImportWizard(self.parent)
 
         def onSave(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-"+str(self.parent.tree_rootDict.keys()[0]).lstrip("0"),defaultDir=os.getcwd(), style=wx.FD_SAVE|wx.OVERWRITE_PROMPT)
-            dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
-            if dlg.ShowModal() == wx.ID_OK:
-                self.parent.masterDatabase.saveProgress(dlg.GetPath())
-            dlg.Destroy()
+            if len(self.parent.tree_rootDict.keys()) == 0:
+                wx.MessageBox("Nothing to save.","Warning", wx.OK | wx.ICON_INFORMATION)
+            else:
+                dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile=str(self.parent.masterDatabase.currentLab)+"-"+str(self.parent.tree_rootDict.keys()[0]).lstrip("0"),defaultDir=self.parent.config.get("Main_Gui","save_dir"), style=wx.FD_SAVE|wx.OVERWRITE_PROMPT)
+                dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
+                if dlg.ShowModal() == wx.ID_OK:
+                    self.parent.masterDatabase.saveProgress(dlg.GetPath())
+                    self.parent.config.set("Main_Gui","save_dir",os.path.dirname(dlg.GetPath()))
+                    self.parent.config.write(open("Math130.ini", "wb"))
+                dlg.Destroy()
 
         def onOpen(self, event):
-            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="",defaultDir=os.getcwd(), style=wx.FD_OPEN)
+            dlg = wx.FileDialog(self.parent, "Choose a lab file:",defaultFile="",defaultDir=self.parent.config.get("Main_Gui","save_dir"), style=wx.FD_OPEN)
             dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
             if dlg.ShowModal() == wx.ID_OK:
                 self.parent.masterDatabase.loadProgress(dlg.GetPath())
                 self.parent.treeArea.updateTreeList()
                 self.parent.questionsArea.drawQuestions()
                 self.parent.labTree.SelectItem(self.parent.labTree.GetFirstVisibleItem())
+                self.parent.config.set("Main_Gui","save_dir",os.path.dirname(dlg.GetPath()))
+                self.parent.config.write(open("Math130.ini", "wb"))
             dlg.Destroy()
 
         def onAbout(self, event):
@@ -94,6 +101,12 @@ class MainApp(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_YES:
+                # Save our configuration stuff in case something borks later.
+                self.parent.config.set("Main_Gui","size_x",str(self.parent.GetSize()[0]))
+                self.parent.config.set("Main_Gui","size_y",str(self.parent.GetSize()[1]))
+                self.parent.config.set("Main_Gui","pos_x",str(self.parent.GetScreenPosition()[0]))
+                self.parent.config.set("Main_Gui","pos_y",str(self.parent.GetScreenPosition()[1]))
+                self.parent.config.write(open("Math130.ini", "wb"))
                 self.parent.Destroy()
 
         def onNew(self, event):
@@ -525,7 +538,30 @@ class MainApp(wx.Frame):
 
     def __init__(self):
         self.masterDatabase = MasterDatabase()
-        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(50,50), size=(800,600), style =wx.DEFAULT_FRAME_STYLE)
+        # Trying to keep track of personal settings and locations of files
+        # so we don't have to keep navigating to folders to find our labs.
+        self.config = ConfigParser.SafeConfigParser()
+        try:
+            with codecs.open('Math130.ini', 'r', encoding='utf-8') as f:
+                self.config.readfp(f)
+        except:
+            print "Creating default configuration file: " + str(os.getcwd()) + "\\Math130.ini"
+            open(str(os.getcwd()) + "\\Math130.ini", 'a').close()
+        if not self.config.has_section("Main_Gui"):
+            self.config.add_section("Main_Gui")
+
+        optionsList = ["pos_x","pos_y","size_x","size_y","save_dir"]
+        defaultOptions = [50,50,800,600,""]
+        for i, option in enumerate(optionsList):
+            if option not in self.config.options("Main_Gui"):
+                self.config.set("Main_Gui",option,str(defaultOptions[i]))
+
+        pos_x = int(self.config.get("Main_Gui","pos_x"))
+        pos_y = int(self.config.get("Main_Gui","pos_y"))
+        size_x = int(self.config.get("Main_Gui","size_x"))
+        size_y = int(self.config.get("Main_Gui","size_y"))
+
+        wx.Frame.__init__(self, None,title="Math 130 Automated Grading System", pos=(pos_x,pos_y), size=(size_x,size_y), style =wx.DEFAULT_FRAME_STYLE)
         self.SetMinSize((800,600))
 
         # We need a panel in order to put stuff on

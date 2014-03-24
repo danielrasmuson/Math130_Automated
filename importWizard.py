@@ -1,6 +1,4 @@
-import embeddedImages
-import wx
-import os
+import wx, embeddedImages, os, ConfigParser, codecs
 import wx.wizard as wiz
 import wx.lib.filebrowsebutton as filebrowse
 from wx.lib.wordwrap import wordwrap
@@ -27,7 +25,32 @@ class ImportWizard:
         wizard = wiz.Wizard(
             None, -1, "Lab Grading Wizard", embeddedImages.SideImage.GetBitmap())
         self.parent = parent
-        currentDirectory = os.path.expanduser('~') + "/Desktop/"
+
+
+
+        # Trying to keep track of personal settings and locations of files
+        # so we don't have to keep navigating to folders to find our labs.
+        self.config = ConfigParser.SafeConfigParser()
+        try:
+            with codecs.open('Math130.ini', 'r', encoding='utf-8') as f:
+                self.config.readfp(f)
+        except:
+            print "Creating default configuration file: " + str(os.getcwd()) + "\\Math130.ini"
+            open(str(os.getcwd()) + "\\Math130.ini", 'a').close()
+        if not self.config.has_section("Wizard"):
+            self.config.add_section("Wizard")
+        optionsList = ["grade_file","attendance_file","lab_dir","email","starid"]
+        for option in optionsList:
+            if option not in self.config.options("Wizard"):
+                self.config.set("Wizard",option,"")
+
+        cfg_grade_file = self.config.get("Wizard","grade_file")
+        cfg_attendance_file = self.config.get("Wizard","attendance_file")
+        cfg_lab_dir = self.config.get("Wizard","lab_dir")
+        cfg_email = self.config.get("Wizard","email")
+        cfg_starid = self.config.get("Wizard","starid")
+
+
         wizard.Bind(wiz.EVT_WIZARD_FINISHED, self.onFinished)
 
         # page 1 - Intro
@@ -42,7 +65,8 @@ class ImportWizard:
         page2.sizer.Add(
             wx.StaticText(page2, -1, str(wordwrap(page2text, 500, wx.ClientDC(page2)))))
         self.gradingSheet = filebrowse.FileBrowseButton(
-            page2, -1, size=(450, -1), labelText="Grading Sheet:", fileMask="Grading Sheet|Finite*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=currentDirectory)
+            page2, -1, size=(450, -1), labelText="Grading Sheet:", fileMask="Grading Sheet|Finite*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=cfg_grade_file)
+        self.gradingSheet.SetValue(cfg_grade_file)
         page2.sizer.Add(self.gradingSheet, 1, flag=wx.ALIGN_CENTER)
 
         # page 3 - Optional Attendance
@@ -51,11 +75,12 @@ class ImportWizard:
         page3.sizer.Add(
             wx.StaticText(page3, -1, str(wordwrap(page3text, 500, wx.ClientDC(page3)))))
         self.attendanceSheet = filebrowse.FileBrowseButton(
-            page3, -1, size=(450, -1), labelText="Attendance File:", fileMask="Attendance File|Att*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=self.gradingSheet.GetValue())
+            page3, -1, size=(450, -1), labelText="Attendance File:", fileMask="Attendance File|Att*.csv|All CSV (*.csv)|*.csv|All Files (*.*)|*.*", startDirectory=cfg_attendance_file)
+        self.attendanceSheet.SetValue(cfg_attendance_file)
         page3.sizer.Add(self.attendanceSheet, 1, flag=wx.ALIGN_CENTER)
 
         # page 4 - Optional Email
-        # @TODO - chang ethe foamatting of this page to look better
+        # @TODO - change the formatting of this page to look better
         page4 = self.TitledPage(wizard, "Input (Optional) Email Sheet")
         page4text = "This is an optional setting to email your results to the students. You need to navigate to d2l and click classlist then select all students and click email. Copy the bcc field and paste it below along with your credentials to your mnsu email."
         page4.sizer.Add(
@@ -63,8 +88,8 @@ class ImportWizard:
 
         # MNSU Email Address - MNSU Star ID:' - 'Email password:' - classList
         # string
-        self.emailAddress = wx.TextCtrl(page4, value="") 
-        self.emailStarID = wx.TextCtrl(page4, value="") 
+        self.emailAddress = wx.TextCtrl(page4, value=cfg_email) 
+        self.emailStarID = wx.TextCtrl(page4, value=cfg_starid) 
         self.emailPassword = wx.TextCtrl(page4, value="", style=wx.TE_PASSWORD) 
         self.emailStudents = wx.TextCtrl(page4, style=wx.TE_MULTILINE, value="") # TODO - make this strech across horizontal too 
 
@@ -83,7 +108,8 @@ class ImportWizard:
         page5.sizer.Add(
             wx.StaticText(page5, -1, str(wordwrap(page5text, 500, wx.ClientDC(page5)))))
         self.gradingDirectory = filebrowse.DirBrowseButton(
-            page5, -1, size=(450, -1), labelText="Lab Directory", startDirectory=self.gradingSheet.GetValue())
+            page5, -1, size=(450, -1), labelText="Lab Directory", startDirectory=cfg_lab_dir)
+        self.gradingDirectory.SetValue(cfg_lab_dir)
         page5.sizer.Add(self.gradingDirectory, 1, flag=wx.ALIGN_CENTER)
 
         wizard.FitToPage(page1)
@@ -114,6 +140,14 @@ class ImportWizard:
         return "".join(labNameList).lower()
 
     def onFinished(self, event):
+        # Save our configuration stuff in case something borks later.
+        self.config.set("Wizard","grade_file",self.gradingSheet.GetValue())
+        self.config.set("Wizard","attendance_file",self.attendanceSheet.GetValue())
+        self.config.set("Wizard","lab_dir",self.gradingDirectory.GetValue())
+        self.config.set("Wizard","email",self.emailAddress.GetValue())
+        self.config.set("Wizard","starid",self.emailStarID.GetValue())
+        self.config.write(open("Math130.ini", "wb"))
+
         self.parent.masterDatabase.gradeFile = self.gradingSheet.GetValue()
         self.parent.masterDatabase.labFolder = self.gradingDirectory.GetValue()
         if len(self.parent.masterDatabase.gradeFile) and len(self.parent.masterDatabase.labFolder):
