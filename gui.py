@@ -401,7 +401,7 @@ class MainApp(wx.Frame):
 
         def updateWordwrap(self,event):
             for textCtrl,text in self.questionTextCtrls:
-                textCtrl.SetLabel(unicode(wordwrap(text.replace("\n",""), self.sizer.GetSizeTuple()[0]-90, wx.ClientDC(self.stagingArea))))
+                textCtrl.SetLabel(unicode(wordwrap(text.replace("\n",""), self.sizer.GetSizeTuple()[0]-100, wx.ClientDC(self.stagingArea))))
             self.parent.mainpanel.Layout()
 
         def drawQuestions(self):
@@ -434,7 +434,7 @@ class MainApp(wx.Frame):
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.stagingArea = wx.ScrolledWindow(self.panel)
-            self.stagingArea.SetScrollbars(1, 15, 200, 200)
+            self.stagingArea.SetScrollbars(1, 15, 20, 20)
             self.stagingArea.EnableScrolling(True,True)
             self.sizer.Add(self.stagingArea, 1, wx.EXPAND)
 
@@ -467,11 +467,9 @@ class MainApp(wx.Frame):
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
-                sizeQArea = self.sizer.GetSize()[0]-90
-                text = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.stagingArea)))
-                textCtrl = wx.StaticText(self.stagingArea, wx.ID_ANY, text)
+                textCtrl = wx.StaticText(self.stagingArea, wx.ID_ANY, question)
+                self.questionTextCtrls.append([textCtrl,question])
                 c_sizer.Add(textCtrl)
-                self.questionTextCtrls.append([textCtrl,text])
 
                 # Correct Buttons \u2714
                 c_sizer.AddStretchSpacer(1) #to push buttons to end
@@ -515,6 +513,7 @@ class MainApp(wx.Frame):
                     self.stagingArea_sizer.Add(wx.StaticLine(self.stagingArea, wx.ID_ANY), 0, wx.ALL|wx.EXPAND, 5)
 
             self.parent.mainpanel.Layout()
+            self.updateWordwrap("")
 
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
