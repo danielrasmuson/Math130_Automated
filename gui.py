@@ -127,8 +127,6 @@ class MainApp(wx.Frame):
             self.panel = panel
             self.sizer = sizer
 
-            # sizer.AddSpacer(8)
-
             self.b_cheat = wx.Button(panel, wx.ID_ANY, "Cheat Check", style=wx.BU_EXACTFIT)
             self.b_cheat.SetToolTipString("Runs some basic cheat detection on the currently loaded students.")
             self.b_cheat.SetBitmap(wx.BitmapFromImage(wx.ImageFromBitmap(embeddedImages.cheat.GetBitmap()).Scale(20,20, wx.IMAGE_QUALITY_HIGH)))
@@ -382,6 +380,9 @@ class MainApp(wx.Frame):
             sizer.Add(si_sizer, proportion=0, flag=wx.ALL|wx.EXPAND, border=5)
             sizer.Add(wx.StaticLine(panel, wx.ID_ANY), 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 5)
 
+            self.questionTextCtrls = []
+            self.panel.Bind(wx.EVT_SIZE, self.updateWordwrap)
+
         def getColor(self,weight):
             # Just an easy way to color specific weight ranges to be consistent.
             if weight == 1:
@@ -397,6 +398,11 @@ class MainApp(wx.Frame):
 
         def scrollTop(self):
             self.stagingArea.Scroll((0,0))
+
+        def updateWordwrap(self,event):
+            for textCtrl,text in self.questionTextCtrls:
+                textCtrl.SetLabel(unicode(wordwrap(text.replace("\n",""), self.sizer.GetSizeTuple()[0]-90, wx.ClientDC(self.stagingArea))))
+            self.parent.mainpanel.Layout()
 
         def drawQuestions(self):
             def otherWeightDialog(qNum):
@@ -428,7 +434,7 @@ class MainApp(wx.Frame):
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             self.stagingArea = wx.ScrolledWindow(self.panel)
-            self.stagingArea.SetScrollbars(1, 15, 500, 1000)
+            self.stagingArea.SetScrollbars(1, 15, 200, 200)
             self.stagingArea.EnableScrolling(True,True)
             self.sizer.Add(self.stagingArea, 1, wx.EXPAND)
 
@@ -461,10 +467,11 @@ class MainApp(wx.Frame):
                 # What is the 3rd term of the sequence? 
                 c_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 question = self.parent.masterDatabase.getQuestion(qNum, niceFormat=True)
-                sizeQArea = self.stagingArea.GetVirtualSize()[0]-25
-                textInQandA = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.stagingArea)))
-                textInQandA = wx.StaticText(self.stagingArea, wx.ID_ANY, textInQandA)
-                c_sizer.Add(textInQandA)
+                sizeQArea = self.sizer.GetSize()[0]-90
+                text = unicode(wordwrap(question, sizeQArea, wx.ClientDC(self.stagingArea)))
+                textCtrl = wx.StaticText(self.stagingArea, wx.ID_ANY, text)
+                c_sizer.Add(textCtrl)
+                self.questionTextCtrls.append([textCtrl,text])
 
                 # Correct Buttons \u2714
                 c_sizer.AddStretchSpacer(1) #to push buttons to end
