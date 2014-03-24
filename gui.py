@@ -193,7 +193,7 @@ class MainApp(wx.Frame):
             score = self.parent.questionsArea.si_score.GetValue()
             if len(name) > 0:
                 if self.parent.questionsArea.si_attendance.GetValue() == "No Quiz":
-                    dlg = wx.MessageDialog(self.parent,name[0] + "did not take the attendance quiz. Submit 0 instead of "+str(score)+"?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
+                    dlg = wx.MessageDialog(self.parent,name[0] + " did not take the attendance quiz. Submit 0 instead of "+str(score)+"?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
                     result = dlg.ShowModal()
                     dlg.Destroy()
                     if result == wx.ID_YES:
@@ -401,7 +401,7 @@ class MainApp(wx.Frame):
 
         def updateWordwrap(self,event):
             for textCtrl,text in self.questionTextCtrls:
-                textCtrl.SetLabel(unicode(wordwrap(text.replace("\n",""), self.sizer.GetSizeTuple()[0]-100, wx.ClientDC(self.stagingArea))))
+                textCtrl.SetLabel(unicode(wordwrap(text.replace("\n",""), self.sizer.GetSizeTuple()[0]-110, wx.ClientDC(self.stagingArea))))
             self.parent.mainpanel.Layout()
 
         def drawQuestions(self):
@@ -431,7 +431,15 @@ class MainApp(wx.Frame):
 
                 self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
                 self.parent.commentWindow.defaultCommentButton("")
+                self.questionPointCtrls[qNum].SetLabel("Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
+
+            def pityPoint(qNum):
+                totalPoints = self.parent.masterDatabase.getQuestionPoints(qNum)
+                if totalPoints >=2 :
+                    setCorrect(qNum,1/(totalPoints))
+                else:
+                    setCorrect(qNum,.5)
 
             self.stagingArea = wx.ScrolledWindow(self.panel)
             self.stagingArea.SetScrollbars(1, 15, 20, 20)
@@ -442,13 +450,14 @@ class MainApp(wx.Frame):
             self.stagingArea.SetSizer(self.stagingArea_sizer)
 
             self.student_answer_boxes = {}
+            self.questionPointCtrls = {}
             for qNum in sorted(self.parent.masterDatabase.getQuestionKeys()):
-
 
                 # Question Num
                 # Question 1
                 qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                qNumText = wx.StaticText(self.stagingArea, wx.ID_ANY, "Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
+                qNumText = wx.StaticText(self.stagingArea, wx.ID_ANY, "Question "+str(qNum)+" (0 of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + " Points):")
+                self.questionPointCtrls[qNum] = qNumText
                 boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
                 qNumText.SetFont(boldFont) # applies bold font
                 qNum_sizer.Add(qNumText)
@@ -493,6 +502,13 @@ class MainApp(wx.Frame):
                 markWrong.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: setCorrect(qNum,0))
                 c_sizer.Add(markWrong, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
 
+                # Pity Point ▼
+                pityP = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label=u"▼")
+                pityP.SetForegroundColour("#FF0000")
+                pityP.SetToolTipString("Gives a pity point for attempting the question when nothing else is correct.")
+                pityP.Bind(wx.EVT_BUTTON, lambda evt , qNum=qNum: pityPoint(qNum))
+                c_sizer.Add(pityP, 0, flag=wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, border=0)
+
                 # Other Button
                 otherWeight = wx.Button(self.stagingArea, size=(20,20), id=wx.ID_ANY, label="?")
                 otherWeight.SetToolTipString("Sets a different weight for the question.")
@@ -517,6 +533,7 @@ class MainApp(wx.Frame):
 
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
+                self.questionPointCtrls[qNum].SetLabel("Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
                 self.student_answer_boxes[qNum].SetLabel(unicode(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
                 self.student_answer_boxes[qNum].SetBackgroundColour(self.parent.questionsArea.getColor(self.parent.masterDatabase.getStudentQuestionWeight(name, qNum)))
             self.panel.Layout()
