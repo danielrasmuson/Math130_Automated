@@ -211,6 +211,13 @@ class MainApp(wx.Frame):
             """ Checks for the ratio of similarity between all of the labs, but it slower than other method. """
             names = sorted(self.parent.masterDatabase.getStudentKeys())
             if len(names) > 0:
+                dlg = wx.MessageDialog(self.parent, "Would you like a warning for each lab with a ratio above .97?","Confirmation", wx.YES_NO | wx.ICON_QUESTION)
+                result = dlg.ShowModal()
+                dlg.Destroy()
+                if result == wx.ID_YES:
+                    warn = True
+                else:
+                    warn = False
                 ratioList = []
                 for i,name1 in enumerate(names):
                     for j,name2 in enumerate(names):
@@ -223,10 +230,12 @@ class MainApp(wx.Frame):
                             labcheck2 = labcheck2.replace("\r","")
                             ratio = difflib.SequenceMatcher(None,labcheck1,labcheck2).ratio()
                             ratioList.append([name1,name2,ratio])
-                            if ratio > .96:
+                            if warn and (ratio > .97):
                                 wx.MessageBox(name1 + " and " + name2 + " have a ratio of "+str(ratio), 'High Text Similarity!', wx.OK | wx.ICON_INFORMATION)
                 ratioList = sorted(ratioList,key=lambda x:x[2], reverse=True)
                 ratioInfo = [ x[0] + " & " + x[1] + ": " + str(x[2])[0:6] for x in ratioList[0:5]]
+                print "Top Ratios:"
+                print "\n".join([ x[0] + " & " + x[1] + ": " + str(x[2])[0:6] for x in ratioList[0:10]])
                 wx.MessageBox("\n".join(ratioInfo),"Top 5 Ratios", wx.OK | wx.ICON_INFORMATION)
                 event.Skip() #Let's us have the button do two things at once.
 
