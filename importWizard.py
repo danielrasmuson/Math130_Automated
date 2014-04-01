@@ -30,25 +30,25 @@ class ImportWizard:
 
         # Trying to keep track of personal settings and locations of files
         # so we don't have to keep navigating to folders to find our labs.
-        self.config = ConfigParser.SafeConfigParser()
+        self.parent.config = ConfigParser.SafeConfigParser()
         try:
             with codecs.open('Math130.ini', 'r', encoding='utf-8') as f:
-                self.config.readfp(f)
+                self.parent.config.readfp(f)
         except:
             print "Creating default configuration file: " + str(os.getcwd()) + "\\Math130.ini"
             open(str(os.getcwd()) + "\\Math130.ini", 'a').close()
-        if not self.config.has_section("Wizard"):
-            self.config.add_section("Wizard")
+        if not self.parent.config.has_section("Wizard"):
+            self.parent.config.add_section("Wizard")
         optionsList = ["grade_file","attendance_file","lab_dir","email","starid"]
         for option in optionsList:
-            if option not in self.config.options("Wizard"):
-                self.config.set("Wizard",option,"")
+            if option not in self.parent.config.options("Wizard"):
+                self.parent.config.set("Wizard",option,"")
 
-        cfg_grade_file = self.config.get("Wizard","grade_file")
-        cfg_attendance_file = self.config.get("Wizard","attendance_file")
-        cfg_lab_dir = self.config.get("Wizard","lab_dir")
-        cfg_email = self.config.get("Wizard","email")
-        cfg_starid = self.config.get("Wizard","starid")
+        cfg_grade_file = self.parent.config.get("Wizard","grade_file")
+        cfg_attendance_file = self.parent.config.get("Wizard","attendance_file")
+        cfg_lab_dir = self.parent.config.get("Wizard","lab_dir")
+        cfg_email = self.parent.config.get("Wizard","email")
+        cfg_starid = self.parent.config.get("Wizard","starid")
 
 
         wizard.Bind(wiz.EVT_WIZARD_FINISHED, self.onFinished)
@@ -141,12 +141,7 @@ class ImportWizard:
 
     def onFinished(self, event):
         # Save our configuration stuff in case something borks later.
-        self.config.set("Wizard","grade_file",self.gradingSheet.GetValue())
-        self.config.set("Wizard","attendance_file",self.attendanceSheet.GetValue())
-        self.config.set("Wizard","lab_dir",self.gradingDirectory.GetValue())
-        self.config.set("Wizard","email",self.emailAddress.GetValue())
-        self.config.set("Wizard","starid",self.emailStarID.GetValue())
-        self.config.write(open("Math130.ini", "wb"))
+        self.parent.configSave(grade_file=self.gradingSheet.GetValue(),attendance_file=self.attendanceSheet.GetValue(),lab_dir=self.gradingDirectory.GetValue(),email=self.emailAddress.GetValue(),starid=self.emailStarID.GetValue())
 
         self.parent.masterDatabase.gradeFile = self.gradingSheet.GetValue()
         self.parent.masterDatabase.labFolder = self.gradingDirectory.GetValue()

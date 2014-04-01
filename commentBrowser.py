@@ -118,15 +118,26 @@ class CommentBrowser(wx.Frame):
 
     def defaultCommentButton(self, event):
         self.currentComment.SetValue("Hi "+self.selectedStudent.split()[0]+",\n")
+        allCorrect = True
         for qNum in sorted(self.database.getQuestionKeys()):
             if (len(self.database.getReason(qNum)) > 0) & (self.database.getStudentQuestionScore(self.selectedStudent,qNum) != self.database.getQuestionPoints(qNum)):
-                self.addComment("\nFor question #" + str(qNum) + " (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\n"+self.database.getReason(qNum)+"\n")
-            elif (len(self.database.getAnswer(qNum)) > 0) & (self.database.getStudentQuestionScore(self.selectedStudent,qNum) != self.database.getQuestionPoints(qNum)):
-                self.addComment("\nFor question #" + str(qNum) + " (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\nThe answer should have been: "+str(self.database.getAnswer(qNum))+"\n")
-        if "For question #" in self.currentComment.GetValue():
-            self.addComment("\nIf something isn't clear feel free to email me.\n")
-        else:
+                if type(qNum) == str:
+                    self.addComment("\n" + qNum)
+                else:
+                    self.addComment("\nFor problem " + str(qNum))
+                allCorrect = False
+                self.addComment(" (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\n"+self.database.getReason(qNum)+"\n")
+            elif (type(self.database.getAnswer(qNum)) != list) & (len(self.database.getAnswer(qNum)) > 0) & (self.database.getStudentQuestionScore(self.selectedStudent,qNum) != self.database.getQuestionPoints(qNum)):
+                if type(qNum) == str:
+                    self.addComment("\n" + qNum)
+                else:
+                    self.addComment("\nFor problem " + str(qNum))
+                allCorrect = False
+                self.addComment(" (" + str(self.database.getStudentQuestionScore(self.selectedStudent,qNum)) + " / " + str(self.database.getQuestionPoints(qNum)) + " points):\nThe answer should have been: "+str(self.database.getAnswer(qNum))+"\n")
+        if allCorrect:
             self.addComment("\nEverything looked great, but if you've got questions feel free to email me.\n")
+        else:
+            self.addComment("\nIf something isn't clear feel free to email me.\n")
 
     def loadEmailList(self):
         # pareses

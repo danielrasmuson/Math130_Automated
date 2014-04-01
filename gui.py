@@ -60,8 +60,6 @@ class MainApp(wx.Frame):
 
             self.parent.SetMenuBar(menuBar)
 
-            # self.parent.statusbar = self.parent.CreateStatusBar()
-
         def wizardEvent(self, event):
             tempwiz = ImportWizard(self.parent)
 
@@ -73,8 +71,7 @@ class MainApp(wx.Frame):
                 dlg.SetWildcard("Lab Dictionaries (*.dat)|*.dat")
                 if dlg.ShowModal() == wx.ID_OK:
                     self.parent.masterDatabase.saveProgress(dlg.GetPath())
-                    self.parent.config.set("Main_Gui","save_dir",os.path.dirname(dlg.GetPath()))
-                    self.parent.config.write(open("Math130.ini", "wb"))
+                    self.parent.configSave(save_dir=os.path.dirname(dlg.GetPath()))
                 dlg.Destroy()
 
         def onOpen(self, event):
@@ -85,8 +82,7 @@ class MainApp(wx.Frame):
                 self.parent.treeArea.updateTreeList()
                 self.parent.questionsArea.drawQuestions()
                 self.parent.labTree.SelectItem(self.parent.labTree.GetFirstVisibleItem())
-                self.parent.config.set("Main_Gui","save_dir",os.path.dirname(dlg.GetPath()))
-                self.parent.config.write(open("Math130.ini", "wb"))
+                self.parent.configSave(save_dir=os.path.dirname(dlg.GetPath()))
             dlg.Destroy()
 
         def onAbout(self, event):
@@ -102,11 +98,7 @@ class MainApp(wx.Frame):
             dlg.Destroy()
             if result == wx.ID_YES:
                 # Save our configuration stuff in case something borks later.
-                self.parent.config.set("Main_Gui","size_x",str(self.parent.GetSize()[0]))
-                self.parent.config.set("Main_Gui","size_y",str(self.parent.GetSize()[1]))
-                self.parent.config.set("Main_Gui","pos_x",str(self.parent.GetScreenPosition()[0]))
-                self.parent.config.set("Main_Gui","pos_y",str(self.parent.GetScreenPosition()[1]))
-                self.parent.config.write(open("Math130.ini", "wb"))
+                self.parent.configSave()
                 self.parent.Destroy()
 
         def onNew(self, event):
@@ -116,6 +108,7 @@ class MainApp(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_OK:
+                self.parent.configSave()
                 self.parent.Show(False)
                 newSession()
                 self.parent.Destroy()
@@ -440,7 +433,11 @@ class MainApp(wx.Frame):
 
                 self.parent.masterDatabase.setStudentQuestionWeight(name, qNum, weight)
                 self.parent.commentWindow.defaultCommentButton("")
-                self.questionPointCtrls[qNum].SetLabel("Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
+                if type(qNum) == str:
+                    tempText = qNum +" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):")
+                else:
+                    tempText = "Problem "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):")
+                self.questionPointCtrls[qNum].SetLabel(tempText)
                 self.si_right.SetValue(str(self.parent.masterDatabase.getStudentTotalWeight(name))[0:5] + " / " + str(int(self.parent.masterDatabase.getTotalQuestions())))
 
             def pityPoint(qNum):
@@ -465,7 +462,11 @@ class MainApp(wx.Frame):
                 # Question Num
                 # Question 1
                 qNum_sizer = wx.BoxSizer(wx.HORIZONTAL)
-                qNumText = wx.StaticText(self.stagingArea, wx.ID_ANY, "Question "+str(qNum)+" (0 of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + " Points):")
+                if type(qNum) == str:
+                    tempText = qNum + " (0 of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + " Points):"
+                else:
+                    tempText = "Problem "+str(qNum)+" (0 of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + " Points):"
+                qNumText = wx.StaticText(self.stagingArea, wx.ID_ANY, tempText)
                 self.questionPointCtrls[qNum] = qNumText
                 boldFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD)
                 qNumText.SetFont(boldFont) # applies bold font
@@ -542,7 +543,11 @@ class MainApp(wx.Frame):
 
         def updateStudentAnswers(self, name):
             for qNum in self.parent.masterDatabase.getQuestionKeys():
-                self.questionPointCtrls[qNum].SetLabel("Question "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):"))
+                if type(qNum) == str:
+                    tempText = qNum +" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):")
+                else:
+                    tempText = "Problem "+str(qNum)+" (" + str(self.parent.masterDatabase.getStudentQuestionScore(name,qNum)) + " of " + str(self.parent.masterDatabase.getQuestionPoints(qNum)) + (" Points):" if self.parent.masterDatabase.getQuestionPoints(qNum) > 1 else " Point):")
+                self.questionPointCtrls[qNum].SetLabel(tempText)
                 self.student_answer_boxes[qNum].SetLabel(unicode(self.parent.masterDatabase.getStudentAnswer(name, qNum)))
                 self.student_answer_boxes[qNum].SetBackgroundColour(self.parent.questionsArea.getColor(self.parent.masterDatabase.getStudentQuestionWeight(name, qNum)))
             self.panel.Layout()
@@ -637,10 +642,29 @@ class MainApp(wx.Frame):
 
         self.Show()
 
+    def configSave(self, save_dir=False, grade_file=False, attendance_file=False, lab_dir=False, email=False, starid=False):
+        self.config.set("Main_Gui","size_x",str(self.GetSize()[0]))
+        self.config.set("Main_Gui","size_y",str(self.GetSize()[1]))
+        self.config.set("Main_Gui","pos_x",str(self.GetScreenPosition()[0]))
+        self.config.set("Main_Gui","pos_y",str(self.GetScreenPosition()[1]))
+        if save_dir != False:
+            self.config.set("Main_Gui","save_dir",save_dir)
+        if grade_file != False:
+            self.config.set("Wizard","grade_file",grade_file)
+        if attendance_file != False:
+            self.config.set("Wizard","attendance_file",attendance_file)
+        if lab_dir != False:
+            self.config.set("Wizard","lab_dir",lab_dir)
+        if email != False:
+            self.config.set("Wizard","email",email)
+        if starid != False:
+            self.config.set("Wizard","starid",starid)
+        self.config.write(open("Math130.ini", "wb"))
+
     def deleteMeLater(self, event):
-        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test8"
-        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 8.csv"
-        self.masterDatabase.setLab("lab8")
+        self.masterDatabase.labFolder = os.getcwd()+"\\Examples\\Test9"
+        self.masterDatabase.gradeFile = os.getcwd()+"\\Examples\\Lab 9.csv"
+        self.masterDatabase.setLab("lab9")
         self.masterDatabase.loadLabs(self.masterDatabase.labFolder, self.masterDatabase.gradeFile)
         self.treeArea.updateTreeList()
         self.questionsArea.drawQuestions()
