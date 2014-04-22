@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from getFiles import getDocxsFromFolder
-import re, cPickle as pickle, xlrd, csv, math
+import re, cPickle as pickle, xlrd, csv, math, zipfile
 
 class MasterDatabase():
     """ Holds all of our question information and student supplied information. """
@@ -194,9 +194,17 @@ class MasterDatabase():
             "Example Question":{"question":"Write the formula for the trendline and its R2 value here.","answer":["y = 50x + 1.25|50x+1.25",u"R² = 1|R2 = 1|R^2=1"],"reason":u"The problem has us setting up a linear trendline through our data.  So long as we're careful to remove the cell C42 because it is incorrect we'll get that our trendline is y = 50x + 1.25 and R² = 1.","aText":"Problem #1","points":2},
             "Problem 1 Question 1":{"question":"Print out a copy of your scatterplot and turn it in with your assignment.","answer":"","reason":"For our graphs we need to be sure that we deleted cell C102 (since the formula uses a cell we don't have) and used the proper difference formula including parenthesis.","aText":"2. (2)","points":6},
             "Problem 1 Question 2":{"question":"What type of function might be an appropriate fit for the data? (Be specific.)","answer":["Polynomial","Degree 3|3|third|three|cubic"],"reason":u"We know our original equation is a polynomial of degree 4.  We also know that if we were to take the derivative by hand it would give us a degree 3 polynomial.  So we would think then that the approximate derivative would be a polynomial of degree 3.  Alternatively we could have tried fitting trendlines to the data and noticed that a polynomial of degree 2 has a low R² value and a polynomial of degree 3 has R²=1 so we don't need to go any higher in checking what fits.","aText":"3. (2)","points":2},
-            "Problem 1 Question 3":{"question":"Write the equation and R2 value for the trendline.","answer":["y = 4x^3 + 0.12x^2 - 1.9384x - 0.0194|4x3 + 0.12x2 - 1.9384x - 0.0194|4x^3 + 0.12x^2 - 1.9384x - 0.0194", u"R² = 1|R2 = 1|R^2=1"],"reason":u"For this problem we're told to fit a cubic polynomial and write it's equation and R².  The equation we get is y = 4x^3 + 0.12x^2 - 1.9384x - 0.0194 with R²=1.","aText":"Problem #2","points":2},
+            "Problem 1 Question 3":{"question":"Write the equation and R2 value for the trendline.","answer":["y = 4x^3 + 0.12x^2 - 1.9384x - 0.0194|4x3 + 0.12x2 - 1.9384x - 0.0194|4x^3 + 0.12x^2 - 1.9384x - 0.0194", u"R² = 1|R2 = 1|R^2=1"],"reason":u"For this problem we're told to fit a cubic polynomial and write its equation and R².  The equation we get is y = 4x^3 + 0.12x^2 - 1.9384x - 0.0194 with R²=1.","aText":"Problem #2","points":2},
             "Problem 2 Question 1":{"question":"Print a copy of your completed graph and turn it in with your assignment.","answer":"","reason":"For our graphs we need to be sure that we deleted cell C202 (since the formula uses a cell we don't have) and used the proper difference formula including parenthesis.","aText":"2. (2)", "afOcc":2,"points":6},
             "Problem 2 Question 2":{"question":"Describe what happened with the graph and what you think this might mean for the derivative of fx=ex.","answer":["The lines are the same and derivative is equal to the function. f(x)=f'(x)|equal to|same"],"reason":"In our graph the blue line is our function f(x) and our red line is our approximate derivative f'(x).  Since they're overlapping in the graph it would appear then that our f(x) is probably equal to f'(x) and in fact in this instance we can verify that indeed f'(x)=e^x which means f(x)=f'(x).","aText":-1,"points":2}
+            },
+
+            "lab11": {
+            "Question 1":{"question":"Print out a copy of your spreadsheet.","answer":"","reason":"","aText":"2. (4","points":4,"excel":"Question 1"},
+            "Question 2":{"question":"Printout a copy of your graph.","answer":"excelChart","reason":"","aText":"3. (2","points":4,"excelChart":"xl/charts/chart1.xml"},
+            "Question 3":{"question":u"In the spreadsheet, for the second derivative, the last two rows should be left blank. Why is this? (Hint: Why do you need to leave the last row blank for S’(t)? Think about this and expand on it.)","answer":["The cell references missing data.|missing|empty|blank"],"reason":"","aText":"4. (2","points":2},
+            "Question 4":{"question":"Based on your spreadsheet, approximately what is the point of diminishing returns for this model?","answer":["1.57|1.56|1.58"],"reason":"","aText":"5. (3","points":2},
+            "Question 5":{"question":"Interpret the meaning of the point of diminishing returns for this model.","answer":"","reason":"","aText":-1,"points":3},
             }
         }
 
@@ -213,6 +221,10 @@ class MasterDatabase():
 
             "lab8":{
             2.3:{"sheet":"Exercise Template","cells":[["C3",120],["C4",0.04208],["E3",1.035],["G3",180],["G4",0.06521],["G5",0.00543],["I3",1.035],["B10",120],["B11",240.42],["F10",180],["F11",360.978],["J9",300],["J10",601.39],["D129",169.27],["H129",253.9]]}
+            },
+
+            "lab11":{
+            "Question 1":{"sheet":"Sheet1","cells":[["B2",106.681294],["C2",11.51136],["D2",18.6015103],["C202",""],["D201",""],["D202",""],["D80",.594322],["C81",54.6253]]}
             }
         }
 
@@ -564,6 +576,12 @@ class MasterDatabase():
             # Check each question.
             for qNum in self.getQuestionKeys():
                 currentPoints = 0
+                # Crude way to see if a chart exists.
+                if self.getAnswer(qNum) == "excelChart":
+                    if self.wordQB[self.currentLab][qNum]["excelChart"] in zipfile.ZipFile(filename[0]).namelist():
+                        self.setStudentQuestionWeight(name,qNum,1)
+                        self.studentList[name].sAnswers[qNum] += "Excel chart found. Giving full points, but no validation has been done on the graph."
+                # Iterate through all of the questions with cells to check.
                 if self.isQuestionExcel(qNum):
                     # Clear the student answer box for excel grading report.
                     self.studentList[name].sAnswers[qNum] = ""
