@@ -205,6 +205,13 @@ class MasterDatabase():
             "Question 3":{"question":u"In the spreadsheet, for the second derivative, the last two rows should be left blank. Why is this? (Hint: Why do you need to leave the last row blank for S’(t)? Think about this and expand on it.)","answer":["The cell references missing data.|missing|empty|blank"],"reason":"","aText":"4. (2","points":2},
             "Question 4":{"question":"Based on your spreadsheet, approximately what is the point of diminishing returns for this model?","answer":["1.57|1.56|1.58"],"reason":"","aText":"5. (3","points":2},
             "Question 5":{"question":"Interpret the meaning of the point of diminishing returns for this model.","answer":"","reason":"","aText":-1,"points":3},
+            },
+
+            "lab12": {
+            "Problem 1":{"question":"Write your final answer below.","answer":["-0.218296769|-0.218"],"reason":"","aText":"Problem #2","points":5},
+            "Problem 2 Question 1":{"question":"Print out a copy of your table and turn it in with this lab.","answer":"","reason":"","aText":"2. (4","points":5,"excel":"Problem 2 Question 1"},
+            "Problem 2 Question 2":{"question":"Based on your table, how many calculators were produced during the third and fourth weeks?","answer":["4868.11|4868"],"reason":"","aText":"3. (1","points":4},
+            "Problem 2 Question 3":{"question":"Describe why the integral is set up for the interval [3,5] for this problem.","answer":"","reason":"","aText":-1,"points":1},
             }
         }
 
@@ -225,6 +232,10 @@ class MasterDatabase():
 
             "lab11":{
             "Question 1":{"sheet":"Sheet1","cells":[["B2",106.681294],["C2",11.51136],["D2",18.6015103],["C202",""],["D201",""],["D202",""],["D80",.594322],["C81",54.6253]]}
+            },
+
+            "lab12":{
+            "Problem 2 Question 1":{"sheet":"Instructions Example","cells":[["B4",0.01],["A7",3],["B7",2041.42],["D206",4868]]}
             }
         }
 
